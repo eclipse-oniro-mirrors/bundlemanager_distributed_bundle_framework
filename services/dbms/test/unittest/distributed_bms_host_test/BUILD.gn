@@ -1,0 +1,75 @@
+# Copyright (c) 2023 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import("//build/test.gni")
+import("../../../../../dbms.gni")
+
+module_output_path = "bundle_framework/distributedbundleservice"
+
+ohos_unittest("DistributedBmsHostTest") {
+  use_exceptions = true
+  module_out_path = module_output_path
+  include_dirs = [ "${dbms_services_path}/include" ]
+
+  sources = [ "${dbms_services_path}/src/distributed_bms_host.cpp" ]
+
+  sources += [
+    "distributed_bms_host_test.cpp",
+    "mock_distributed_bms_interface.cpp",
+  ]
+
+  deps = [
+    "${common_path}:libappexecfwk_common",
+    "${dbms_inner_api_path}:dbms_fwk",
+    "//third_party/googletest:gmock_main",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "ability_base:want",
+    "access_token:libaccesstoken_sdk",
+    "access_token:libtokenid_sdk",
+    "bundle_framework:appexecfwk_base",
+    "bundle_framework:appexecfwk_core",
+    "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "hicollie_native:libhicollie",
+    "hiviewdfx_hilog_native:libhilog",
+    "i18n:intl_util",
+    "init:libbegetutil",
+    "ipc:ipc_core",
+    "kv_store:distributeddata_inner",
+    "multimedia_image_framework:image_native",
+    "resource_management:global_resmgr",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
+  ]
+  defines = []
+
+  if (hisysevent_enable_dbms) {
+    sources += [ "${dbms_services_path}/src/event_report.cpp" ]
+    external_deps += [ "hisysevent_native:libhisysevent" ]
+    defines += [ "HISYSEVENT_ENABLE" ]
+  }
+
+  if (account_enable_dbms) {
+    external_deps += [ "os_account:os_account_innerkits" ]
+    defines += [ "ACCOUNT_ENABLE" ]
+  }
+}
+
+group("unittest") {
+  testonly = true
+  if (ability_runtime_enable_dbms) {
+    deps = [ ":DistributedBmsHostTest" ]
+  }
+}
