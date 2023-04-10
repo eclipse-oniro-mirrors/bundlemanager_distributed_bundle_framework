@@ -20,6 +20,7 @@
 
 #include "bundle_info.h"
 #include "bundle_mgr_interface.h"
+#include "dbms_device_manager.h"
 #include "distributed_bms_host.h"
 #include "distributed_monitor.h"
 #include "if_system_ability_manager.h"
@@ -36,6 +37,7 @@ class DistributedBms : public SystemAbility, public DistributedBmsHost {
 public:
     OHOS::sptr<OHOS::AppExecFwk::IBundleMgr> GetBundleMgr();
 
+    OHOS::sptr<DbmsDeviceManager> GetDeviceManager();
     /**
      * @brief get remote ability info
      * @param elementName Indicates the elementName.
@@ -109,7 +111,7 @@ public:
      */
     int32_t GetAbilityInfos(const std::vector<ElementName> &elementNames, const std::string &localeInfo,
         std::vector<RemoteAbilityInfo> &remoteAbilityInfos) override;
-    
+
     bool GetDistributedBundleInfo(const std::string &networkId, const std::string &bundleName,
         DistributedBundleInfo &distributedBundleInfo) override;
     
@@ -123,6 +125,8 @@ public:
     int32_t GetDistributedBundleName(const std::string &networkId,  uint32_t accessTokenId,
         std::string &bundleName) override;
 
+    int32_t GetUdidByNetworkId(const std::string &networkId, std::string &udid);
+
     /**
      * @brief Start the bundle manager service.
      * @return
@@ -133,12 +137,15 @@ public:
      * @return
      */
     virtual void OnStop() override;
+
 private:
     OHOS::sptr<OHOS::AppExecFwk::IBundleMgr> bundleMgr_;
+    std::shared_ptr<DbmsDeviceManager> dbmsDeviceManager_;
     std::shared_ptr<DistributedMonitor> distributedSub_;
     std::mutex bundleMgrMutex_;
 
     void Init();
+    void InitDeviceManager();
     bool GetMediaBase64(std::unique_ptr<uint8_t[]> &data, int64_t fileLength,
         std::string &imageType, std::string &value);
     std::unique_ptr<unsigned char[]> LoadResourceFile(std::string &path, int &len);

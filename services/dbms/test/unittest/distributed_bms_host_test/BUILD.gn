@@ -20,7 +20,10 @@ ohos_unittest("DistributedBmsHostTest") {
   module_out_path = module_output_path
   include_dirs = [ "${dbms_services_path}/include" ]
 
-  sources = [ "${dbms_services_path}/src/distributed_bms_host.cpp" ]
+  sources = [
+    "${dbms_services_path}/src/dbms_device_manager.cpp",
+    "${dbms_services_path}/src/distributed_bms_host.cpp",
+  ]
 
   sources += [
     "distributed_bms_host_test.cpp",
@@ -42,6 +45,7 @@ ohos_unittest("DistributedBmsHostTest") {
     "bundle_framework:appexecfwk_core",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "device_manager:devicemanagersdk",
     "hicollie_native:libhicollie",
     "hiviewdfx_hilog_native:libhilog",
     "i18n:intl_util",

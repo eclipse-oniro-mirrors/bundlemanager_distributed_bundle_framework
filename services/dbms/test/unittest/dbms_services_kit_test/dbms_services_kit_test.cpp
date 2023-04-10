@@ -23,6 +23,7 @@
 #include <fcntl.h>
 
 #include "appexecfwk_errors.h"
+#include "dbms_device_manager.h"
 #include "distributed_ability_info.h"
 #include "distributed_bms.h"
 #include "distributed_bms_interface.h"
@@ -1444,7 +1445,6 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0074, Function | SmallTest | L
     }
 }
 
-
 /**
  * @tc.number: DbmsServicesKitTest
  * @tc.name: test GetDistributedBundleName
@@ -1462,4 +1462,43 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0075, Function | SmallTest | L
     }
 }
 
+/**
+ * @tc.number: InitDeviceManager_0100
+ * @tc.name: test InitDeviceManager
+ * @tc.desc: isInit_ is true, return true.
+ */
+HWTEST_F(DbmsServicesKitTest, InitDeviceManager_0100, Function | SmallTest | Level0)
+{
+    DbmsDeviceManager deviceManager;
+    deviceManager.isInit_ = true;
+    bool res = deviceManager.InitDeviceManager();
+    EXPECT_TRUE(res);
+}
+
+/**
+ * @tc.number: InitDeviceManager_0200
+ * @tc.name: test InitDeviceManager
+ * @tc.desc: isInit_ is false, return true.
+ */
+HWTEST_F(DbmsServicesKitTest, InitDeviceManager_0200, Function | SmallTest | Level0)
+{
+    DbmsDeviceManager deviceManager;
+    deviceManager.isInit_ = false;
+    bool res = deviceManager.InitDeviceManager();
+    EXPECT_TRUE(res);
+}
+
+/**
+ * @tc.number: GetUdidByNetworkId_0100
+ * @tc.name: test GetUdidByNetworkId
+ * @tc.desc: GetUdidByNetworkId is false
+ */
+HWTEST_F(DbmsServicesKitTest, GetUdidByNetworkId_0100, Function | SmallTest | Level0)
+{
+    DbmsDeviceManager deviceManager;
+    std::string netWorkId = EMPTY_STRING;
+    std::string uid = EMPTY_STRING;
+    auto ret = deviceManager.GetUdidByNetworkId(netWorkId, uid);
+    EXPECT_FALSE(ret == -1);
+}
 } // OHOS

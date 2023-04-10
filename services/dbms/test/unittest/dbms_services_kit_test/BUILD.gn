@@ -26,6 +26,7 @@ ohos_unittest("DbmsServicesKitTest") {
   sources = [
     "${dbms_inner_api_path}/src/distributed_bms_proxy.cpp",
     "${dbms_services_path}/src/account_manager_helper.cpp",
+    "${dbms_services_path}/src/dbms_device_manager.cpp",
     "${dbms_services_path}/src/distributed_bms.cpp",
     "${dbms_services_path}/src/distributed_bms_host.cpp",
     "${dbms_services_path}/src/distributed_data_storage.cpp",
@@ -47,6 +48,7 @@ ohos_unittest("DbmsServicesKitTest") {
     "bundle_framework:appexecfwk_core",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
+    "device_manager:devicemanagersdk",
     "hicollie_native:libhicollie",
     "hiviewdfx_hilog_native:libhilog",
     "i18n:intl_util",
