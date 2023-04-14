@@ -147,6 +147,11 @@ int DistributedBmsHost::HandleGetRemoteAbilityInfos(Parcel &data, Parcel &reply)
 int DistributedBmsHost::HandleGetAbilityInfo(Parcel &data, Parcel &reply)
 {
     APP_LOGI("DistributedBmsHost handle get ability info");
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    if (!VerifySystemAppForTokenNative(callerToken) && !VerifySystemAppForTokenShell(callerToken)) {
+        APP_LOGE("caller is not native");
+        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
+    }
     std::unique_ptr<ElementName> elementName(data.ReadParcelable<ElementName>());
     if (!elementName) {
         APP_LOGE("ReadParcelable<elementName> failed");
@@ -173,6 +178,11 @@ int DistributedBmsHost::HandleGetAbilityInfo(Parcel &data, Parcel &reply)
 int DistributedBmsHost::HandleGetAbilityInfos(Parcel &data, Parcel &reply)
 {
     APP_LOGI("DistributedBmsHost handle get ability infos");
+    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    if (!VerifySystemAppForTokenNative(callerToken) && !VerifySystemAppForTokenShell(callerToken)) {
+        APP_LOGE("caller is not native");
+        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
+    }
     std::vector<ElementName> elementNames;
     if (!GetParcelableInfos<ElementName>(data, elementNames)) {
         APP_LOGE("GetRemoteAbilityInfos get parcelable infos failed");
