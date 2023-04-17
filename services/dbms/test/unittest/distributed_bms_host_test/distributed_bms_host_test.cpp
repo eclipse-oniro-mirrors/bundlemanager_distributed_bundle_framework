@@ -277,7 +277,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1100, Function | MediumTest | L
     MessageOption option;
 
     data.WriteInterfaceToken(DistributedBmsHost::GetDescriptor());
-    
+
     std::string networkId;
     std::string bundleName;
     data.WriteString(networkId);
@@ -301,7 +301,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1200, Function | MediumTest | L
     MessageOption option;
 
     data.WriteInterfaceToken(DistributedBmsHost::GetDescriptor());
-    
+
     std::string networkId;
     std::string bundleName;
     data.WriteString(networkId);
@@ -694,30 +694,6 @@ HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0400, Function |
     MockDistributedBmsHost host;
     int32_t res = host.HandleGetDistributedBundleName(data, reply);
     EXPECT_EQ(res, NO_ERROR);
-}
-
-/**
- * @tc.number: VerifyCallingPermission_0100
- * @tc.name: Test VerifyCallingPermission
- * @tc.desc: Verify the VerifyCallingPermission return true.
- */
-HWTEST_F(DistributedBmsHostTest, VerifyCallingPermission_0100, Function | MediumTest | Level1)
-{
-    MockDistributedBmsHost host;
-    int res = host.VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED);
-    EXPECT_TRUE(res);
-}
-
-/**
- * @tc.number: VerifyCallingPermission_0200
- * @tc.name: Test VerifyCallingPermission
- * @tc.desc: Verify the VerifyCallingPermission return false.
- */
-HWTEST_F(DistributedBmsHostTest, VerifyCallingPermission_0200, Function | MediumTest | Level1)
-{
-    MockDistributedBmsHost host;
-    int res = host.VerifyCallingPermission("");
-    EXPECT_FALSE(res);
 }
 
 /**

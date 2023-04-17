@@ -15,14 +15,11 @@
 
 #include "distributed_bms_host.h"
 
-#include "accesstoken_kit.h"
 #include "app_log_wrapper.h"
 #include "appexecfwk_errors.h"
 #include "bundle_constants.h"
 #include "bundle_memory_guard.h"
 #include "remote_ability_info.h"
-#include "ipc_skeleton.h"
-#include "tokenid_kit.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -78,14 +75,6 @@ int DistributedBmsHost::OnRemoteRequest(uint32_t code, MessageParcel &data, Mess
 int DistributedBmsHost::HandleGetRemoteAbilityInfo(Parcel &data, Parcel &reply)
 {
     APP_LOGI("DistributedBmsHost handle get remote ability info");
-    if (!VerifySystemApp()) {
-        APP_LOGE("verify system app failed");
-        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
-    }
-    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
-        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
-        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
-    }
     std::unique_ptr<ElementName> elementName(data.ReadParcelable<ElementName>());
     if (!elementName) {
         APP_LOGE("ReadParcelable<elementName> failed");
@@ -112,14 +101,6 @@ int DistributedBmsHost::HandleGetRemoteAbilityInfo(Parcel &data, Parcel &reply)
 int DistributedBmsHost::HandleGetRemoteAbilityInfos(Parcel &data, Parcel &reply)
 {
     APP_LOGI("DistributedBmsHost handle get remote ability infos");
-    if (!VerifySystemApp()) {
-        APP_LOGE("verify system app failed");
-        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
-    }
-    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
-        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
-        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
-    }
     std::vector<ElementName> elementNames;
     if (!GetParcelableInfos<ElementName>(data, elementNames)) {
         APP_LOGE("GetRemoteAbilityInfos get parcelable infos failed");
@@ -147,11 +128,6 @@ int DistributedBmsHost::HandleGetRemoteAbilityInfos(Parcel &data, Parcel &reply)
 int DistributedBmsHost::HandleGetAbilityInfo(Parcel &data, Parcel &reply)
 {
     APP_LOGI("DistributedBmsHost handle get ability info");
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    if (!VerifySystemAppForTokenNative(callerToken) && !VerifySystemAppForTokenShell(callerToken)) {
-        APP_LOGE("caller is not native");
-        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
-    }
     std::unique_ptr<ElementName> elementName(data.ReadParcelable<ElementName>());
     if (!elementName) {
         APP_LOGE("ReadParcelable<elementName> failed");
@@ -178,11 +154,6 @@ int DistributedBmsHost::HandleGetAbilityInfo(Parcel &data, Parcel &reply)
 int DistributedBmsHost::HandleGetAbilityInfos(Parcel &data, Parcel &reply)
 {
     APP_LOGI("DistributedBmsHost handle get ability infos");
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    if (!VerifySystemAppForTokenNative(callerToken) && !VerifySystemAppForTokenShell(callerToken)) {
-        APP_LOGE("caller is not native");
-        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
-    }
     std::vector<ElementName> elementNames;
     if (!GetParcelableInfos<ElementName>(data, elementNames)) {
         APP_LOGE("GetRemoteAbilityInfos get parcelable infos failed");
@@ -231,11 +202,6 @@ int DistributedBmsHost::HandleGetDistributedBundleInfo(Parcel &data, Parcel &rep
 int32_t DistributedBmsHost::HandleGetDistributedBundleName(Parcel &data, Parcel &reply)
 {
     APP_LOGD("DistributedBmsHost handle get distributedBundleName");
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    if (!VerifySystemAppForTokenNative(callerToken) && !VerifySystemAppForTokenShell(callerToken)) {
-        APP_LOGE("caller tokenType not native or shell, verify failed");
-        return ERR_APPEXECFWK_PARCEL_ERROR;
-    }
     std::string networkId = data.ReadString();
     uint32_t accessTokenId = data.ReadUint32();
     std::string bundleName;
@@ -245,69 +211,6 @@ int32_t DistributedBmsHost::HandleGetDistributedBundleName(Parcel &data, Parcel 
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
     return ret;
-}
-
-bool DistributedBmsHost::VerifyCallingPermission(const std::string &permissionName)
-{
-    APP_LOGD("VerifyCallingPermission permission %{public}s", permissionName.c_str());
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    if (VerifySystemAppForTokenNative(callerToken)) {
-        APP_LOGD("caller tokenType is native, verify success");
-        return true;
-    }
-    int32_t ret = OHOS::Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken, permissionName);
-    if (ret == OHOS::Security::AccessToken::PermissionState::PERMISSION_DENIED) {
-        APP_LOGE("permission %{public}s: PERMISSION_DENIED", permissionName.c_str());
-        return false;
-    }
-    APP_LOGD("verify permission success");
-    return true;
-}
-
-bool DistributedBmsHost::VerifySystemApp()
-{
-    APP_LOGI("verifying systemApp");
-    int32_t callingUid = IPCSkeleton::GetCallingUid();
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    if (VerifySystemAppForTokenNative(callerToken) || VerifySystemAppForTokenShell(callerToken)
-        || callingUid == Constants::ROOT_UID) {
-        APP_LOGI("caller tokenType is native or shell, verify success");
-        return true;
-    }
-    uint64_t accessTokenIdEx = IPCSkeleton::GetCallingFullTokenID();
-    if (!Security::AccessToken::TokenIdKit::IsSystemAppByFullTokenID(accessTokenIdEx)) {
-        APP_LOGE("non-system app calling system api");
-        return false;
-    }
-    return true;
-}
-
-bool DistributedBmsHost::VerifySystemAppForTokenNative(Security::AccessToken::AccessTokenID callerToken)
-{
-    APP_LOGD("verifying system app for native token");
-    Security::AccessToken::ATokenTypeEnum tokenType =
-        Security::AccessToken::AccessTokenKit::GetTokenTypeFlag(callerToken);
-    APP_LOGD("token type is %{public}d", static_cast<int32_t>(tokenType));
-    if (tokenType == Security::AccessToken::ATokenTypeEnum::TOKEN_NATIVE) {
-        APP_LOGI("caller tokenType is native, verify success");
-        return true;
-    }
-    APP_LOGE("caller tokenType not native, verify failed");
-    return false;
-}
-
-bool DistributedBmsHost::VerifySystemAppForTokenShell(Security::AccessToken::AccessTokenID callerToken)
-{
-    APP_LOGD("verifying system app for shell token");
-    Security::AccessToken::ATokenTypeEnum tokenType =
-        Security::AccessToken::AccessTokenKit::GetTokenTypeFlag(callerToken);
-    APP_LOGD("token type is %{public}d", static_cast<int32_t>(tokenType));
-    if (tokenType == Security::AccessToken::ATokenTypeEnum::TOKEN_SHELL) {
-        APP_LOGI("caller tokenType is shell, verify success");
-        return true;
-    }
-    APP_LOGE("caller tokenType not shell, verify failed");
-    return false;
 }
 
 template<typename T>
