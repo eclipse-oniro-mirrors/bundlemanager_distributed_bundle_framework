@@ -49,7 +49,7 @@ private:
     int32_t GetUdidByNetworkId(const std::string &networkId, std::string &udid);
     bool InnerSaveStorageDistributeInfo(const DistributedBundleInfo &distributedBundleInfo);
 private:
-    static std::recursive_mutex mutex_;
+    static std::mutex mutex_;
     static std::shared_ptr<DistributedDataStorage> instance_;
 
     const DistributedKv::AppId appId_ {Constants::APP_ID};

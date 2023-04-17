@@ -38,12 +38,12 @@ const uint32_t DEVICE_UDID_LENGTH = 65;
 }  // namespace
 
 std::shared_ptr<DistributedDataStorage> DistributedDataStorage::instance_ = nullptr;
-std::recursive_mutex DistributedDataStorage::mutex_;
+std::mutex DistributedDataStorage::mutex_;
 
 std::shared_ptr<DistributedDataStorage> DistributedDataStorage::GetInstance()
 {
     if (instance_ == nullptr) {
-        std::lock_guard<std::recursive_mutex> lock_l(mutex_);
+        std::lock_guard<std::mutex> lock_l(mutex_);
         if (instance_ == nullptr) {
             instance_ = std::make_shared<DistributedDataStorage>();
         }
