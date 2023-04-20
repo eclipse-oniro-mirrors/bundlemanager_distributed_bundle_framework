@@ -114,7 +114,7 @@ public:
 
     bool GetDistributedBundleInfo(const std::string &networkId, const std::string &bundleName,
         DistributedBundleInfo &distributedBundleInfo) override;
-    
+
     /**
      * @brief get distributedBundleName based on a given accessTokenId and networkId.
      * @param networkId Indicates the networkId of remote device.
@@ -154,6 +154,10 @@ private:
         const AbilityInfo &abilityInfo, int32_t userId, RemoteAbilityInfo &remoteAbilityInfo);
     int32_t Base64WithoutCompress(std::unique_ptr<uint8_t[]> &imageContent, size_t imageContentSize,
         RemoteAbilityInfo &remoteAbilityInfo);
+    bool VerifySystemApp();
+    bool VerifyTokenNative(Security::AccessToken::AccessTokenID callerToken);
+    bool VerifyTokenShell(Security::AccessToken::AccessTokenID callerToken);
+    bool VerifyCallingPermission(const std::string &permissionName);
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS

@@ -1501,4 +1501,30 @@ HWTEST_F(DbmsServicesKitTest, GetUdidByNetworkId_0100, Function | SmallTest | Le
     auto ret = deviceManager.GetUdidByNetworkId(netWorkId, uid);
     EXPECT_FALSE(ret == -1);
 }
+
+/**
+ * @tc.number: VerifyCallingPermission_0100
+ * @tc.name: Test VerifyCallingPermission
+ * @tc.desc: Verify the VerifyCallingPermission return true.
+ */
+HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0100, Function | MediumTest | Level1)
+{
+    auto distributedBms = GetDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    int res = distributedBms->VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED);
+    EXPECT_TRUE(res);
+}
+
+/**
+ * @tc.number: VerifyCallingPermission_0200
+ * @tc.name: Test VerifyCallingPermission
+ * @tc.desc: Verify the VerifyCallingPermission return false.
+ */
+HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0200, Function | MediumTest | Level1)
+{
+    auto distributedBms = GetDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    int res = distributedBms->VerifyCallingPermission("");
+    EXPECT_FALSE(res);
+}
 } // OHOS
