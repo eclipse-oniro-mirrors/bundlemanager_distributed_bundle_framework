@@ -39,5 +39,6 @@ ohos_shared_library("dbms_fwk") {
   ]
 
   part_name = "distributed_bundle_framework"
+  innerapi_tags = [ "platformsdk" ]
   subsystem_name = "bundlemanager"
 }
