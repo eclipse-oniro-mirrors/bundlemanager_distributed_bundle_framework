@@ -11,30 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//build/ohos.gni")
+import("../../dbms.gni")
 
-group("inner_api_target") {
-  deps = [ "interfaces/inner_api:dbms_fwk" ]
-}
-
-group("jsapi_target") {
-  deps = [
-    "interfaces/kits/js/distributebundlemgr:jsapi_target",
-    "interfaces/kits/js/distributedBundle:jsapi_target",
-  ]
-}
-
-group("dbms_target") {
-  deps = [
-    "services/dbms:dbms_target",
-    "services/dbms/sa_profile:distributedbms",
-  ]
-}
-
-group("test_target") {
+group("fuzztest") {
   testonly = true
-  deps = [
-    "services/dbms/test:unittest",
-    "test/fuzztest:fuzztest",
+  deps = []
+
+  deps += [
+    # deps file
+    "distributedbmshost_fuzzer:DistributedBmsHostFuzzTest",
   ]
 }

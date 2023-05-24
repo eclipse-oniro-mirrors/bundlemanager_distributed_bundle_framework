@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 
+#include "appexecfwk_errors.h"
 #include "distributed_bundle_info.h"
 #include "element_name.h"
 #include "iremote_broker.h"
@@ -37,7 +38,10 @@ public:
      * @return Returns result code when get remote ability info.
      */
     virtual int32_t GetRemoteAbilityInfo(
-        const OHOS::AppExecFwk::ElementName &elementName, RemoteAbilityInfo &remoteAbilityInfo) = 0;
+        const OHOS::AppExecFwk::ElementName &elementName, RemoteAbilityInfo &remoteAbilityInfo)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     /**
      * @brief get remote ability info
@@ -47,7 +51,10 @@ public:
      * @return Returns result code when get remote ability info.
      */
     virtual int32_t GetRemoteAbilityInfo(const OHOS::AppExecFwk::ElementName &elementName,
-        const std::string &localeInfo, RemoteAbilityInfo &remoteAbilityInfo) = 0;
+        const std::string &localeInfo, RemoteAbilityInfo &remoteAbilityInfo)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     /**
      * @brief get remote ability infos
@@ -56,7 +63,10 @@ public:
      * @return Returns result code when get remote ability infos.
      */
     virtual int32_t GetRemoteAbilityInfos(
-        const std::vector<ElementName> &elementNames, std::vector<RemoteAbilityInfo> &remoteAbilityInfos) = 0;
+        const std::vector<ElementName> &elementNames, std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     /**
      * @brief get remote ability infos
@@ -66,7 +76,10 @@ public:
      * @return Returns result code when get remote ability infos.
      */
     virtual int32_t GetRemoteAbilityInfos(const std::vector<ElementName> &elementNames, const std::string &localeInfo,
-        std::vector<RemoteAbilityInfo> &remoteAbilityInfos) = 0;
+        std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     /**
      * @brief get ability info
@@ -75,7 +88,10 @@ public:
      * @return Returns result code when get ability info.
      */
     virtual int32_t GetAbilityInfo(
-        const OHOS::AppExecFwk::ElementName &elementName, RemoteAbilityInfo &remoteAbilityInfo) = 0;
+        const OHOS::AppExecFwk::ElementName &elementName, RemoteAbilityInfo &remoteAbilityInfo)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     /**
      * @brief get ability info
@@ -85,7 +101,10 @@ public:
      * @return Returns result code when get ability info.
      */
     virtual int32_t GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elementName, const std::string &localeInfo,
-        RemoteAbilityInfo &remoteAbilityInfo) = 0;
+        RemoteAbilityInfo &remoteAbilityInfo)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     /**
      * @brief get ability infos
@@ -94,7 +113,10 @@ public:
      * @return Returns result code when get ability infos.
      */
     virtual int32_t GetAbilityInfos(
-        const std::vector<ElementName> &elementNames, std::vector<RemoteAbilityInfo> &remoteAbilityInfos) = 0;
+        const std::vector<ElementName> &elementNames, std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     /**
      * @brief get ability infos
@@ -104,10 +126,16 @@ public:
      * @return Returns result code when get ability infos.
      */
     virtual int32_t GetAbilityInfos(const std::vector<ElementName> &elementNames, const std::string &localeInfo,
-        std::vector<RemoteAbilityInfo> &remoteAbilityInfos) = 0;
+        std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     virtual bool GetDistributedBundleInfo(const std::string &networkId, const std::string &bundleName,
-        DistributedBundleInfo &distributedBundleInfo) = 0;
+        DistributedBundleInfo &distributedBundleInfo)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     /**
      * @brief get distributedBundleName based on a given accessTokenId and networkId.
@@ -117,7 +145,10 @@ public:
      * @return Returns ERR_OK on success, others on failure when get distributed bundle name.
      */
     virtual int32_t GetDistributedBundleName(const std::string &networkId, uint32_t accessTokenId,
-        std::string &bundleName) = 0;
+        std::string &bundleName)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 
     enum class Message {
         GET_REMOTE_ABILITY_INFO = 0,
