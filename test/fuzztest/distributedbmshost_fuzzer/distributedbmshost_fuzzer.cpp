@@ -13,12 +13,12 @@
  * limitations under the License.
  */
 
-#include "distributed_bms_host.h"
+#include "distributedbmshost_fuzzer.h"
 
 #include <cstddef>
 #include <cstdint>
 
-#include "distributedbmshost_fuzzer.h"
+#include "distributed_bms_host.h"
 #include "securec.h"
 
 using namespace OHOS::AppExecFwk;
