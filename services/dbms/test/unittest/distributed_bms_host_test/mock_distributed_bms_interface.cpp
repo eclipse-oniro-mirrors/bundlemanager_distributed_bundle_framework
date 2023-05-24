@@ -78,6 +78,5 @@ int32_t MockDistributedBmsHost::GetDistributedBundleName(const std::string &netw
 {
     return 0;
 }
-
 } // namespace AppExecFwk
 } // namespace OHOS
