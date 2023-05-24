@@ -94,13 +94,15 @@ void DbmsServicesKitTest::TearDownTestCase()
 void DbmsServicesKitTest::SetUp()
 {
     std::string strExtra = std::to_string(402);
-    ServiceControlWithExtra("d-bms", START, &(strExtra.c_str()), 1);
+    const char *argv[] = {strExtra};
+    ServiceControlWithExtra("d-bms", START, argv, 1);
 }
 
 void DbmsServicesKitTest::TearDown()
 {
     std::string strExtra = std::to_string(402);
-    ServiceControlWithExtra("d-bms", STOP, &(strExtra.c_str()), 1);
+    const char *argv[] = {strExtra};
+    ServiceControlWithExtra("d-bms", STOP, argv, 1);
 }
 
 std::shared_ptr<DistributedBms> DbmsServicesKitTest::GetDistributedBms()
