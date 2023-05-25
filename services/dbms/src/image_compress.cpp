@@ -50,6 +50,8 @@ namespace {
     constexpr int32_t INDEX_ONE = 1;
     constexpr int32_t INDEX_TWO = 2;
     constexpr int32_t INDEX_THREE = 3;
+    constexpr int32_t EMPTY_FILE_SIZE = 0;
+    constexpr double FILE_SIZE_ERR = -1.0;
 }
 bool ImageCompress::IsPathValid(const std::string &srcPath)
 {
@@ -67,6 +69,9 @@ bool ImageCompress::IsImageNeedCompressBySize(size_t fileSize)
 
 double ImageCompress::CalculateRatio(size_t fileSize, const std::string &imageType)
 {
+    if (fileSize == EMPTY_FILE_SIZE) {
+        return FILE_SIZE_ERR;
+    }
     if (imageType == WEBP_FORMAT) {
         return sqrt(static_cast<double>(WEBP_COMPRESS_SIZE) / fileSize);
     }
@@ -155,7 +160,11 @@ bool ImageCompress::CompressImageByContent(const std::unique_ptr<uint8_t[]> &fil
         return false;
     }
     double ratio = CalculateRatio(fileSize, imageType);
-    APP_LOGE("ratio is %{public}f", ratio);
+    if (ratio == FILE_SIZE_ERR) {
+        APP_LOGE("CalculateRatio failed: ratio is %{public}f", ratio);
+        return false;
+    }
+    APP_LOGD("ratio is %{public}f", ratio);
     pixMap->scale(ratio, ratio);
     Media::ImagePacker imagePacker;
     Media::PackOption packOption;
