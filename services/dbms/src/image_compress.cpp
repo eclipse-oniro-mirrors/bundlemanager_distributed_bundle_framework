@@ -164,7 +164,7 @@ bool ImageCompress::CompressImageByContent(const std::unique_ptr<uint8_t[]> &fil
         APP_LOGE("CalculateRatio failed: ratio is %{public}f", ratio);
         return false;
     }
-    APP_LOGE("ratio is %{public}f", ratio);
+    APP_LOGD("ratio is %{public}f", ratio);
     pixMap->scale(ratio, ratio);
     Media::ImagePacker imagePacker;
     Media::PackOption packOption;
