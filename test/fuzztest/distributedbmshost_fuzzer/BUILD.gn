@@ -33,15 +33,13 @@ ohos_fuzztest("DistributedBmsHostFuzzTest") {
   sources = [ "${dbms_services_path}/src/distributed_bms_host.cpp" ]
   sources += [ "distributedbmshost_fuzzer.cpp" ]
 
-  deps = [
-    "${common_path}:libappexecfwk_common",
-    "${dbms_inner_api_path}:dbms_fwk",
-  ]
+  deps = [ "${dbms_inner_api_path}:dbms_fwk" ]
   external_deps = [
     "ability_base:want",
     "access_token:libaccesstoken_sdk",
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
+    "bundle_framework:libappexecfwk_common",
     "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",

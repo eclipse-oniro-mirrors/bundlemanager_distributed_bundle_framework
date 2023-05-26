@@ -27,14 +27,12 @@ ohos_shared_library("distributedbundle") {
 
   configs = [ "${dbms_services_path}:distributed_bms_config" ]
 
-  deps = [
-    "${common_path}:libappexecfwk_common",
-    "${dbms_inner_api_path}:dbms_fwk",
-  ]
+  deps = [ "${dbms_inner_api_path}:dbms_fwk" ]
 
   external_deps = [
     "ability_base:want",
     "bundle_framework:appexecfwk_base",
+    "bundle_framework:libappexecfwk_common",
     "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",
