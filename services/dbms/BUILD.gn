@@ -41,10 +41,7 @@ ohos_shared_library("libdbms") {
 
   configs = [ ":distributed_bms_config" ]
 
-  deps = [
-    "${common_path}:libappexecfwk_common",
-    "${dbms_inner_api_path}:dbms_fwk",
-  ]
+  deps = [ "${dbms_inner_api_path}:dbms_fwk" ]
 
   external_deps = [
     "ability_base:want",
@@ -52,6 +49,7 @@ ohos_shared_library("libdbms") {
     "access_token:libtokenid_sdk",
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
+    "bundle_framework:libappexecfwk_common",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "device_manager:devicemanagersdk",

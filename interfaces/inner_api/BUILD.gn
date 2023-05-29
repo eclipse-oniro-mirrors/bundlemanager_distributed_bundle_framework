@@ -28,11 +28,10 @@ ohos_shared_library("dbms_fwk") {
 
   public_configs = [ ":dbms_fwk_config" ]
 
-  deps = [ "${common_path}:libappexecfwk_common" ]
-
   external_deps = [
     "ability_base:want",
     "bundle_framework:appexecfwk_base",
+    "bundle_framework:libappexecfwk_common",
     "c_utils:utils",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_core",

@@ -31,7 +31,6 @@ ohos_unittest("DistributedBmsHostTest") {
   ]
 
   deps = [
-    "${common_path}:libappexecfwk_common",
     "${dbms_inner_api_path}:dbms_fwk",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
@@ -43,6 +42,7 @@ ohos_unittest("DistributedBmsHostTest") {
     "access_token:libtokenid_sdk",
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
+    "bundle_framework:libappexecfwk_common",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "device_manager:devicemanagersdk",
