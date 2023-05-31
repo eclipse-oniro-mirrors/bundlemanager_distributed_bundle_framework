@@ -149,19 +149,6 @@ public:
     {
         return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
     }
-
-    enum class Message {
-        GET_REMOTE_ABILITY_INFO = 0,
-        GET_REMOTE_ABILITY_INFOS,
-        GET_ABILITY_INFO,
-        GET_ABILITY_INFOS,
-        GET_REMOTE_ABILITY_INFO_WITH_LOCALE,
-        GET_REMOTE_ABILITY_INFOS_WITH_LOCALE,
-        GET_ABILITY_INFO_WITH_LOCALE,
-        GET_ABILITY_INFOS_WITH_LOCALE,
-        GET_DISTRIBUTED_BUNDLE_INFO,
-        GET_DISTRIBUTED_BUNDLE_NAME,
-    };
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS

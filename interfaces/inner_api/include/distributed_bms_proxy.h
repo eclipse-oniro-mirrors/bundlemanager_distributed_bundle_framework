@@ -20,6 +20,7 @@
 
 #include "distributed_bms_interface.h"
 #include "iremote_proxy.h"
+#include "distributed_bundle_ipc_interface_code.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -117,13 +118,13 @@ public:
     int32_t GetDistributedBundleName(const std::string &networkId, uint32_t accessTokenId,
         std::string &bundleName) override;
 private:
-    int32_t SendRequest(IDistributedBms::Message code, MessageParcel &data, MessageParcel &reply);
+    int32_t SendRequest(DistributedInterfaceCode code, MessageParcel &data, MessageParcel &reply);
     template<typename T>
     bool WriteParcelableVector(const std::vector<T> &parcelableVector, Parcel &data);
     template <typename T>
-    int32_t GetParcelableInfo(IDistributedBms::Message code, MessageParcel &data, T &parcelableInfo);
+    int32_t GetParcelableInfo(DistributedInterfaceCode code, MessageParcel &data, T &parcelableInfo);
     template <typename T>
-    int32_t GetParcelableInfos(IDistributedBms::Message code, MessageParcel &data, std::vector<T> &parcelableInfos);
+    int32_t GetParcelableInfos(DistributedInterfaceCode code, MessageParcel &data, std::vector<T> &parcelableInfos);
     int32_t CheckElementName(const ElementName &elementName);
     static inline BrokerDelegator<DistributedBmsProxy> delegator_;
 };

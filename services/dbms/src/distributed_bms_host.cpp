@@ -20,6 +20,7 @@
 #include "bundle_constants.h"
 #include "bundle_memory_guard.h"
 #include "remote_ability_info.h"
+#include "distributed_bundle_ipc_interface_code.h"
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -49,21 +50,21 @@ int DistributedBmsHost::OnRemoteRequest(uint32_t code, MessageParcel &data, Mess
         return ERR_INVALID_STATE;
     }
     switch (code) {
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_REMOTE_ABILITY_INFO):
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_REMOTE_ABILITY_INFO_WITH_LOCALE):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_REMOTE_ABILITY_INFO):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_REMOTE_ABILITY_INFO_WITH_LOCALE):
             return HandleGetRemoteAbilityInfo(data, reply);
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_REMOTE_ABILITY_INFOS):
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_REMOTE_ABILITY_INFOS_WITH_LOCALE):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_REMOTE_ABILITY_INFOS):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_REMOTE_ABILITY_INFOS_WITH_LOCALE):
             return HandleGetRemoteAbilityInfos(data, reply);
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_ABILITY_INFO):
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_ABILITY_INFO_WITH_LOCALE):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_ABILITY_INFO):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_ABILITY_INFO_WITH_LOCALE):
             return HandleGetAbilityInfo(data, reply);
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_ABILITY_INFOS):
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_ABILITY_INFOS_WITH_LOCALE):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_ABILITY_INFOS):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_ABILITY_INFOS_WITH_LOCALE):
             return HandleGetAbilityInfos(data, reply);
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_DISTRIBUTED_BUNDLE_INFO):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_DISTRIBUTED_BUNDLE_INFO):
             return HandleGetDistributedBundleInfo(data, reply);
-        case static_cast<uint32_t>(IDistributedBms::Message::GET_DISTRIBUTED_BUNDLE_NAME):
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_DISTRIBUTED_BUNDLE_NAME):
             return HandleGetDistributedBundleName(data, reply);
         default:
             APP_LOGW("DistributedBmsHost receives unknown code, code = %{public}d", code);

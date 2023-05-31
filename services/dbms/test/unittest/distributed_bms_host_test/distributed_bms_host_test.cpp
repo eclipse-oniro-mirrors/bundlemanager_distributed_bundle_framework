@@ -19,6 +19,7 @@
 
 #include "appexecfwk_errors.h"
 #include "distributed_bms_proxy.h"
+#include "distributed_bundle_ipc_interface_code.h"
 #undef private
 #include "mock_distributed_bms_interface.h"
 
@@ -59,7 +60,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0100, Function | MediumTest | L
 
     MockDistributedBmsHost host;
     int res = host.OnRemoteRequest(static_cast<uint32_t>
-        (IDistributedBms::Message::GET_REMOTE_ABILITY_INFO), data, reply, option);
+        (DistributedInterfaceCode::GET_REMOTE_ABILITY_INFO), data, reply, option);
     EXPECT_EQ(res, ERR_INVALID_STATE);
 }
 
@@ -78,7 +79,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0200, Function | MediumTest | L
     AppExecFwk::ElementName elementName;
     data.WriteParcelable(&elementName);
     MockDistributedBmsHost host;
-    int res = host.OnRemoteRequest(static_cast<uint32_t>(IDistributedBms::Message::GET_REMOTE_ABILITY_INFO),
+    int res = host.OnRemoteRequest(static_cast<uint32_t>(DistributedInterfaceCode::GET_REMOTE_ABILITY_INFO),
         data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
@@ -98,7 +99,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0300, Function | MediumTest | L
     AppExecFwk::ElementName elementName;
     data.WriteParcelable(&elementName);
     MockDistributedBmsHost host;
-    int res = host.OnRemoteRequest(static_cast<uint32_t>(IDistributedBms::Message::GET_REMOTE_ABILITY_INFO_WITH_LOCALE),
+    int res = host.OnRemoteRequest(static_cast<uint32_t>(DistributedInterfaceCode::GET_REMOTE_ABILITY_INFO_WITH_LOCALE),
         data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
@@ -122,7 +123,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0400, Function | MediumTest | L
     data.WriteString(localeInfo);
     MockDistributedBmsHost host;
     int res = host.OnRemoteRequest(static_cast<uint32_t>
-        (IDistributedBms::Message::GET_REMOTE_ABILITY_INFOS), data, reply, option);
+        (DistributedInterfaceCode::GET_REMOTE_ABILITY_INFOS), data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
 
@@ -145,7 +146,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0500, Function | MediumTest | L
     data.WriteString(localeInfo);
     MockDistributedBmsHost host;
     int res = host.OnRemoteRequest(static_cast<uint32_t>
-        (IDistributedBms::Message::GET_REMOTE_ABILITY_INFOS_WITH_LOCALE), data, reply, option);
+        (DistributedInterfaceCode::GET_REMOTE_ABILITY_INFOS_WITH_LOCALE), data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
 
@@ -168,7 +169,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0600, Function | MediumTest | L
     data.WriteString(localeInfo);
     MockDistributedBmsHost host;
     int res = host.OnRemoteRequest(static_cast<uint32_t>
-        (IDistributedBms::Message::GET_REMOTE_ABILITY_INFOS_WITH_LOCALE), data, reply, option);
+        (DistributedInterfaceCode::GET_REMOTE_ABILITY_INFOS_WITH_LOCALE), data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
 
@@ -190,7 +191,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0700, Function | MediumTest | L
     data.WriteString(localeInfo);
     MockDistributedBmsHost host;
     int res = host.OnRemoteRequest(static_cast<uint32_t>
-        (IDistributedBms::Message::GET_ABILITY_INFO), data, reply, option);
+        (DistributedInterfaceCode::GET_ABILITY_INFO), data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
 
@@ -213,7 +214,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0800, Function | MediumTest | L
 
     MockDistributedBmsHost host;
     int res = host.OnRemoteRequest(static_cast<uint32_t>
-        (IDistributedBms::Message::GET_ABILITY_INFO_WITH_LOCALE), data, reply, option);
+        (DistributedInterfaceCode::GET_ABILITY_INFO_WITH_LOCALE), data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
 
@@ -237,7 +238,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0900, Function | MediumTest | L
 
     MockDistributedBmsHost host;
     int res = host.OnRemoteRequest(static_cast<uint32_t>
-        (IDistributedBms::Message::GET_ABILITY_INFOS), data, reply, option);
+        (DistributedInterfaceCode::GET_ABILITY_INFOS), data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
 
@@ -261,7 +262,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1000, Function | MediumTest | L
 
     MockDistributedBmsHost host;
     int res = host.OnRemoteRequest(static_cast<uint32_t>
-        (IDistributedBms::Message::GET_ABILITY_INFOS_WITH_LOCALE), data, reply, option);
+        (DistributedInterfaceCode::GET_ABILITY_INFOS_WITH_LOCALE), data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
 
@@ -285,7 +286,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1100, Function | MediumTest | L
 
     MockDistributedBmsHost host;
     int res = host.OnRemoteRequest(static_cast<uint32_t>
-        (IDistributedBms::Message::GET_DISTRIBUTED_BUNDLE_INFO), data, reply, option);
+        (DistributedInterfaceCode::GET_DISTRIBUTED_BUNDLE_INFO), data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
 
