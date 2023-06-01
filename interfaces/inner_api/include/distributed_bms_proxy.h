@@ -19,8 +19,8 @@
 #include <string>
 
 #include "distributed_bms_interface.h"
-#include "iremote_proxy.h"
 #include "distributed_bundle_ipc_interface_code.h"
+#include "iremote_proxy.h"
 
 namespace OHOS {
 namespace AppExecFwk {

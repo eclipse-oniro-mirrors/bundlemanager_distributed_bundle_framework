@@ -12,4 +12,4 @@
 # limitations under the License.
 
 # any change to xxx_ipc_interface_code.h needs to be reviewed by @leochan5
-interfaces/inner_api/include/distributed_bundle_ipc_interface_code.h @leochan5
+interfaces/inner_api/include/distributed_bundle_ipc_interface_code.h @leonchan5

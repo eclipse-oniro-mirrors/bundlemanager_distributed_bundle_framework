@@ -19,8 +19,8 @@
 #include "appexecfwk_errors.h"
 #include "bundle_constants.h"
 #include "bundle_memory_guard.h"
-#include "remote_ability_info.h"
 #include "distributed_bundle_ipc_interface_code.h"
+#include "remote_ability_info.h"
 
 namespace OHOS {
 namespace AppExecFwk {
