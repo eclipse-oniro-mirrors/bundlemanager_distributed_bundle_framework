@@ -235,6 +235,8 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
             return OHOS::NO_ERROR;
         }
     }
+    APP_LOGE("get distributed bundleName no matching data: %{private}s %{private}s %{private}d",
+        networkId.c_str(), udid.c_str(), accessTokenId);
     return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
 }
 
