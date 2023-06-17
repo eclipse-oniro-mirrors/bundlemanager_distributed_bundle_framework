@@ -33,7 +33,7 @@ ohos_shared_library("dbms_fwk") {
     "bundle_framework:appexecfwk_base",
     "bundle_framework:libappexecfwk_common",
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 

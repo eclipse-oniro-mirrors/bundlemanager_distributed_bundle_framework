@@ -54,7 +54,7 @@ ohos_shared_library("libdbms") {
     "common_event_service:cesfwk_innerkits",
     "device_manager:devicemanagersdk",
     "hicollie_native:libhicollie",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "i18n:intl_util",
     "init:libbegetutil",
     "ipc:ipc_core",
@@ -67,7 +67,7 @@ ohos_shared_library("libdbms") {
 
   if (hisysevent_enable_dbms) {
     sources += [ "src/event_report.cpp" ]
-    external_deps += [ "hisysevent_native:libhisysevent" ]
+    external_deps += [ "hisysevent:libhisysevent" ]
     defines += [ "HISYSEVENT_ENABLE" ]
   }
 
