@@ -38,7 +38,7 @@
                 "samgr",
                 "common_event_service",
                 "device_manager",
-                "hicollie_native",
+                "hicollie",
                 "init",
                 "kv_store"
             ],
