@@ -47,7 +47,7 @@ ohos_unittest("DbmsServicesKitTest") {
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "device_manager:devicemanagersdk",
-    "hicollie_native:libhicollie",
+    "hicollie:libhicollie",
     "hilog:libhilog",
     "i18n:intl_util",
     "init:libbegetutil",
