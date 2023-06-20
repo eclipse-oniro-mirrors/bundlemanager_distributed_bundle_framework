@@ -41,7 +41,7 @@ ohos_fuzztest("DistributedBmsHostFuzzTest") {
     "bundle_framework:appexecfwk_core",
     "bundle_framework:libappexecfwk_common",
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 }

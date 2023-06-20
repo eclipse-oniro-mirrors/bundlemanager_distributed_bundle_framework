@@ -34,7 +34,7 @@ ohos_shared_library("distributedbundle") {
     "bundle_framework:appexecfwk_base",
     "bundle_framework:libappexecfwk_common",
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "napi:ace_napi",
     "samgr:samgr_proxy",
