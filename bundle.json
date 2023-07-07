@@ -30,7 +30,7 @@
                 "hilog",
                 "i18n",
                 "ipc",
-                "multimedia_image_framework",
+                "image_framework",
                 "napi",
                 "os_account",
                 "resource_management",
