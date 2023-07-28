@@ -25,6 +25,11 @@
 
 namespace OHOS {
 namespace AppExecFwk {
+namespace {
+// distributed database
+static const char* APP_ID = "bundle_manager_service";
+static const char* DISTRIBUTE_DATA_STORE_ID = "distribute_bundle_datas";
+}
 class DistributedDataStorage {
 public:
     DistributedDataStorage();
@@ -52,8 +57,8 @@ private:
     static std::mutex mutex_;
     static std::shared_ptr<DistributedDataStorage> instance_;
 
-    const DistributedKv::AppId appId_ {Constants::APP_ID};
-    const DistributedKv::StoreId storeId_ {Constants::DISTRIBUTE_DATA_STORE_ID};
+    const DistributedKv::AppId appId_ {APP_ID};
+    const DistributedKv::StoreId storeId_ {DISTRIBUTE_DATA_STORE_ID};
     DistributedKv::DistributedKvDataManager dataManager_;
     std::shared_ptr<DistributedKv::SingleKvStore> kvStorePtr_;
     mutable std::mutex kvStorePtrMutex_;
