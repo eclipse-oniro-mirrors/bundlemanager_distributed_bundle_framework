@@ -31,7 +31,6 @@ ohos_shared_library("libdbms") {
     "src/distributed_bms.cpp",
     "src/distributed_bms_host.cpp",
     "src/distributed_data_storage.cpp",
-    "src/image_compress.cpp",
   ]
 
   defines = [
@@ -56,7 +55,6 @@ ohos_shared_library("libdbms") {
     "hicollie:libhicollie",
     "hilog:libhilog",
     "i18n:intl_util",
-    "image_framework:image_native",
     "init:libbegetutil",
     "ipc:ipc_core",
     "kv_store:distributeddata_inner",
@@ -74,6 +72,12 @@ ohos_shared_library("libdbms") {
   if (account_enable_dbms) {
     external_deps += [ "os_account:os_account_innerkits" ]
     defines += [ "ACCOUNT_ENABLE" ]
+  }
+
+  if (image_framework_enable) {
+    sources += [ "src/image_compress.cpp" ]
+    external_deps += [ "image_framework:image_native" ]
+    defines += [ "IMAGE_FRAMEWORK" ]
   }
 
   shlib_type = "sa"

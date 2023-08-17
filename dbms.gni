@@ -28,6 +28,7 @@ declare_args() {
   account_enable_dbms = true
   distributed_bundle_framework_enable = true
   hisysevent_enable_dbms = true
+  image_framework_enable = false
 
   if (defined(global_parts_info) &&
       !defined(global_parts_info.ability_ability_runtime)) {
@@ -48,6 +49,11 @@ declare_args() {
       !defined(global_parts_info.hiviewdfx_hisysevent_native)) {
     hisysevent_enable_dbms = false
   }
+
+  if (defined(global_parts_info) &&
+      !defined(global_parts_info.multimedia_image_framework)) {
+    image_framework_enable = false
+  }
 }
 
 print("distributed_bundle_framework_graphics = " +
@@ -57,3 +63,4 @@ print("account_enable_dbms = " + "$account_enable_dbms")
 print("distributed_bundle_framework_enable = " +
       "$distributed_bundle_framework_enable")
 print("hisysevent_enable_dbms = " + "$hisysevent_enable_dbms")
+print("image_framework_enable = " + "$image_framework_enable")

@@ -32,7 +32,9 @@
 #include "distributed_module_info.h"
 #include "element_name.h"
 #include "event_report.h"
+#ifdef IMAGE_FRAMEWORK
 #include "image_compress.h"
+#endif
 #include "json_util.h"
 #include "service_control.h"
 
@@ -631,6 +633,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0023, Function | SmallTest | L
     }
 }
 
+#ifdef IMAGE_FRAMEWORK
 /**
  * @tc.number: DbmsServicesKitTest
  * @tc.name: test IsPathValid
@@ -707,6 +710,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0034, Function | SmallTest | L
         EXPECT_EQ(res, false);
     }
 }
+#endif
 
 #ifdef HISYSEVENT_ENABLE
 /**
@@ -1015,6 +1019,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0052, Function | SmallTest | L
     }
 }
 
+#ifdef IMAGE_FRAMEWORK
 /**
  * @tc.number: DbmsServicesKitTest_0053
  * @tc.name: test IsPathValid
@@ -1342,6 +1347,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0069, Function | SmallTest | L
         EXPECT_EQ(res, false);
     }
 }
+#endif
 
 /**
  * @tc.number: DbmsServicesKitTest_0070

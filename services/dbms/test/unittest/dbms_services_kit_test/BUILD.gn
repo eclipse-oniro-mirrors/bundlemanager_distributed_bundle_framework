@@ -30,7 +30,6 @@ ohos_unittest("DbmsServicesKitTest") {
     "${dbms_services_path}/src/distributed_bms.cpp",
     "${dbms_services_path}/src/distributed_bms_host.cpp",
     "${dbms_services_path}/src/distributed_data_storage.cpp",
-    "${dbms_services_path}/src/image_compress.cpp",
   ]
 
   sources += [ "dbms_services_kit_test.cpp" ]
@@ -50,7 +49,6 @@ ohos_unittest("DbmsServicesKitTest") {
     "hicollie:libhicollie",
     "hilog:libhilog",
     "i18n:intl_util",
-    "image_framework:image_native",
     "init:libbegetutil",
     "ipc:ipc_core",
     "kv_store:distributeddata_inner",
@@ -70,11 +68,17 @@ ohos_unittest("DbmsServicesKitTest") {
     external_deps += [ "os_account:os_account_innerkits" ]
     defines += [ "ACCOUNT_ENABLE" ]
   }
+
+  if (image_framework_enable) {
+    sources += [ "${dbms_services_path}/src/image_compress.cpp" ]
+    external_deps += [ "image_framework:image_native" ]
+    defines += [ "IMAGE_FRAMEWORK" ]
+  }
 }
 
 group("unittest") {
   testonly = true
-  if (ability_runtime_enable_dbms) {
+  if (ability_runtime_enable_dbms && image_framework_enable) {
     deps = [ ":DbmsServicesKitTest" ]
   }
 }
