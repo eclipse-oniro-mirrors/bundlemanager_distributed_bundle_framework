@@ -72,7 +72,10 @@ static OHOS::sptr<OHOS::AppExecFwk::IDistributedBms> GetDistributedBundleMgr()
 {
     APP_LOGI("GetDistributedBundleMgr");
     auto samgr = OHOS::SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
-    // OHOS::sptr<OHOS::IRemoteObject> remoteObject;
+    if (samgr == nullptr) {
+        APP_LOGE("GetSystemAbilityManager failed, samgr is nullptr.");
+        return nullptr;
+    }
     auto remoteObject = samgr->GetSystemAbility(OHOS::DISTRIBUTED_BUNDLE_MGR_SERVICE_SYS_ABILITY_ID);
     return OHOS::iface_cast<IDistributedBms>(remoteObject);
 }
