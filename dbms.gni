@@ -45,7 +45,7 @@ declare_args() {
   }
 
   if (defined(global_parts_info) &&
-      !defined(global_parts_info.hiviewdfx_hisysevent_native)) {
+      !defined(global_parts_info.hiviewdfx_hisysevent)) {
     hisysevent_enable_dbms = false
   }
 }
