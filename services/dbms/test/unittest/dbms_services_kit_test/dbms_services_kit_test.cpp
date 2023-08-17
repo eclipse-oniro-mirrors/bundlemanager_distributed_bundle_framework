@@ -22,6 +22,7 @@
 #include <string>
 #include <fcntl.h>
 
+#include "accesstoken_kit.h"
 #include "appexecfwk_errors.h"
 #include "dbms_device_manager.h"
 #include "distributed_ability_info.h"
@@ -34,7 +35,10 @@
 #include "event_report.h"
 #include "image_compress.h"
 #include "json_util.h"
+#include "nativetoken_kit.h"
+#include "token_setproc.h"
 #include "service_control.h"
+#include "softbus_common.h"
 
 using namespace testing::ext;
 using namespace std::chrono_literals;
@@ -93,6 +97,26 @@ void DbmsServicesKitTest::TearDownTestCase()
 
 void DbmsServicesKitTest::SetUp()
 {
+    const int32_t PERMS_NUM = 3;
+    const int32_t PERMS_INDEX_TWO = 2;
+    uint64_t tokenId;
+    const char *perms[PERMS_NUM];
+    perms[0] = OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER;
+    perms[1] = OHOS_PERMISSION_DISTRIBUTED_DATASYNC;
+    perms[PERMS_INDEX_TWO] = "ohos.permission.ACCESS_SERVICE_DM";
+    NativeTokenInfoParams infoInstance = {
+        .dcapsNum = 0,
+        .permsNum = PERMS_NUM,
+        .aclsNum = 0,
+        .dcaps = NULL,
+        .perms = perms,
+        .acls = NULL,
+        .processName = "dsoftbus_service",
+        .aplStr = "system_core",
+    };
+    tokenId = GetAccessTokenId(&infoInstance);
+    SetSelfTokenID(tokenId);
+    OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
     std::string strExtra = std::to_string(402);
     auto extraArgv = strExtra.c_str();
     ServiceControlWithExtra("d-bms", START, &extraArgv, 1);
@@ -279,7 +303,11 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0007, Function | SmallTest | L
         name.SetAbilityName(WRONG_ABILITY_NAME);
         RemoteAbilityInfo info;
         auto ret = distributedBms->GetAbilityInfo(name, info);
+    #ifdef USE_NO_LAUNCHER
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
+    #else
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_ABILITY_NOT_EXIST);
+    #endif
     }
 }
 
@@ -300,7 +328,11 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0008, Function | SmallTest | L
         name.SetAbilityName(ABILITY_NAME);
         RemoteAbilityInfo info;
         auto ret = distributedBms->GetAbilityInfo(name, info);
+    #ifdef USE_NO_LAUNCHER
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
+    #else
         EXPECT_EQ(ret, ERR_OK);
+    #endif
     }
 }
 
@@ -322,7 +354,11 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0009, Function | SmallTest | L
         name.SetAbilityName(WRONG_ABILITY_NAME);
         RemoteAbilityInfo info;
         auto ret = distributedBms->GetAbilityInfo(name, info);
+    #ifdef USE_NO_LAUNCHER
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
+    #else
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_ABILITY_NOT_EXIST);
+    #endif
     }
 }
 
@@ -365,7 +401,11 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0011, Function | SmallTest | L
         names.push_back(name);
         std::vector<RemoteAbilityInfo> infos;
         auto ret = distributedBms->GetAbilityInfos(names, infos);
+    #ifdef USE_NO_LAUNCHER
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
+    #else
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_ABILITY_NOT_EXIST);
+    #endif
     }
 }
 
@@ -388,7 +428,11 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0012, Function | SmallTest | L
         names.push_back(name);
         std::vector<RemoteAbilityInfo> infos;
         auto ret = distributedBms->GetAbilityInfos(names, infos);
+    #ifdef USE_NO_LAUNCHER
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
+    #else
         EXPECT_EQ(ret, ERR_OK);
+    #endif
     }
 }
 
@@ -1525,6 +1569,6 @@ HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0200, Function | MediumTes
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     int res = distributedBms->VerifyCallingPermission("");
-    EXPECT_FALSE(res);
+    EXPECT_TRUE(res);
 }
 } // OHOS
