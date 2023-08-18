@@ -303,11 +303,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0007, Function | SmallTest | L
         name.SetAbilityName(WRONG_ABILITY_NAME);
         RemoteAbilityInfo info;
         auto ret = distributedBms->GetAbilityInfo(name, info);
-    #ifdef USE_NO_LAUNCHER
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
-    #else
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_ABILITY_NOT_EXIST);
-    #endif
     }
 }
 
@@ -328,11 +324,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0008, Function | SmallTest | L
         name.SetAbilityName(ABILITY_NAME);
         RemoteAbilityInfo info;
         auto ret = distributedBms->GetAbilityInfo(name, info);
-    #ifdef USE_NO_LAUNCHER
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
-    #else
         EXPECT_EQ(ret, ERR_OK);
-    #endif
     }
 }
 
@@ -354,11 +346,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0009, Function | SmallTest | L
         name.SetAbilityName(WRONG_ABILITY_NAME);
         RemoteAbilityInfo info;
         auto ret = distributedBms->GetAbilityInfo(name, info);
-    #ifdef USE_NO_LAUNCHER
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
-    #else
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_ABILITY_NOT_EXIST);
-    #endif
     }
 }
 
@@ -401,11 +389,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0011, Function | SmallTest | L
         names.push_back(name);
         std::vector<RemoteAbilityInfo> infos;
         auto ret = distributedBms->GetAbilityInfos(names, infos);
-    #ifdef USE_NO_LAUNCHER
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
-    #else
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_ABILITY_NOT_EXIST);
-    #endif
     }
 }
 
@@ -428,11 +412,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0012, Function | SmallTest | L
         names.push_back(name);
         std::vector<RemoteAbilityInfo> infos;
         auto ret = distributedBms->GetAbilityInfos(names, infos);
-    #ifdef USE_NO_LAUNCHER
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_APPLICATION_DISABLED);
-    #else
         EXPECT_EQ(ret, ERR_OK);
-    #endif
     }
 }
 
