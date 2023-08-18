@@ -69,15 +69,15 @@ ohos_unittest("DistributedBmsHostTest") {
     defines += [ "ACCOUNT_ENABLE" ]
   }
 
-  if (image_framework_enable) {
+  if (distributed_bundle_image_framework_enable) {
     external_deps += [ "image_framework:image_native" ]
-    defines += [ "IMAGE_FRAMEWORK" ]
+    defines += [ "DISTRIBUTED_BUNDLE_IMAGE_ENABLE" ]
   }
 }
 
 group("unittest") {
   testonly = true
-  if (ability_runtime_enable_dbms && image_framework_enable) {
+  if (ability_runtime_enable_dbms && distributed_bundle_image_framework_enable) {
     deps = [ ":DistributedBmsHostTest" ]
   }
 }
