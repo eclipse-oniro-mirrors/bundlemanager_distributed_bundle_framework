@@ -77,7 +77,8 @@ ohos_unittest("DistributedBmsHostTest") {
 
 group("unittest") {
   testonly = true
-  if (ability_runtime_enable_dbms && distributed_bundle_image_framework_enable) {
+  if (ability_runtime_enable_dbms &&
+      distributed_bundle_image_framework_enable) {
     deps = [ ":DistributedBmsHostTest" ]
   }
 }

@@ -28,7 +28,7 @@ declare_args() {
   account_enable_dbms = true
   distributed_bundle_framework_enable = true
   hisysevent_enable_dbms = true
-   distributed_bundle_image_framework_enable = false
+  distributed_bundle_image_framework_enable = true
 
   if (defined(global_parts_info) &&
       !defined(global_parts_info.ability_ability_runtime)) {
@@ -63,4 +63,5 @@ print("account_enable_dbms = " + "$account_enable_dbms")
 print("distributed_bundle_framework_enable = " +
       "$distributed_bundle_framework_enable")
 print("hisysevent_enable_dbms = " + "$hisysevent_enable_dbms")
-print("distributed_bundle_image_framework_enable = " + "$distributed_bundle_image_framework_enable")
+print("distributed_bundle_image_framework_enable = " +
+      "$distributed_bundle_image_framework_enable")
