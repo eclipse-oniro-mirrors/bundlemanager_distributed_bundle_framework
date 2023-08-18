@@ -32,7 +32,7 @@
 #include "distributed_module_info.h"
 #include "element_name.h"
 #include "event_report.h"
-#ifdef IMAGE_FRAMEWORK
+#ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
 #include "image_compress.h"
 #endif
 #include "json_util.h"
@@ -633,7 +633,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0023, Function | SmallTest | L
     }
 }
 
-#ifdef IMAGE_FRAMEWORK
+#ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
 /**
  * @tc.number: DbmsServicesKitTest
  * @tc.name: test IsPathValid
@@ -1019,7 +1019,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0052, Function | SmallTest | L
     }
 }
 
-#ifdef IMAGE_FRAMEWORK
+#ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
 /**
  * @tc.number: DbmsServicesKitTest_0053
  * @tc.name: test IsPathValid
