@@ -32,7 +32,7 @@
 #include "locale_config.h"
 #include "locale_info.h"
 #include "image_compress.h"
-#ifdef IMAGE_FRAMEWORK
+#ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
 #include "image_packer.h"
 #include "image_source.h"
 #endif
@@ -355,7 +355,7 @@ int32_t DistributedBms::GetAbilityIconByContent(
         APP_LOGE("DistributedBms GetBundleMgr failed");
         return ERR_APPEXECFWK_FAILED_SERVICE_DIED;
     }
-#ifdef IMAGE_FRAMEWORK
+#ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
     std::unique_ptr<uint8_t[]> imageContent;
     size_t imageContentSize = 0;
     ErrCode ret = iBundleMgr->GetMediaData(abilityInfo.bundleName, abilityInfo.moduleName, abilityInfo.name,
@@ -385,7 +385,7 @@ int32_t DistributedBms::GetAbilityIconByContent(
     return OHOS::NO_ERROR;
 }
 
-#ifdef IMAGE_FRAMEWORK
+#ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
 int32_t DistributedBms::Base64WithoutCompress(std::unique_ptr<uint8_t[]> &imageContent, size_t imageContentSize,
     RemoteAbilityInfo &remoteAbilityInfo)
 {
