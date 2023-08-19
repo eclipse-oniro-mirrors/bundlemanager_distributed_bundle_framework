@@ -203,6 +203,10 @@ int32_t DistributedBms::GetUdidByNetworkId(const std::string &networkId, std::st
 static OHOS::sptr<OHOS::AppExecFwk::IDistributedBms> GetDistributedBundleMgr(const std::string &deviceId)
 {
     auto samgr = OHOS::SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (samgr == nullptr) {
+        APP_LOGE("GetSystemAbilityManager failed");
+        return nullptr;
+    }
     OHOS::sptr<OHOS::IRemoteObject> remoteObject;
     if (deviceId.empty()) {
         APP_LOGW("GetDistributedBundleMgr deviceId is empty");
