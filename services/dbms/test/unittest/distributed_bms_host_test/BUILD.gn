@@ -49,7 +49,6 @@ ohos_unittest("DistributedBmsHostTest") {
     "hicollie:libhicollie",
     "hilog:libhilog",
     "i18n:intl_util",
-    "image_framework:image_native",
     "init:libbegetutil",
     "ipc:ipc_core",
     "kv_store:distributeddata_inner",
@@ -69,11 +68,17 @@ ohos_unittest("DistributedBmsHostTest") {
     external_deps += [ "os_account:os_account_innerkits" ]
     defines += [ "ACCOUNT_ENABLE" ]
   }
+
+  if (distributed_bundle_image_framework_enable) {
+    external_deps += [ "image_framework:image_native" ]
+    defines += [ "DISTRIBUTED_BUNDLE_IMAGE_ENABLE" ]
+  }
 }
 
 group("unittest") {
   testonly = true
-  if (ability_runtime_enable_dbms) {
+  if (ability_runtime_enable_dbms &&
+      distributed_bundle_image_framework_enable) {
     deps = [ ":DistributedBmsHostTest" ]
   }
 }

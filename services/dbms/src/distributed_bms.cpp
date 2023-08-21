@@ -32,8 +32,10 @@
 #include "locale_config.h"
 #include "locale_info.h"
 #include "image_compress.h"
+#ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
 #include "image_packer.h"
 #include "image_source.h"
+#endif
 #include "ipc_skeleton.h"
 #include "system_ability_definition.h"
 #include "tokenid_kit.h"
@@ -353,6 +355,7 @@ int32_t DistributedBms::GetAbilityIconByContent(
         APP_LOGE("DistributedBms GetBundleMgr failed");
         return ERR_APPEXECFWK_FAILED_SERVICE_DIED;
     }
+#ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
     std::unique_ptr<uint8_t[]> imageContent;
     size_t imageContentSize = 0;
     ErrCode ret = iBundleMgr->GetMediaData(abilityInfo.bundleName, abilityInfo.moduleName, abilityInfo.name,
@@ -378,9 +381,11 @@ int32_t DistributedBms::GetAbilityIconByContent(
     } else {
         return Base64WithoutCompress(imageContent, imageContentSize, remoteAbilityInfo);
     }
+#endif
     return OHOS::NO_ERROR;
 }
 
+#ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
 int32_t DistributedBms::Base64WithoutCompress(std::unique_ptr<uint8_t[]> &imageContent, size_t imageContentSize,
     RemoteAbilityInfo &remoteAbilityInfo)
 {
@@ -395,6 +400,7 @@ int32_t DistributedBms::Base64WithoutCompress(std::unique_ptr<uint8_t[]> &imageC
     }
     return OHOS::NO_ERROR;
 }
+#endif
 
 int32_t DistributedBms::GetAbilityInfos(
     const std::vector<ElementName> &elementNames, std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
