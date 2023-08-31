@@ -1,0 +1,23 @@
+{
+    "app": {
+        "bundleName": "com.query.test",
+        "debug": true,
+        "icon": "$media:app_icon",
+        "iconId": 16777217,
+        "label": "$string:app_name",
+        "labelId": 16777216,
+        "description":"$string:description_application",
+        "descriptionId":1010,
+        "vendor": "huawei",
+        "versionCode": 1,
+        "versionName": "1.0",
+        "minCompatibleVersionCode":1,
+        "minAPIVersion": 8,
+        "targetAPIVersion":8,
+        "apiReleaseType":"Beta2",
+        "keepAlive":true,
+        "removable":false,
+        "userDataClearable":false,
+        "accessible":true
+    }
+}

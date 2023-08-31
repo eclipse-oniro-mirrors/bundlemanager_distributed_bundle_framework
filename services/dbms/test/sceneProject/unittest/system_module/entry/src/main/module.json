@@ -1,0 +1,190 @@
+{
+    "module": {
+        "name":"module01",
+        "type":"entry",
+        "srcEntry":"./MyAbilityStage.ts",
+        "description":"$string:description_application",
+        "descriptionId": 2020,
+        "process":"bba",
+        "mainElement":"MainAbility",
+        "deviceTypes":[
+            "2in1",
+            "tablet",
+            "default",
+            "car",
+            "liteWearable",
+            "phone",
+            "smartVision",
+            "tablet",
+            "tv",
+            "wearable",
+            "router"
+        ],
+        "deliveryWithInstall":true,
+        "installationFree":false,
+        "virtualMachine":"ark",
+        "pages":"$profile:page_config",
+        "metadata":[
+            {
+                "name":"string",
+                "value":"string",
+                "resource":"@profile:config_file"
+            },
+            {
+                "name":"string",
+                "value":"string",
+                "resource":"@profile:config_file"
+            }
+        ],
+        "abilities": [
+            {
+            "name": "MainAbility",
+            "srcEntry": "./login/MyLoginAbility.ts",
+            "description": "$string:description_main_ability",
+            "descriptionId": 3030,
+            "icon": "$media:icon",
+            "iconId": 4040,
+            "label": "Login",
+            "labelId": 16777216,
+            "permissions":["ext","sql"],
+            "metadata":[
+                {
+                    "name":"a01",
+                    "value":"v01",
+                    "resource":"hello"
+                },
+                {
+                    "name":"a02",
+                    "value":"v02",
+                    "resource":"world"
+                }
+            ],
+            "exported": true,
+            "skills": [
+                {
+                "actions": [
+                    "action.system.home"
+                ],
+                "entities": [
+                    "entity.system.home"
+                ],
+               "uris":[
+                   {
+                       "scheme":"content",
+                       "host":"www.test.com",
+                       "port":"8080",
+                       "pathRegex":"query/.*/name",
+                       "path":"hello",
+                       "pathStartWith":"cc/jac"
+                   },
+                   {
+                       "scheme":"aaaaa",
+                       "host":"bbbbb",
+                       "port":"10",
+                       "pathRegex":"ccc",
+                       "path":"ddd",
+                       "pathStartWith":"eee"
+                   }
+               ]
+            }
+        ],
+           "backgroundModes":[
+               "dataTransfer",
+               "audioPlayback",
+               "audioRecording",
+               "location",
+               "bluetoothInteraction",
+               "multDeviceConnection",
+               "wifiInteraction",
+               "voip",
+               "taskKeeping"
+           ]
+        }
+    ],
+        "extensionAbilities": [
+            {
+            "name": "FormName",
+            "srcEntry": "./form/MyForm.ts",
+            "icon": "$media:icon",
+            "iconId": 16777223,
+            "label": "$string:extension_name",
+            "labelId": 6060,
+            "description": "$string:form_description",
+            "descriptionId": 7070,
+            "type": "form",
+            "readPermission":"readPermission---",
+            "writePermission":"writePermission---",
+            "permissions":["aaa","ccc"],
+            "exported": true,
+            "skills": [
+                {
+                "actions": ["action001"],
+                "entities": ["entity001"],
+               "uris":[
+                   {
+                       "scheme":"content",
+                       "host":"www.test.com",
+                       "pathRegex":"query/.*/name",
+                       "port":"8080",
+                       "path":"hello",
+                       "pathStartWith":"cc/jac"
+                   },
+                   {
+                       "scheme":"aaaaa",
+                       "host":"bbbbb",
+                       "port":"10",
+                       "pathRegex":"ccc",
+                       "path":"ddd",
+                       "pathStartWith":"eee"
+                   }
+               ]
+            }
+        ],
+        "metadata": [
+            {
+            "name": "ohos.extablility.form",
+            "resource": "$profile:form_config"
+           }
+         ]
+      }
+    ],
+		"requestPermissions": [
+            {
+			    "name": "ohos.permission.GET_BUNDLE_INFO_PRIVILEGED",
+			    "reason": "$string:reason",
+			    "usedScene": {
+			    	"abilities": ["FormAbility"],
+			    	"when": "inuse"
+			    }
+		    },
+            {
+                "reason": "use ohos.permission.INSTALL_BUNDLE",
+                "name": "ohos.permission.INSTALL_BUNDLE"
+            }
+        ],
+        "definePermissions":[
+            {
+                "name":"ohos.abilitydemo.permission.PROVIDER",
+                "grantMode":"system_grant",
+                "availableLevel":"system_basic",
+                "provisionEnable":true,
+                "distributedSceneEnable":true,
+                "label":"$string:permlab_provider",
+                "labelId":12,
+                "description":"$string:permdesc_provider",
+                "descriptionId":13
+            },
+            {
+                "name":"ohos.abilitydemo.permission.PROVIDER002",
+                "grantMode":"system_grant",
+                "availableLevel":"system_basic",
+                "provisionEnable":true,
+                "distributedSceneEnable":true,
+                "label":"$string:permlab_provider",
+                "labelId":112,
+                "description":"$string:permdesc_provider002",
+                "descriptionId":113
+            }
+        ]
+    }
+}

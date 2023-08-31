@@ -1,0 +1,40 @@
+{
+    "string":  [
+        {
+            "name": "description_application",
+            "value": "description"
+        },
+        {
+            "name": "extension_name",
+            "value": "label"
+        },
+        {
+            "name": "description_main_ability",
+            "value": "description"
+        },
+        {
+            "name": "permlab_provider",
+            "value": "label"
+        },
+        {
+            "name": "form_description",
+            "value": "description"
+        },
+        {
+            "name": "reason",
+            "value": "reason"
+        },
+        {
+            "name": "permdesc_provider",
+            "value": "description"
+        },
+        {
+            "name": "permdesc_provider002",
+            "value": "description"
+        },
+        {
+            "name": "16777219",
+            "value": "description"
+        }
+    ]
+}
