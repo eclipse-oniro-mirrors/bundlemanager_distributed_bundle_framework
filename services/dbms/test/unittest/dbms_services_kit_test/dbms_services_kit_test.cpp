@@ -142,7 +142,7 @@ std::shared_ptr<DistributedBms> DbmsServicesKitTest::GetDistributedBms()
 sptr<DistributedBms> DbmsServicesKitTest::GetSptrDistributedBms()
 {
     if (sptrDistributedBms_ == nullptr) {
-        sptrDistributedBms_ = new DistributedBms();
+        sptrDistributedBms_ = new (std::nothrow) DistributedBms();
     }
     return sptrDistributedBms_;
 }
