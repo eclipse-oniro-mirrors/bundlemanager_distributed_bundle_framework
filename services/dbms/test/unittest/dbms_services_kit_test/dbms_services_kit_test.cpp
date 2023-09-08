@@ -21,9 +21,12 @@
 #include <sstream>
 #include <string>
 #include <fcntl.h>
+#include <future>
 
 #include "accesstoken_kit.h"
 #include "appexecfwk_errors.h"
+#include "bundle_installer_proxy.h"
+#include "bundle_mgr_proxy.h"
 #include "dbms_device_manager.h"
 #include "distributed_ability_info.h"
 #include "distributed_bms.h"
@@ -36,11 +39,15 @@
 #ifdef DISTRIBUTED_BUNDLE_IMAGE_ENABLE
 #include "image_compress.h"
 #endif
+#include "iservice_registry.h"
 #include "json_util.h"
 #include "nativetoken_kit.h"
 #include "token_setproc.h"
+#include "scope_guard.h"
 #include "service_control.h"
 #include "softbus_common.h"
+#include "status_receiver_host.h"
+#include "system_ability_definition.h"
 
 using namespace testing::ext;
 using namespace std::chrono_literals;
@@ -50,9 +57,10 @@ namespace OHOS {
 namespace {
 const std::string WRONG_BUNDLE_NAME = "wrong";
 const std::string WRONG_ABILITY_NAME = "wrong";
-const std::string BUNDLE_NAME = "com.ohos.launcher";
-const std::string MODULE_NAME = "launcher_settings";
-const std::string ABILITY_NAME = "com.ohos.launcher.settings.MainAbility";
+const std::string BUNDLE_NAME = "com.query.test";
+const std::string MODULE_NAME = "module01";
+const std::string ABILITY_NAME = "MainAbility";
+const std::string SYSTEM_HAP_FILE_PATH = "/data/test/resource/bms/install_bundle/distributed_system_module.hap";
 const std::string DEVICE_ID = "1111";
 const std::string INVALID_NAME = "invalid";
 const std::string HAP_FILE_PATH =
@@ -62,7 +70,60 @@ const std::string PATH_LOCATIONS = "/data/app/el1/bundle/new_create.txt";
 const std::string DEVICE_ID_NORMAL = "deviceId";
 const std::string LOCALE_INFO = "localeInfo";
 const std::string EMPTY_STRING = "";
+const int32_t USERID = 100;
+const std::string MSG_SUCCESS = "[SUCCESS]";
+const std::string OPERATION_FAILED = "Failure";
+const std::string OPERATION_SUCCESS = "Success";
 }  // namespace
+
+class StatusReceiverImpl : public StatusReceiverHost {
+public:
+    StatusReceiverImpl();
+    virtual ~StatusReceiverImpl();
+    virtual void OnStatusNotify(const int progress) override;
+    virtual void OnFinished(const int32_t resultCode, const std::string &resultMsg) override;
+    std::string GetResultMsg() const;
+
+private:
+    mutable std::promise<std::string> resultMsgSignal_;
+    int iProgress_ = 0;
+
+    DISALLOW_COPY_AND_MOVE(StatusReceiverImpl);
+};
+
+StatusReceiverImpl::StatusReceiverImpl()
+{
+    APP_LOGI("create status receiver instance");
+}
+
+StatusReceiverImpl::~StatusReceiverImpl()
+{
+    APP_LOGI("destroy status receiver instance");
+}
+
+void StatusReceiverImpl::OnFinished(const int32_t resultCode, const std::string &resultMsg)
+{
+    APP_LOGD("OnFinished result is %{public}d, %{public}s", resultCode, resultMsg.c_str());
+    resultMsgSignal_.set_value(resultMsg);
+}
+void StatusReceiverImpl::OnStatusNotify(const int progress)
+{
+    EXPECT_GT(progress, iProgress_);
+    iProgress_ = progress;
+    APP_LOGI("OnStatusNotify progress:%{public}d", progress);
+}
+
+std::string StatusReceiverImpl::GetResultMsg() const
+{
+    auto future = resultMsgSignal_.get_future();
+    future.wait();
+    std::string resultMsg = future.get();
+    if (resultMsg == MSG_SUCCESS) {
+        return OPERATION_SUCCESS;
+    } else {
+        return OPERATION_FAILED + resultMsg;
+    }
+}
 
 class DbmsServicesKitTest : public testing::Test {
 public:
@@ -77,6 +138,10 @@ public:
     std::shared_ptr<DistributedDataStorage> GetDistributedDataStorage();
     std::shared_ptr<EventReport> GetEventReport();
     sptr<DistributedBms> GetSptrDistributedBms();
+    static sptr<BundleMgrProxy> GetBundleMgrProxy();
+    static sptr<IBundleInstaller> GetInstallerProxy();
+    bool InstallBundle(const std::string &bundlePath) const;
+    bool UninstallBundle(const std::string &bundleName) const;
 private:
     std::shared_ptr<DistributedBms> distributedBms_ = nullptr;
     std::shared_ptr<DistributedBmsProxy> distributedBmsProxy_ = nullptr;
@@ -129,6 +194,81 @@ void DbmsServicesKitTest::TearDown()
     std::string strExtra = std::to_string(402);
     auto extraArgv = strExtra.c_str();
     ServiceControlWithExtra("d-bms", STOP, &extraArgv, 1);
+}
+
+sptr<BundleMgrProxy> DbmsServicesKitTest::GetBundleMgrProxy()
+{
+    sptr<ISystemAbilityManager> systemAbilityManager =
+        SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
+    if (!systemAbilityManager) {
+        APP_LOGE("fail to get system ability mgr.");
+        return nullptr;
+    }
+
+    sptr<IRemoteObject> remoteObject = systemAbilityManager->GetSystemAbility(BUNDLE_MGR_SERVICE_SYS_ABILITY_ID);
+    if (!remoteObject) {
+        APP_LOGE("fail to get bundle manager proxy.");
+        return nullptr;
+    }
+
+    APP_LOGI("get bundle manager proxy success.");
+    return iface_cast<BundleMgrProxy>(remoteObject);
+}
+
+sptr<IBundleInstaller> DbmsServicesKitTest::GetInstallerProxy()
+{
+    sptr<BundleMgrProxy> bundleMgrProxy = GetBundleMgrProxy();
+    if (!bundleMgrProxy) {
+        APP_LOGE("bundle mgr proxy is nullptr.");
+        return nullptr;
+    }
+
+    sptr<IBundleInstaller> installerProxy = bundleMgrProxy->GetBundleInstaller();
+    if (!installerProxy) {
+        APP_LOGE("fail to get bundle installer proxy.");
+        return nullptr;
+    }
+
+    APP_LOGI("get bundle installer proxy success.");
+    return installerProxy;
+}
+
+bool DbmsServicesKitTest::InstallBundle(const std::string &bundlePath) const
+{
+    setuid(Constants::FOUNDATION_UID);
+    ScopeGuard uidGuard([&] { setuid(Constants::ROOT_UID); });
+    sptr<IBundleInstaller> installerProxy = GetInstallerProxy();
+    if (!installerProxy) {
+        APP_LOGE("get bundle installer failed.");
+        return false;
+    }
+    InstallParam installParam;
+    installParam.installFlag = InstallFlag::REPLACE_EXISTING;
+    installParam.userId = USERID;
+    sptr<StatusReceiverImpl> statusReceiver = (new (std::nothrow) StatusReceiverImpl());
+    EXPECT_NE(statusReceiver, nullptr);
+    bool result = installerProxy->Install(bundlePath, installParam, statusReceiver);
+    EXPECT_EQ(statusReceiver->GetResultMsg(), OPERATION_SUCCESS);
+    return result;
+}
+
+bool DbmsServicesKitTest::UninstallBundle(const std::string &bundleName) const
+{
+    setuid(Constants::FOUNDATION_UID);
+    ScopeGuard uidGuard([&] { setuid(Constants::ROOT_UID); });
+    sptr<IBundleInstaller> installerProxy = GetInstallerProxy();
+    if (!installerProxy) {
+        APP_LOGE("get bundle installer failed.");
+        return false;
+    }
+    InstallParam installParam;
+    installParam.installFlag = InstallFlag::NORMAL;
+    installParam.userId = USERID;
+    sptr<StatusReceiverImpl> statusReceiver = (new (std::nothrow) StatusReceiverImpl());
+    EXPECT_NE(statusReceiver, nullptr);
+    bool result = installerProxy->Uninstall(bundleName, installParam, statusReceiver);
+    EXPECT_EQ(statusReceiver->GetResultMsg(), OPERATION_SUCCESS);
+    return result;
 }
 
 std::shared_ptr<DistributedBms> DbmsServicesKitTest::GetDistributedBms()
@@ -297,6 +437,9 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0006, Function | SmallTest | L
  */
 HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0007, Function | SmallTest | Level0)
 {
+    auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
+    EXPECT_TRUE(res);
+    
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     if (distributedBms != nullptr) {
@@ -307,6 +450,8 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0007, Function | SmallTest | L
         auto ret = distributedBms->GetAbilityInfo(name, info);
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_ABILITY_NOT_EXIST);
     }
+    res = UninstallBundle(BUNDLE_NAME);
+    EXPECT_TRUE(res);
 }
 
 /**
@@ -318,6 +463,8 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0007, Function | SmallTest | L
  */
 HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0008, Function | SmallTest | Level0)
 {
+    auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
+    EXPECT_TRUE(res);
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     if (distributedBms != nullptr) {
@@ -328,6 +475,8 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0008, Function | SmallTest | L
         auto ret = distributedBms->GetAbilityInfo(name, info);
         EXPECT_EQ(ret, ERR_OK);
     }
+    res = UninstallBundle(BUNDLE_NAME);
+    EXPECT_TRUE(res);
 }
 
 /**
@@ -339,6 +488,9 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0008, Function | SmallTest | L
  */
 HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0009, Function | SmallTest | Level0)
 {
+    auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
+    EXPECT_TRUE(res);
+
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     if (distributedBms != nullptr) {
@@ -350,6 +502,8 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0009, Function | SmallTest | L
         auto ret = distributedBms->GetAbilityInfo(name, info);
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_ABILITY_NOT_EXIST);
     }
+    res = UninstallBundle(BUNDLE_NAME);
+    EXPECT_TRUE(res);
 }
 
 /**
@@ -380,6 +534,9 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0010, Function | SmallTest | L
  */
 HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0011, Function | SmallTest | Level0)
 {
+    auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
+    EXPECT_TRUE(res);
+
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     if (distributedBms != nullptr) {
@@ -393,6 +550,8 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0011, Function | SmallTest | L
         auto ret = distributedBms->GetAbilityInfos(names, infos);
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_ABILITY_NOT_EXIST);
     }
+    res = UninstallBundle(BUNDLE_NAME);
+    EXPECT_TRUE(res);
 }
 
 /**
@@ -404,6 +563,9 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0011, Function | SmallTest | L
  */
 HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0012, Function | SmallTest | Level0)
 {
+    auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
+    EXPECT_TRUE(res);
+
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     if (distributedBms != nullptr) {
@@ -416,6 +578,8 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0012, Function | SmallTest | L
         auto ret = distributedBms->GetAbilityInfos(names, infos);
         EXPECT_EQ(ret, ERR_OK);
     }
+    res = UninstallBundle(BUNDLE_NAME);
+    EXPECT_TRUE(res);
 }
 
 /**

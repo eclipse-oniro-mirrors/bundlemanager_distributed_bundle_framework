@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -21,6 +21,7 @@ ohos_unittest("DbmsServicesKitTest") {
   include_dirs = [
     "${dbms_inner_api_path}/include",
     "${dbms_services_path}/include",
+    "${bundle_framework_path}/services/bundlemgr/include",
   ]
 
   sources = [
@@ -34,7 +35,11 @@ ohos_unittest("DbmsServicesKitTest") {
 
   sources += [ "dbms_services_kit_test.cpp" ]
 
-  deps = [ "${dbms_inner_api_path}:dbms_fwk" ]
+  deps = [
+    "${dbms_inner_api_path}:dbms_fwk",
+    "${dbms_services_path}/test/sceneProject/unittest/ohos_test:copy_ohos_test",
+    "${dbms_services_path}/test/sceneProject/unittest/system_module:distributed_system_module",
+  ]
 
   external_deps = [
     "ability_base:want",
@@ -59,7 +64,6 @@ ohos_unittest("DbmsServicesKitTest") {
     "samgr:samgr_proxy",
   ]
   defines = []
-
   if (hisysevent_enable_dbms) {
     sources += [ "${dbms_services_path}/src/event_report.cpp" ]
     external_deps += [ "hisysevent:libhisysevent" ]

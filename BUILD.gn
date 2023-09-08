@@ -35,6 +35,7 @@ group("test_target") {
   testonly = true
   deps = [
     "services/dbms/test:unittest",
+    "services/dbms/test/sceneProject:test_hap",
     "test/fuzztest:fuzztest",
   ]
 }
