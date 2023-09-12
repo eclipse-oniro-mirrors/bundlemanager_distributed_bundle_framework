@@ -13,7 +13,7 @@
 
 bundlemanager_path = "//foundation/bundlemanager"
 bundle_framework_path = "${bundlemanager_path}/bundle_framework"
-
+fuzz_test_path = "distributed_bundle_framework/distributed_bundle_framework"
 common_path = "${bundle_framework_path}/common"
 dbms_inner_api_path =
     "${bundlemanager_path}/distributed_bundle_framework/interfaces/inner_api"

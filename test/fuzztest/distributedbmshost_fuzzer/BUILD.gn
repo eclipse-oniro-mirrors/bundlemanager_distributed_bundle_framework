@@ -16,7 +16,7 @@ import("//build/config/features.gni")
 import("//build/ohos.gni")
 import("//build/test.gni")
 import("../../../dbms.gni")
-module_output_path = "bundle_framework/fuzz"
+module_output_path = fuzz_test_path
 
 ##############################fuzztest##########################################
 ohos_fuzztest("DistributedBmsHostFuzzTest") {
