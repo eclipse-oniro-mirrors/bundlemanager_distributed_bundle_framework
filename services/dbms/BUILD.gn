@@ -25,6 +25,8 @@ config("distributed_bms_config") {
 }
 
 ohos_shared_library("libdbms") {
+  stack_protector_ret = true
+
   sources = [
     "src/account_manager_helper.cpp",
     "src/dbms_device_manager.cpp",
