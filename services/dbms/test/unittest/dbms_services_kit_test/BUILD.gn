@@ -64,6 +64,9 @@ ohos_unittest("DbmsServicesKitTest") {
     "samgr:samgr_proxy",
   ]
   defines = []
+  if (current_cpu == "arm64") {
+    defines += [ "ON_64BIT_SYSTEM" ]
+  }
   if (hisysevent_enable_dbms) {
     sources += [ "${dbms_services_path}/src/event_report.cpp" ]
     external_deps += [ "hisysevent:libhisysevent" ]
