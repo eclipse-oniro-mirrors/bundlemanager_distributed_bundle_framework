@@ -19,8 +19,6 @@ config("dbms_fwk_config") {
 }
 
 ohos_shared_library("dbms_fwk") {
-  stack_protector_ret = true
-
   sources = [ "src/distributed_bms_proxy.cpp" ]
 
   defines = [
