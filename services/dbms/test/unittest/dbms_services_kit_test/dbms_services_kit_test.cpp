@@ -65,7 +65,7 @@ const std::string DEVICE_ID = "1111";
 const std::string INVALID_NAME = "invalid";
 const std::string HAP_FILE_PATH =
     "/data/app/el1/bundle/public/com.example.test/entry.hap";
-const std::string PATH_LOCATION = "/data/app/el1/bundle/public/com.ohos.launcher";
+const std::string PATH_LOCATION = "/data/app/el1/bundle/public/com.query.test";
 const std::string PATH_LOCATIONS = "/data/app/el1/bundle/new_create.txt";
 const std::string DEVICE_ID_NORMAL = "deviceId";
 const std::string LOCALE_INFO = "localeInfo";
@@ -1224,12 +1224,17 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0052, Function | SmallTest | L
  */
 HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0053, Function | SmallTest | Level0)
 {
+    auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
+    EXPECT_TRUE(res);
+
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
     if (imageCompress != nullptr) {
         bool res = imageCompress->IsPathValid(PATH_LOCATION);
         EXPECT_EQ(res, true);
     }
+    res = UninstallBundle(BUNDLE_NAME);
+    EXPECT_TRUE(res);
 }
 
 /**
