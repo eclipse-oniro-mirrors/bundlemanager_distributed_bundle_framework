@@ -105,6 +105,75 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0300, Function | MediumTest | L
 }
 
 /**
+ * @tc.number: OnRemoteRequest_0400
+ * @tc.name: Test OnRemoteRequest
+ * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0400, Function | MediumTest | Level1)
+{
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    data.WriteInterfaceToken(DistributedBmsHost::GetDescriptor());
+    std::vector<ElementName> elementNames;
+    std::string localeInfo;
+    DistributedBmsProxy proxy(nullptr);
+    proxy.WriteParcelableVector(elementNames, data);
+    data.WriteString(localeInfo);
+    MockDistributedBmsHost host;
+    int res = host.OnRemoteRequest(static_cast<uint32_t>
+        (DistributedInterfaceCode::GET_REMOTE_ABILITY_INFOS), data, reply, option);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: OnRemoteRequest_0500
+ * @tc.name: Test OnRemoteRequest
+ * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0500, Function | MediumTest | Level1)
+{
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    data.WriteInterfaceToken(DistributedBmsHost::GetDescriptor());
+    std::vector<ElementName> elementNames;
+    std::string localeInfo;
+    DistributedBmsProxy proxy(nullptr);
+    proxy.WriteParcelableVector(elementNames, data);
+    data.WriteString(localeInfo);
+    MockDistributedBmsHost host;
+    int res = host.OnRemoteRequest(static_cast<uint32_t>
+        (DistributedInterfaceCode::GET_REMOTE_ABILITY_INFOS_WITH_LOCALE), data, reply, option);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: OnRemoteRequest_0600
+ * @tc.name: Test OnRemoteRequest
+ * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0600, Function | MediumTest | Level1)
+{
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    data.WriteInterfaceToken(DistributedBmsHost::GetDescriptor());
+    std::vector<ElementName> elementNames;
+    std::string localeInfo;
+    DistributedBmsProxy proxy(nullptr);
+    proxy.WriteParcelableVector(elementNames, data);
+    data.WriteString(localeInfo);
+    MockDistributedBmsHost host;
+    int res = host.OnRemoteRequest(static_cast<uint32_t>
+        (DistributedInterfaceCode::GET_REMOTE_ABILITY_INFOS_WITH_LOCALE), data, reply, option);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
  * @tc.number: OnRemoteRequest_0700
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
