@@ -21,6 +21,7 @@ ohos_unittest("DistributedBmsHostTest") {
   include_dirs = [ "${dbms_services_path}/include" ]
 
   sources = [
+    "${dbms_inner_api_path}/src/distributed_bms_proxy.cpp",
     "${dbms_services_path}/src/dbms_device_manager.cpp",
     "${dbms_services_path}/src/distributed_bms_host.cpp",
   ]
