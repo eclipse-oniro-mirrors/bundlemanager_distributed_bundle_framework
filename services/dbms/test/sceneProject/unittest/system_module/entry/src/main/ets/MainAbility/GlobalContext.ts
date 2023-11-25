@@ -12,7 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Core} from "deccjsunit/index.ets"
+import testsuite from "../../test/List.test.ets"
 
-
-export default function testsuite(context:Context) {
+export default class GlobalContext {
+  constructor(){
+  }
+  globalContext(core:Core) {
+    const configService = core.getDefaultService('config')
+    console.info('parameters---->' + JSON.stringify(globalThis.abilityWant.parameters))
+    globalThis.abilityWant.parameters.timeout = 70000;
+    configService.setConfig(globalThis.abilityWant.parameters)
+    testsuite(globalThis.abilityContext)
+  }
 }
