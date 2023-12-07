@@ -53,6 +53,8 @@ private:
     DistributedBundleInfo ConvertToDistributedBundleInfo(const BundleInfo &bundleInfo);
     int32_t GetUdidByNetworkId(const std::string &networkId, std::string &udid);
     bool InnerSaveStorageDistributeInfo(const DistributedBundleInfo &distributedBundleInfo);
+    std::map<std::string, DistributedBundleInfo> GetAllOldDistributionBundleInfo();
+
 private:
     static std::mutex mutex_;
     static std::shared_ptr<DistributedDataStorage> instance_;

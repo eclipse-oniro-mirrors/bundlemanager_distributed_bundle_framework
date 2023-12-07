@@ -358,56 +358,74 @@ DistributedBundleInfo DistributedDataStorage::ConvertToDistributedBundleInfo(con
     }
     distributedBundleInfo.enabled = bundleInfo.applicationInfo.enabled;
     distributedBundleInfo.accessTokenId = bundleInfo.applicationInfo.accessTokenId;
+    distributedBundleInfo.updateTime = bundleInfo.updateTime;
     return distributedBundleInfo;
 }
 
 void DistributedDataStorage::UpdateDistributedData(int32_t userId)
 {
     APP_LOGI("UpdateDistributedData");
+    auto bundleMgr = DelayedSingleton<DistributedBms>::GetInstance()->GetBundleMgr();
+    if (bundleMgr == nullptr) {
+        APP_LOGE("Get bundleMgr shared_ptr nullptr");
+        return;
+    }
+    std::map<std::string, DistributedBundleInfo> oldDistributedBundleInfos = GetAllOldDistributionBundleInfo();
+    std::vector<BundleInfo> bundleInfos;
+    if (!bundleMgr->GetBundleInfos(FLAGS, bundleInfos, userId)) {
+        APP_LOGE("get bundleInfos failed");
+        return;
+    }
+    for (const auto &bundleInfo : bundleInfos) {
+        if (bundleInfo.singleton) {
+            continue;
+        }
+        if (oldDistributedBundleInfos.find(bundleInfo.name) != oldDistributedBundleInfos.end()) {
+            if (oldDistributedBundleInfos[bundleInfo.name].updateTime == bundleInfo.updateTime) {
+                APP_LOGW("bundleName:%{public}s no need to update", bundleInfo.name.c_str());
+                continue;
+            }
+        }
+        if (!InnerSaveStorageDistributeInfo(ConvertToDistributedBundleInfo(bundleInfo))) {
+            APP_LOGW("UpdateDistributedData SaveStorageDistributeInfo:%{public}s failed", bundleInfo.name.c_str());
+        }
+    }
+}
+
+std::map<std::string, DistributedBundleInfo> DistributedDataStorage::GetAllOldDistributionBundleInfo()
+{
+    APP_LOGD("start");
+    std::map<std::string, DistributedBundleInfo> oldDistributedBundleInfos;
     if (kvStorePtr_ == nullptr) {
         APP_LOGE("kvStorePtr_ is null");
-        return;
+        return oldDistributedBundleInfos;
     }
     std::string udid;
     if (!GetLocalUdid(udid)) {
         APP_LOGE("GetLocalUdid failed");
-        return;
+        return oldDistributedBundleInfos;
     }
     Key allEntryKeyPrefix("");
     std::vector<Entry> allEntries;
     Status status = kvStorePtr_->GetEntries(allEntryKeyPrefix, allEntries);
     if (status != Status::SUCCESS) {
         APP_LOGE("dataManager_ GetEntries error: %{public}d", status);
-        return;
+        return oldDistributedBundleInfos;
     }
-    for (auto entry : allEntries) {
+    for (const auto &entry : allEntries) {
         std::string key = entry.key.ToString();
         if (key.find(udid) == std::string::npos) {
             continue;
         }
-        status = kvStorePtr_->Delete(entry.key);
-        if (status != Status::SUCCESS) {
-            APP_LOGE("Delete key:%{public}s failed", key.c_str());
+        std::string value = entry.value.ToString();
+        DistributedBundleInfo distributedBundleInfo;
+        if (distributedBundleInfo.FromJsonString(value)) {
+            oldDistributedBundleInfos.emplace(distributedBundleInfo.bundleName, distributedBundleInfo);
+        } else {
+            APP_LOGE("DistributionInfo FromJsonString key:%{public}s failed", key.c_str());
         }
     }
-    auto bundleMgr = DelayedSingleton<DistributedBms>::GetInstance()->GetBundleMgr();
-    if (bundleMgr == nullptr) {
-        APP_LOGE("Get bundleMgr shared_ptr nullptr");
-        return;
-    }
-    std::vector<BundleInfo> bundleInfos;
-    if (!bundleMgr->GetBundleInfos(FLAGS, bundleInfos, userId)) {
-        APP_LOGE("get bundleInfos failed");
-        return;
-    }
-    for (auto bundleInfo : bundleInfos) {
-        if (bundleInfo.singleton) {
-            continue;
-        }
-        if (!InnerSaveStorageDistributeInfo(ConvertToDistributedBundleInfo(bundleInfo))) {
-            APP_LOGW("UpdateDistributedData SaveStorageDistributeInfo:%{public}s failed", bundleInfo.name.c_str());
-        }
-    }
+    return oldDistributedBundleInfos;
 }
 }  // namespace AppExecFwk
 }  // namespace OHOS
