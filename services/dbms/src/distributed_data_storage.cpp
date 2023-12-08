@@ -370,12 +370,18 @@ void DistributedDataStorage::UpdateDistributedData(int32_t userId)
         APP_LOGE("Get bundleMgr shared_ptr nullptr");
         return;
     }
-    std::map<std::string, DistributedBundleInfo> oldDistributedBundleInfos = GetAllOldDistributionBundleInfo();
     std::vector<BundleInfo> bundleInfos;
     if (!bundleMgr->GetBundleInfos(FLAGS, bundleInfos, userId)) {
         APP_LOGE("get bundleInfos failed");
         return;
     }
+    std::vector<std::string> bundleNames;
+    for (const auto &bundleInfo : bundleInfos) {
+        bundleNames.push_back(bundleInfo.name);
+    }
+    std::map<std::string, DistributedBundleInfo> oldDistributedBundleInfos =
+        GetAllOldDistributionBundleInfo(bundleNames);
+
     for (const auto &bundleInfo : bundleInfos) {
         if (bundleInfo.singleton) {
             continue;
@@ -392,7 +398,8 @@ void DistributedDataStorage::UpdateDistributedData(int32_t userId)
     }
 }
 
-std::map<std::string, DistributedBundleInfo> DistributedDataStorage::GetAllOldDistributionBundleInfo()
+std::map<std::string, DistributedBundleInfo> DistributedDataStorage::GetAllOldDistributionBundleInfo(
+    const std::vector<std::string> &bundleNames)
 {
     APP_LOGD("start");
     std::map<std::string, DistributedBundleInfo> oldDistributedBundleInfos;
@@ -420,6 +427,14 @@ std::map<std::string, DistributedBundleInfo> DistributedDataStorage::GetAllOldDi
         std::string value = entry.value.ToString();
         DistributedBundleInfo distributedBundleInfo;
         if (distributedBundleInfo.FromJsonString(value)) {
+            if (std::find(bundleNames.begin(), bundleNames.end(), distributedBundleInfo.bundleName) ==
+                bundleNames.end()) {
+                APP_LOGW("bundleName:%{public}s need delete", distributedBundleInfo.bundleName.c_str());
+                if (kvStorePtr_->Delete(entry.key) != Status::SUCCESS) {
+                    APP_LOGE("Delete key:%{public}s failed", key.c_str());
+                }
+                continue;
+            }
             oldDistributedBundleInfos.emplace(distributedBundleInfo.bundleName, distributedBundleInfo);
         } else {
             APP_LOGE("DistributionInfo FromJsonString key:%{public}s failed", key.c_str());

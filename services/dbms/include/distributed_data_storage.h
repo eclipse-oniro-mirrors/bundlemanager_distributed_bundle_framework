@@ -53,7 +53,8 @@ private:
     DistributedBundleInfo ConvertToDistributedBundleInfo(const BundleInfo &bundleInfo);
     int32_t GetUdidByNetworkId(const std::string &networkId, std::string &udid);
     bool InnerSaveStorageDistributeInfo(const DistributedBundleInfo &distributedBundleInfo);
-    std::map<std::string, DistributedBundleInfo> GetAllOldDistributionBundleInfo();
+    std::map<std::string, DistributedBundleInfo> GetAllOldDistributionBundleInfo(
+        const std::vector<std::string> &bundleNames);
 
 private:
     static std::mutex mutex_;
