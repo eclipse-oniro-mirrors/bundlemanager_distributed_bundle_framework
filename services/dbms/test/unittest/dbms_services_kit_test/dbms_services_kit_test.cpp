@@ -80,8 +80,8 @@ class StatusReceiverImpl : public StatusReceiverHost {
 public:
     StatusReceiverImpl();
     virtual ~StatusReceiverImpl();
-    virtual void OnStatusNotify(const int progress) override;
-    virtual void OnFinished(const int32_t resultCode, const std::string &resultMsg) override;
+    void OnStatusNotify(const int progress) override;
+    void OnFinished(const int32_t resultCode, const std::string &resultMsg) override;
     std::string GetResultMsg() const;
 
 private:
