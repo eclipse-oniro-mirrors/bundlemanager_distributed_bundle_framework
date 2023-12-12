@@ -312,10 +312,9 @@ int32_t DistributedBms::GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elem
 {
     APP_LOGI("DistributedBms GetAbilityInfo bundleName:%{public}s , abilityName:%{public}s, localeInfo:%{public}s",
         elementName.GetBundleName().c_str(), elementName.GetAbilityName().c_str(), localeInfo.c_str());
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    if (!VerifyTokenNative(callerToken) && !VerifyTokenShell(callerToken)) {
-        APP_LOGE("caller is not native");
-        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
+    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
     }
     auto iBundleMgr = GetBundleMgr();
     if (!iBundleMgr) {
@@ -417,10 +416,9 @@ int32_t DistributedBms::GetAbilityInfos(const std::vector<ElementName> &elementN
     const std::string &localeInfo, std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
 {
     APP_LOGD("DistributedBms GetAbilityInfos");
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    if (!VerifyTokenNative(callerToken) && !VerifyTokenShell(callerToken)) {
-        APP_LOGE("caller is not native");
-        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
+    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
     }
     for (auto elementName : elementNames) {
         RemoteAbilityInfo remoteAbilityInfo;
@@ -446,6 +444,10 @@ bool DistributedBms::GetMediaBase64(std::unique_ptr<uint8_t[]> &data, int64_t fi
 bool DistributedBms::GetDistributedBundleInfo(const std::string &networkId, const std::string &bundleName,
     DistributedBundleInfo &distributedBundleInfo)
 {
+    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
+    }
 #ifdef HICOLLIE_ENABLE
     int timerId = HiviewDFX::XCollie::GetInstance().SetTimer("GetDistributedBundleInfo", LOCAL_TIME_OUT_SECONDS,
         nullptr, nullptr, HiviewDFX::XCOLLIE_FLAG_RECOVERY);
@@ -461,10 +463,9 @@ bool DistributedBms::GetDistributedBundleInfo(const std::string &networkId, cons
 int32_t DistributedBms::GetDistributedBundleName(const std::string &networkId,  uint32_t accessTokenId,
     std::string &bundleName)
 {
-    Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    if (!VerifyTokenNative(callerToken) && !VerifyTokenShell(callerToken)) {
-        APP_LOGE("caller tokenType not native or shell, verify failed");
-        return ERR_APPEXECFWK_PARCEL_ERROR;
+    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+        APP_LOGE("verify calling permission failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
     }
 #ifdef HICOLLIE_ENABLE
     int timerId = HiviewDFX::XCollie::GetInstance().SetTimer("GetDistributedBundleName", LOCAL_TIME_OUT_SECONDS,
@@ -572,10 +573,6 @@ bool DistributedBms::VerifyCallingPermission(const std::string &permissionName)
 {
     APP_LOGD("VerifyCallingPermission permission %{public}s", permissionName.c_str());
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
-    if (VerifyTokenNative(callerToken)) {
-        APP_LOGD("caller tokenType is native, verify success");
-        return true;
-    }
     int32_t ret = OHOS::Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken, permissionName);
     if (ret == OHOS::Security::AccessToken::PermissionState::PERMISSION_DENIED) {
         APP_LOGE("permission %{public}s: PERMISSION_DENIED", permissionName.c_str());
