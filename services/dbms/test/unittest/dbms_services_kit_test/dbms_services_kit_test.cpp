@@ -164,16 +164,18 @@ void DbmsServicesKitTest::TearDownTestCase()
 
 void DbmsServicesKitTest::SetUp()
 {
-    const int32_t PERMS_NUM = 3;
+    const int32_t permsNum = 4;
     const int32_t PERMS_INDEX_TWO = 2;
+    const int32_t permsIndexThree = 3;
     uint64_t tokenId;
-    const char *perms[PERMS_NUM];
+    const char *perms[permsNum];
     perms[0] = OHOS_PERMISSION_DISTRIBUTED_SOFTBUS_CENTER;
     perms[1] = OHOS_PERMISSION_DISTRIBUTED_DATASYNC;
     perms[PERMS_INDEX_TWO] = "ohos.permission.ACCESS_SERVICE_DM";
+    perms[permsIndexThree] = Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED;
     NativeTokenInfoParams infoInstance = {
         .dcapsNum = 0,
-        .permsNum = PERMS_NUM,
+        .permsNum = permsNum,
         .aclsNum = 0,
         .dcaps = NULL,
         .perms = perms,
@@ -1732,6 +1734,6 @@ HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0200, Function | MediumTes
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     int res = distributedBms->VerifyCallingPermission("");
-    EXPECT_TRUE(res);
+    EXPECT_FALSE(res);
 }
 } // OHOS
