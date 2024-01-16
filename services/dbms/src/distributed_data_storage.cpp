@@ -279,10 +279,6 @@ Status DistributedDataStorage::GetKvStore()
     SyncPolicy syncPolicyOnline {
         .type = PolicyType::IMMEDIATE_SYNC_ON_ONLINE
     };
-    SyncPolicy syncPolicyOnReady {
-        .type = PolicyType::IMMEDIATE_SYNC_ON_READY
-    };
-    options.policies.emplace_back(syncPolicyOnReady);
     options.policies.emplace_back(syncPolicyOnline);
     Status status = dataManager_.GetSingleKvStore(options, appId_, storeId_, kvStorePtr_);
     if (status != Status::SUCCESS) {
