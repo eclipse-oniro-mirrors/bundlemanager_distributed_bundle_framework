@@ -15,6 +15,7 @@
 
 #include "distributed_data_storage.h"
 
+#include <set>
 #include <unistd.h>
 
 #include "account_manager_helper.h"
@@ -29,12 +30,16 @@ namespace AppExecFwk {
 namespace {
 const std::string BMS_KV_BASE_DIR = "/data/service/el1/public/database/";
 const int32_t EL1 = 1;
+const int32_t START_INDEX = 0;
 const int32_t MAX_TIMES = 600;              // 1min
+const int32_t UDID_LENGTH = 64;              // the length of udid
+const int32_t PRINTF_LENGTH = 8;              // print length of udid
 const int32_t SLEEP_INTERVAL = 100 * 1000;  // 100ms
 const int32_t FLAGS = BundleFlag::GET_BUNDLE_WITH_ABILITIES |
                       ApplicationFlag::GET_APPLICATION_INFO_WITH_DISABLE |
                       AbilityInfoFlag::GET_ABILITY_INFO_WITH_DISABLE;
 const uint32_t DEVICE_UDID_LENGTH = 65;
+const std::string EMPTY_DEVICE_ID = "";
 }  // namespace
 
 std::shared_ptr<DistributedDataStorage> DistributedDataStorage::instance_ = nullptr;
@@ -223,9 +228,13 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
         APP_LOGE("dataManager_ GetEntries error: %{public}d", status);
         return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
     }
+    std::set<std::string> udidSet;
     for (auto entry : allEntries) {
         std::string key = entry.key.ToString();
         std::string value =  entry.value.ToString();
+        if (key.length() > UDID_LENGTH) {
+            udidSet.insert(key.substr(START_INDEX, UDID_LENGTH));
+        }
         if (key.find(udid) == std::string::npos) {
             continue;
         }
@@ -237,7 +246,20 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
     }
     APP_LOGE("get distributed bundleName no matching data: %{private}s %{private}s %{private}d",
         networkId.c_str(), udid.c_str(), accessTokenId);
+    for (std::string udidItem : udidSet) {
+        APP_LOGW("dbms db has keyItem :%{public}s", AnonymizeUdid(udidItem).c_str());
+    }
     return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
+}
+
+std::string DistributedDataStorage::AnonymizeUdid(const std::string& udid)
+{
+    if (udid.length() < PRINTF_LENGTH) {
+        return EMPTY_DEVICE_ID;
+    }
+    std::string anonUdid = udid.substr(START_INDEX, PRINTF_LENGTH);
+    anonUdid.append("******");
+    return anonUdid;
 }
 
 std::string DistributedDataStorage::DeviceAndNameToKey(

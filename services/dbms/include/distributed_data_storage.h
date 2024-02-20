@@ -55,7 +55,7 @@ private:
     bool InnerSaveStorageDistributeInfo(const DistributedBundleInfo &distributedBundleInfo);
     std::map<std::string, DistributedBundleInfo> GetAllOldDistributionBundleInfo(
         const std::vector<std::string> &bundleNames);
-
+    static std::string AnonymizeUdid(const std::string& udid);
 private:
     static std::mutex mutex_;
     static std::shared_ptr<DistributedDataStorage> instance_;
