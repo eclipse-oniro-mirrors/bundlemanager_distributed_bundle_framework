@@ -57,6 +57,7 @@ namespace {
     const unsigned char DECODE_VALUE_CHAR_THREE = 3;
     const uint8_t DECODE_VALUE_FOUR = 4;
     const uint8_t DECODE_VALUE_SIX = 6;
+    const uint32_t DBMS_UID = 6000;
     const unsigned char DECODE_VALUE_CHAR_FIFTEEN = 15;
     const unsigned char DECODE_VALUE_CHAR_SIXTY_THREE = 63;
     const std::vector<char> DECODE_TABLE = {
@@ -573,8 +574,10 @@ bool DistributedBms::VerifyCallingPermission(const std::string &permissionName)
 {
     APP_LOGD("VerifyCallingPermission permission %{public}s", permissionName.c_str());
     Security::AccessToken::AccessTokenID callerToken = IPCSkeleton::GetCallingTokenID();
+    auto uid = IPCSkeleton::GetCallingUid();
+    APP_LOGD("VerifyCallingPermission callingUid %{public}d", uid);
     int32_t ret = OHOS::Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken, permissionName);
-    if (ret == OHOS::Security::AccessToken::PermissionState::PERMISSION_DENIED) {
+    if ((ret == OHOS::Security::AccessToken::PermissionState::PERMISSION_DENIED) && (uid != DBMS_UID)) {
         APP_LOGE("permission %{public}s: PERMISSION_DENIED", permissionName.c_str());
         return false;
     }
