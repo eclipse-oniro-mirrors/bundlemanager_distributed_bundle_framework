@@ -15,7 +15,6 @@ import("//build/ohos.gni")
 import("../../../../dbms.gni")
 
 ohos_shared_library("distributedbundlemanager") {
-  include_dirs = [ "${kits_path}/js/common" ]
   defines = [
     "APP_LOG_TAG = \"DistributedBundleMgrService\"",
     "LOG_DOMAIN = 0xD001120",
@@ -43,7 +42,7 @@ ohos_shared_library("distributedbundlemanager") {
     "napi:ace_napi",
     "samgr:samgr_proxy",
   ]
-
+  public_external_deps = [ "bundle_framework:bundle_napi_common" ]
   relative_install_dir = "module/bundle"
   subsystem_name = "bundlemanager"
   part_name = "distributed_bundle_framework"
