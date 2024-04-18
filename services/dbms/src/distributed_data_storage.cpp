@@ -181,7 +181,7 @@ bool DistributedDataStorage::GetStorageDistributeInfo(const std::string &network
         return false;
     }
     std::string keyOfData = DeviceAndNameToKey(udid, bundleName);
-    APP_LOGI("keyOfData: [%{public}s]", keyOfData.c_str());
+    APP_LOGI("keyOfData: [%{public}s]", AnonymizeUdid(keyOfData).c_str());
     Key key(keyOfData);
     Value value;
     Status status = kvStorePtr_->Get(key, value);
