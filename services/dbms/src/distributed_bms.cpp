@@ -577,12 +577,12 @@ bool DistributedBms::VerifyCallingPermission(const std::string &permissionName)
     auto uid = IPCSkeleton::GetCallingUid();
     APP_LOGD("VerifyCallingPermission callingUid %{public}d", uid);
     int32_t ret = OHOS::Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken, permissionName);
-    if ((ret == OHOS::Security::AccessToken::PermissionState::PERMISSION_DENIED) && (uid != DBMS_UID)) {
-        APP_LOGE("permission %{public}s: PERMISSION_DENIED", permissionName.c_str());
-        return false;
+    if ((ret == OHOS::Security::AccessToken::PermissionState::PERMISSION_GRANTED) || (uid == DBMS_UID)) {
+        APP_LOGD("verify permission success");
+        return true;
     }
-    APP_LOGD("verify permission success");
-    return true;
+    APP_LOGE("permission %{public}s: PERMISSION_DENIED", permissionName.c_str());
+    return false;
 }
 }
 }
