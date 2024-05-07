@@ -184,12 +184,18 @@ bool DistributedDataStorage::GetStorageDistributeInfo(const std::string &network
     APP_LOGI("keyOfData: [%{public}s]", AnonymizeUdid(keyOfData).c_str());
     Key key(keyOfData);
     Value value;
-    Status status = kvStorePtr_->Get(key, value);
-    if (status == Status::IPC_ERROR) {
-        status = kvStorePtr_->Get(key, value);
-        APP_LOGW("distribute database ipc error and try to call again, result = %{public}d", status);
-    }
+    std::promise<OHOS::DistributedKv::Status> resultStatusSignal;
+    kvStorePtr_->Get(key, networkId,
+        [&value, &resultStatusSignal](Status innerStatus, Value innerValue) {
+            APP_LOGI("distribute database Get, result = %{public}d", innerStatus);
+            if (innerStatus == Status::SUCCESS) {
+                value = innerValue;
+            }
+            resultStatusSignal.set_value(innerStatus);
+        });
+    Status status = GetResultSatus(resultStatusSignal);
     if (status == Status::SUCCESS) {
+        APP_LOGI("distribute database Get, result = %{public}d", status);
         if (!info.FromJsonString(value.ToString())) {
             APP_LOGE("it's an error value");
             kvStorePtr_->Delete(key);
@@ -199,6 +205,29 @@ bool DistributedDataStorage::GetStorageDistributeInfo(const std::string &network
     }
     APP_LOGE("get value status: %{public}d", status);
     return false;
+}
+
+Status DistributedDataStorage::GetResultSatus(std::promise<OHOS::DistributedKv::Status> &resultStatusSignal)
+{
+    auto future = resultStatusSignal.get_future();
+    if (future.wait_for(std::chrono::seconds(waittingTime_)) == std::future_status::ready) {
+        Status status = future.get();
+        return status;
+    }
+    return Status::ERROR;
+}
+
+void DistributedDataStorage::GetEntries(const std::string &networkId, const Key &allEntryKeyPrefix,
+    std::promise<OHOS::DistributedKv::Status> &resultStatusSignal, std::vector<Entry> &allEntries)
+{
+    kvStorePtr_->GetEntries(allEntryKeyPrefix, networkId,
+        [&resultStatusSignal, &allEntries](Status innerStatus, std::vector<Entry> innerAllEntries) {
+            APP_LOGI("distribute database GetEntries, result = %{public}d", innerStatus);
+            if (innerStatus == Status::SUCCESS) {
+                std::copy(innerAllEntries.begin(), innerAllEntries.end(), std::back_inserter(allEntries));
+            }
+            resultStatusSignal.set_value(innerStatus);
+        });
 }
 
 int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &networkId, uint32_t accessTokenId,
@@ -223,7 +252,9 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
     }
     Key allEntryKeyPrefix("");
     std::vector<Entry> allEntries;
-    Status status = kvStorePtr_->GetEntries(allEntryKeyPrefix, allEntries);
+    std::promise<OHOS::DistributedKv::Status> resultStatusSignal;
+    GetEntries(networkId, allEntryKeyPrefix, resultStatusSignal, allEntries);
+    Status status = GetResultSatus(resultStatusSignal);
     if (status != Status::SUCCESS) {
         APP_LOGE("dataManager_ GetEntries error: %{public}d", status);
         return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
@@ -292,7 +323,7 @@ Status DistributedDataStorage::GetKvStore()
     Options options = {
         .createIfMissing = true,
         .encrypt = false,
-        .autoSync = true,
+        .autoSync = false,
         .securityLevel = SecurityLevel::S1,
         .area = EL1,
         .kvStoreType = KvStoreType::SINGLE_VERSION,
