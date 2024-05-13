@@ -16,6 +16,7 @@
 #ifndef FOUNDATION_APPEXECFWK_SERVICES_DBMS_INCLUDE_DISTRIBUTED_DATA_STORAGE_H
 #define FOUNDATION_APPEXECFWK_SERVICES_DBMS_INCLUDE_DISTRIBUTED_DATA_STORAGE_H
 
+#include <future>
 #include <map>
 
 #include "distributed_bundle_info.h"
@@ -56,6 +57,10 @@ private:
     std::map<std::string, DistributedBundleInfo> GetAllOldDistributionBundleInfo(
         const std::vector<std::string> &bundleNames);
     static std::string AnonymizeUdid(const std::string& udid);
+    void GetEntries(const std::string &networkId, const OHOS::DistributedKv::Key &allEntryKeyPrefix,
+        std::promise<OHOS::DistributedKv::Status> &resultStatusSignal,
+        std::vector<OHOS::DistributedKv::Entry> &allEntries);
+    OHOS::DistributedKv::Status GetResultSatus(std::promise<OHOS::DistributedKv::Status> &resultStatusSignal);
 private:
     static std::mutex mutex_;
     static std::shared_ptr<DistributedDataStorage> instance_;
@@ -65,6 +70,7 @@ private:
     DistributedKv::DistributedKvDataManager dataManager_;
     std::shared_ptr<DistributedKv::SingleKvStore> kvStorePtr_;
     mutable std::mutex kvStorePtrMutex_;
+    int32_t waittingTime_ = 180; // 3 mins
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS
