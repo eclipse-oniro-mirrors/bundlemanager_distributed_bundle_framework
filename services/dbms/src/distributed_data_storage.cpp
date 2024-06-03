@@ -180,22 +180,17 @@ bool DistributedDataStorage::GetStorageDistributeInfo(const std::string &network
         APP_LOGI("can not get udid by networkId error:%{public}d", ret);
         return false;
     }
+    Sync(udid);
     std::string keyOfData = DeviceAndNameToKey(udid, bundleName);
     APP_LOGI("keyOfData: [%{public}s]", AnonymizeUdid(keyOfData).c_str());
     Key key(keyOfData);
     Value value;
-    std::promise<OHOS::DistributedKv::Status> resultStatusSignal;
-    kvStorePtr_->Get(key, networkId,
-        [&value, &resultStatusSignal](Status innerStatus, Value innerValue) {
-            APP_LOGI("distribute database Get, result = %{public}d", innerStatus);
-            if (innerStatus == Status::SUCCESS) {
-                value = innerValue;
-            }
-            resultStatusSignal.set_value(innerStatus);
-        });
-    Status status = GetResultSatus(resultStatusSignal);
+    Status status = kvStorePtr_->Get(key, value);
+    if (status == Status::IPC_ERROR) {
+        status = kvStorePtr_->Get(key, value);
+        APP_LOGW("distribute database ipc error and try to call again, result = %{public}d", status);
+    }
     if (status == Status::SUCCESS) {
-        APP_LOGI("distribute database Get, result = %{public}d", status);
         if (!info.FromJsonString(value.ToString())) {
             APP_LOGE("it's an error value");
             kvStorePtr_->Delete(key);
@@ -205,29 +200,6 @@ bool DistributedDataStorage::GetStorageDistributeInfo(const std::string &network
     }
     APP_LOGE("get value status: %{public}d", status);
     return false;
-}
-
-Status DistributedDataStorage::GetResultSatus(std::promise<OHOS::DistributedKv::Status> &resultStatusSignal)
-{
-    auto future = resultStatusSignal.get_future();
-    if (future.wait_for(std::chrono::seconds(waittingTime_)) == std::future_status::ready) {
-        Status status = future.get();
-        return status;
-    }
-    return Status::ERROR;
-}
-
-void DistributedDataStorage::GetEntries(const std::string &networkId, const Key &allEntryKeyPrefix,
-    std::promise<OHOS::DistributedKv::Status> &resultStatusSignal, std::vector<Entry> &allEntries)
-{
-    kvStorePtr_->GetEntries(allEntryKeyPrefix, networkId,
-        [&resultStatusSignal, &allEntries](Status innerStatus, std::vector<Entry> innerAllEntries) {
-            APP_LOGI("distribute database GetEntries, result = %{public}d", innerStatus);
-            if (innerStatus == Status::SUCCESS) {
-                std::copy(innerAllEntries.begin(), innerAllEntries.end(), std::back_inserter(allEntries));
-            }
-            resultStatusSignal.set_value(innerStatus);
-        });
 }
 
 int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &networkId, uint32_t accessTokenId,
@@ -250,11 +222,10 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
         APP_LOGE("get udid is Empty");
         return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
     }
+    Sync(udid);
     Key allEntryKeyPrefix("");
     std::vector<Entry> allEntries;
-    std::promise<OHOS::DistributedKv::Status> resultStatusSignal;
-    GetEntries(networkId, allEntryKeyPrefix, resultStatusSignal, allEntries);
-    Status status = GetResultSatus(resultStatusSignal);
+    Status status = kvStorePtr_->GetEntries(allEntryKeyPrefix, allEntries);
     if (status != Status::SUCCESS) {
         APP_LOGE("dataManager_ GetEntries error: %{public}d", status);
         return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
@@ -316,6 +287,27 @@ bool DistributedDataStorage::CheckKvStore()
         tryTimes--;
     }
     return kvStorePtr_ != nullptr;
+}
+
+void DistributedDataStorage::Sync(const std::string &udid)
+{
+    std::string localUdid;
+    bool ret = GetLocalUdid(localUdid);
+    if (!ret) {
+        APP_LOGE("GetLocalUdid error");
+        return;
+    }
+    if (udid == localUdid) {
+        APP_LOGE("query db of local udid");
+        return;
+    }
+    std::vector<std::string> networkIdList = {udid};
+    Status status = kvStorePtr_->Sync(networkIdList, DistributedKv::SyncMode::PUSH_PULL);
+    if (status != Status::SUCCESS) {
+        APP_LOGE("distribute database start sync data: %{public}d", status);
+        return ;
+    }
+    APP_LOGI("distribute database start sync data success");
 }
 
 Status DistributedDataStorage::GetKvStore()
