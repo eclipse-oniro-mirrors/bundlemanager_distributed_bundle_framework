@@ -321,10 +321,6 @@ Status DistributedDataStorage::GetKvStore()
         .kvStoreType = KvStoreType::SINGLE_VERSION,
         .baseDir = BMS_KV_BASE_DIR + appId_.appId
     };
-    SyncPolicy syncPolicyOnline {
-        .type = PolicyType::IMMEDIATE_SYNC_ON_ONLINE
-    };
-    options.policies.emplace_back(syncPolicyOnline);
     Status status = dataManager_.GetSingleKvStore(options, appId_, storeId_, kvStorePtr_);
     if (status != Status::SUCCESS) {
         APP_LOGE("return error: %{public}d", status);
