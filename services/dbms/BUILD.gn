@@ -46,7 +46,7 @@ ohos_shared_library("libdbms") {
 
   defines = [
     "APP_LOG_TAG = \"DistributedBundleMgrService\"",
-    "LOG_DOMAIN = 0xD001120",
+    "LOG_DOMAIN = 0xD0011E0",
   ]
 
   configs = [ ":distributed_bms_config" ]

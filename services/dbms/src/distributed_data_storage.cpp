@@ -425,7 +425,7 @@ void DistributedDataStorage::UpdateDistributedData(int32_t userId)
         }
         if (oldDistributedBundleInfos.find(bundleInfo.name) != oldDistributedBundleInfos.end()) {
             if (oldDistributedBundleInfos[bundleInfo.name].updateTime == bundleInfo.updateTime) {
-                APP_LOGW("bundleName:%{public}s no need to update", bundleInfo.name.c_str());
+                APP_LOGD("bundleName:%{public}s no need to update", bundleInfo.name.c_str());
                 continue;
             }
         }
