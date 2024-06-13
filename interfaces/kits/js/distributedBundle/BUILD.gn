@@ -17,7 +17,7 @@ import("../../../../dbms.gni")
 ohos_shared_library("distributedbundlemanager") {
   defines = [
     "APP_LOG_TAG = \"DistributedBundleMgrService\"",
-    "LOG_DOMAIN = 0xD001120",
+    "LOG_DOMAIN = 0xD0011E0",
   ]
   sources = [ "native_module.cpp" ]
   if (distributed_bundle_framework_enable) {
