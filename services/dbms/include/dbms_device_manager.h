@@ -29,6 +29,7 @@ class DbmsDeviceManager {
 public:
     DbmsDeviceManager();
     int32_t GetUdidByNetworkId(const std::string &netWorkId, std::string &udid);
+    int32_t GetUuidByNetworkId(const std::string &netWorkId, std::string &uuid);
 
 private:
     bool InitDeviceManager();
