@@ -126,6 +126,7 @@ public:
         std::string &bundleName) override;
 
     int32_t GetUdidByNetworkId(const std::string &networkId, std::string &udid);
+    int32_t GetUuidByNetworkId(const std::string &netWorkId, std::string &uuid);
 
     /**
      * @brief Start the bundle manager service.

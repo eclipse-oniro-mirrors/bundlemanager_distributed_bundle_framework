@@ -203,6 +203,15 @@ int32_t DistributedBms::GetUdidByNetworkId(const std::string &networkId, std::st
     return dbmsDeviceManager_->GetUdidByNetworkId(networkId, udid);
 }
 
+int32_t DistributedBms::GetUuidByNetworkId(const std::string &networkId, std::string &uuid)
+{
+    if (dbmsDeviceManager_ == nullptr) {
+        APP_LOGI("deviceManager_ is nullptr");
+        InitDeviceManager();
+    }
+    return dbmsDeviceManager_->GetUuidByNetworkId(networkId, uuid);
+}
+
 static OHOS::sptr<OHOS::AppExecFwk::IDistributedBms> GetDistributedBundleMgr(const std::string &deviceId)
 {
     auto samgr = OHOS::SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();

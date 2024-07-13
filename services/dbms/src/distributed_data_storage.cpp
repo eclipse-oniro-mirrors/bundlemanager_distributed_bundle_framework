@@ -31,8 +31,8 @@ namespace {
 const std::string BMS_KV_BASE_DIR = "/data/service/el1/public/database/";
 const int32_t EL1 = 1;
 const int32_t START_INDEX = 0;
+const int32_t MINIMUM_WAITING_TIME = 180;   //3 mins
 const int32_t MAX_TIMES = 600;              // 1min
-const int32_t UDID_LENGTH = 64;              // the length of udid
 const int32_t PRINTF_LENGTH = 8;              // print length of udid
 const int32_t SLEEP_INTERVAL = 100 * 1000;  // 100ms
 const int32_t FLAGS = BundleFlag::GET_BUNDLE_WITH_ABILITIES |
@@ -180,7 +180,11 @@ bool DistributedDataStorage::GetStorageDistributeInfo(const std::string &network
         APP_LOGI("can not get udid by networkId error:%{public}d", ret);
         return false;
     }
-    Sync(udid);
+    bool resBool =  SyncAndCompleted(udid, networkId);
+    if (!resBool) {
+        APP_LOGE("SyncAndCompleted failed");
+        return false;
+    }
     std::string keyOfData = DeviceAndNameToKey(udid, bundleName);
     APP_LOGI("keyOfData: [%{public}s]", AnonymizeUdid(keyOfData).c_str());
     Key key(keyOfData);
@@ -222,7 +226,11 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
         APP_LOGE("get udid is Empty");
         return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
     }
-    Sync(udid);
+    bool resBool =  SyncAndCompleted(udid, networkId);
+    if (!resBool) {
+        APP_LOGE("SyncAndCompleted failed");
+        return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
+    }
     Key allEntryKeyPrefix("");
     std::vector<Entry> allEntries;
     Status status = kvStorePtr_->GetEntries(allEntryKeyPrefix, allEntries);
@@ -230,13 +238,9 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
         APP_LOGE("dataManager_ GetEntries error: %{public}d", status);
         return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
     }
-    std::set<std::string> udidSet;
     for (auto entry : allEntries) {
         std::string key = entry.key.ToString();
         std::string value =  entry.value.ToString();
-        if (key.length() > UDID_LENGTH) {
-            udidSet.insert(key.substr(START_INDEX, UDID_LENGTH));
-        }
         if (key.find(udid) == std::string::npos) {
             continue;
         }
@@ -248,9 +252,6 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
     }
     APP_LOGE("get distributed bundleName no matching data: %{private}s %{private}s %{private}d",
         networkId.c_str(), udid.c_str(), accessTokenId);
-    for (std::string udidItem : udidSet) {
-        APP_LOGW("dbms db has keyItem :%{public}s", AnonymizeUdid(udidItem).c_str());
-    }
     return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
 }
 
@@ -289,25 +290,46 @@ bool DistributedDataStorage::CheckKvStore()
     return kvStorePtr_ != nullptr;
 }
 
-void DistributedDataStorage::Sync(const std::string &udid)
+bool DistributedDataStorage::SyncAndCompleted(const std::string &udid, const std::string &networkId)
 {
     std::string localUdid;
     bool ret = GetLocalUdid(localUdid);
     if (!ret) {
         APP_LOGE("GetLocalUdid error");
-        return;
+        return false;
     }
     if (udid == localUdid) {
         APP_LOGE("query db of local udid");
-        return;
+        return false;
     }
+    std::string uuid;
+    int32_t result = GetUuidByNetworkId(networkId, uuid);
+    if (result != 0) {
+        APP_LOGE("can not get uuid by networkId error:%{public}d", ret);
+        return false;
+    }
+    if (udid.size() == 0) {
+        APP_LOGE("get uuid is Empty");
+        return false;
+    }
+    DistributedKv::DataQuery dataQuery;
+    dataQuery.KeyPrefix(udid);
     std::vector<std::string> networkIdList = {udid};
-    Status status = kvStorePtr_->Sync(networkIdList, DistributedKv::SyncMode::PUSH_PULL);
+    std::shared_ptr<DistributedDataStorageCallback> syncCallback = std::make_shared<DistributedDataStorageCallback>();
+    syncCallback->setUuid(uuid);
+    Status status = kvStorePtr_->Sync(networkIdList, DistributedKv::SyncMode::PUSH_PULL, dataQuery, syncCallback);
     if (status != Status::SUCCESS) {
         APP_LOGE("distribute database start sync data: %{public}d", status);
-        return ;
+        return false;
     }
     APP_LOGI("distribute database start sync data success");
+    Status statusResult = syncCallback->GetResultCode();
+    if (statusResult != Status::SUCCESS) {
+        APP_LOGE("distribute database syncCompleted status: %{public}d", statusResult);
+        return false;
+    }
+    APP_LOGI("distribute database start sync data syncCompleted success");
+    return true;
 }
 
 Status DistributedDataStorage::GetKvStore()
@@ -359,6 +381,16 @@ int32_t DistributedDataStorage::GetUdidByNetworkId(const std::string &networkId,
         return Constants::INVALID_UDID;
     }
     return dbms->GetUdidByNetworkId(networkId, udid);
+}
+
+int32_t DistributedDataStorage::GetUuidByNetworkId(const std::string &networkId, std::string &uuid)
+{
+    auto dbms = DelayedSingleton<DistributedBms>::GetInstance();
+    if (dbms == nullptr) {
+        APP_LOGE("dbms is null");
+        return Constants::INVALID_UDID;
+    }
+    return dbms->GetUuidByNetworkId(networkId, uuid);
 }
 
 DistributedBundleInfo DistributedDataStorage::ConvertToDistributedBundleInfo(const BundleInfo &bundleInfo)
@@ -478,6 +510,53 @@ std::map<std::string, DistributedBundleInfo> DistributedDataStorage::GetAllOldDi
         }
     }
     return oldDistributedBundleInfos;
+}
+
+DistributedDataStorageCallback::DistributedDataStorageCallback()
+{
+    APP_LOGD("create dbms callback instance");
+}
+
+DistributedDataStorageCallback::~DistributedDataStorageCallback()
+{
+    APP_LOGD("destroy dbms callback instance");
+}
+
+void DistributedDataStorageCallback::SyncCompleted(const std::map<std::string, DistributedKv::Status> &result)
+{
+    APP_LOGD("kvstore sync completed.");
+    if (result.find(uuid_) == result.end()) {
+        APP_LOGW("SyncCompleted uuid %{public}s no result",
+            OHOS::AppExecFwk::DistributedDataStorage::AnonymizeUdid(uuid_).c_str());
+        return;
+    }
+    DistributedKv::Status status = result.at(uuid_);
+    APP_LOGI("SyncCompleted uuid %{public}s  result %{public}d",
+        OHOS::AppExecFwk::DistributedDataStorage::AnonymizeUdid(uuid_).c_str(), status);
+    std::lock_guard<std::mutex> lock(setVauleMutex_);
+    if (!isSetValue_) {
+        isSetValue_ = true;
+        resultStatusSignal_.set_value(status);
+    } else {
+        APP_LOGW("resultStatusSignal_ is set");
+    }
+}
+
+void DistributedDataStorageCallback::setUuid(const std::string uuid)
+{
+    uuid_ = uuid;
+}
+
+DistributedKv::Status DistributedDataStorageCallback::GetResultCode()
+{
+    auto future = resultStatusSignal_.get_future();
+    if (future.wait_for(std::chrono::seconds(MINIMUM_WAITING_TIME)) == std::future_status::ready) {
+        DistributedKv::Status status = future.get();
+        APP_LOGI("GetResultCode status %{public}d", status);
+        return status;
+    }
+    APP_LOGW("GetResultCode time out");
+    return Status::TIME_OUT;
 }
 }  // namespace AppExecFwk
 }  // namespace OHOS

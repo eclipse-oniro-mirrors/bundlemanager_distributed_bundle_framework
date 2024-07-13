@@ -23,6 +23,7 @@
 #include "bundle_constants.h"
 #include "bundle_info.h"
 #include "distributed_kv_data_manager.h"
+#include <future>
 
 namespace OHOS {
 namespace AppExecFwk {
@@ -31,6 +32,21 @@ namespace {
 static const char* APP_ID = "bundle_manager_service";
 static const char* DISTRIBUTE_DATA_STORE_ID = "distribute_bundle_datas";
 }
+
+class DistributedDataStorageCallback : public OHOS::DistributedKv::KvStoreSyncCallback {
+public:
+    DistributedDataStorageCallback();
+    virtual ~DistributedDataStorageCallback();
+    void SyncCompleted(const std::map<std::string, DistributedKv::Status> &result) override;
+    void setUuid(const std::string udid);
+    DistributedKv::Status GetResultCode();
+private:
+    std::promise<OHOS::DistributedKv::Status> resultStatusSignal_;
+    bool isSetValue_ = false;
+    std::mutex setVauleMutex_;
+    std::string uuid_;
+};
+
 class DistributedDataStorage {
 public:
     DistributedDataStorage();
@@ -44,6 +60,7 @@ public:
     int32_t GetDistributedBundleName(const std::string &networkId,  uint32_t accessTokenId,
         std::string &bundleName);
     void UpdateDistributedData(int32_t userId);
+    static std::string AnonymizeUdid(const std::string& udid);
 
 private:
     std::string DeviceAndNameToKey(const std::string &udid, const std::string &bundleName) const;
@@ -53,11 +70,11 @@ private:
     bool GetLocalUdid(std::string &udid);
     DistributedBundleInfo ConvertToDistributedBundleInfo(const BundleInfo &bundleInfo);
     int32_t GetUdidByNetworkId(const std::string &networkId, std::string &udid);
+    int32_t GetUuidByNetworkId(const std::string &netWorkId, std::string &uuid);
     bool InnerSaveStorageDistributeInfo(const DistributedBundleInfo &distributedBundleInfo);
     std::map<std::string, DistributedBundleInfo> GetAllOldDistributionBundleInfo(
         const std::vector<std::string> &bundleNames);
-    static std::string AnonymizeUdid(const std::string& udid);
-    void Sync(const std::string &udid);
+    bool SyncAndCompleted(const std::string &udid, const std::string &networkId);
 private:
     static std::mutex mutex_;
     static std::shared_ptr<DistributedDataStorage> instance_;
