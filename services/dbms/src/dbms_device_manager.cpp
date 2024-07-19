@@ -77,7 +77,7 @@ int32_t DbmsDeviceManager::GetUuidByNetworkId(const std::string &netWorkId, std:
     int32_t errCode = DistributedHardware::DeviceManager::GetInstance()
         .GetUuidByNetworkId(DISTRIBUTED_BUNDLE_NAME, netWorkId, uuid);
     if (errCode != ERR_OK) {
-        APP_LOGE("GetUuidByNetworkId errCode = %{public}d", errCode);
+        APP_LOGE("GetUuidByNetworkId failed");
     }
     return errCode;
 }
