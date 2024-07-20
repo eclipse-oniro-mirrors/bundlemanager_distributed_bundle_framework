@@ -74,6 +74,7 @@ const int32_t USERID = 100;
 const std::string MSG_SUCCESS = "[SUCCESS]";
 const std::string OPERATION_FAILED = "Failure";
 const std::string OPERATION_SUCCESS = "Success";
+const int32_t SOFTBUS_IPC_ERR = -426442720;
 }  // namespace
 
 class StatusReceiverImpl : public StatusReceiverHost {
@@ -993,7 +994,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0039, Function | SmallTest | L
         std::string networkId = "networkId";
         std::string udid = "udid";
         auto ret = distributedDataStorage->GetUdidByNetworkId(networkId, udid);
-        EXPECT_EQ(ret, 0);
+        EXPECT_EQ(ret, SOFTBUS_IPC_ERR);
     }
 }
 
