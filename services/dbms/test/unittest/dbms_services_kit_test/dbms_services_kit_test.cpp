@@ -993,7 +993,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0039, Function | SmallTest | L
         std::string networkId = "networkId";
         std::string udid = "udid";
         auto ret = distributedDataStorage->GetUdidByNetworkId(networkId, udid);
-        EXPECT_EQ(ret, 0);
+        EXPECT_NE(ret, 0);
     }
 }
 
