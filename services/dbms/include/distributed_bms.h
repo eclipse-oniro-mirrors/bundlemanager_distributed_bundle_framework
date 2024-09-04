@@ -144,6 +144,7 @@ private:
     std::shared_ptr<DbmsDeviceManager> dbmsDeviceManager_;
     std::shared_ptr<DistributedMonitor> distributedSub_;
     std::mutex bundleMgrMutex_;
+    std::mutex dbmsDeviceManagerMutex_;
 
     void Init();
     void InitDeviceManager();

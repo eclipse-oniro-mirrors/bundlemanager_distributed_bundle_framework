@@ -168,8 +168,11 @@ void DistributedBms::Init()
 void DistributedBms::InitDeviceManager()
 {
     if (dbmsDeviceManager_ == nullptr) {
-        APP_LOGI("Create device manager");
-        dbmsDeviceManager_ = std::make_shared<DbmsDeviceManager>();
+        std::lock_guard<std::mutex> lock(dbmsDeviceManagerMutex_);
+        if (dbmsDeviceManager_ == nullptr) {
+            APP_LOGI("Create device manager");
+            dbmsDeviceManager_ = std::make_shared<DbmsDeviceManager>();
+        }
     }
 }
 
