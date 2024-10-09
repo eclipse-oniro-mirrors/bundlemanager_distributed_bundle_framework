@@ -151,12 +151,16 @@ bool ImageCompress::CompressImageByContent(const std::unique_ptr<uint8_t[]> &fil
     Media::SourceOptions options;
     std::unique_ptr<Media::ImageSource> imageSourcePtr =
         Media::ImageSource::CreateImageSource(fileData.get(), fileSize, options, errorCode);
+    if (imageSourcePtr == nullptr) {
+        APP_LOGE("imageSourcePtr nullptr");
+        return false;
+    }
     // do compress
     Media::DecodeOptions decodeOptions;
     uint32_t pixMapError = 0;
     std::unique_ptr<Media::PixelMap> pixMap = imageSourcePtr->CreatePixelMap(decodeOptions, pixMapError);
     if (pixMap == nullptr || pixMapError != Media::SUCCESS) {
-        APP_LOGE("CreatePixelMap failed!");
+        APP_LOGE("CreatePixelMap failed");
         return false;
     }
     double ratio = CalculateRatio(fileSize, imageType);
