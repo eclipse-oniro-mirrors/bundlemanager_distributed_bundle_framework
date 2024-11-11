@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2024 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -22,6 +22,7 @@ ohos_unittest("DbmsServicesKitTest") {
     "${dbms_inner_api_path}/include",
     "${dbms_services_path}/include",
     "${bundle_framework_path}/services/bundlemgr/include",
+    "${distributeddatamgr_path}/kv_store/interfaces/innerkits/distributeddata/include",
   ]
 
   sources = [
@@ -50,6 +51,7 @@ ohos_unittest("DbmsServicesKitTest") {
     "bundle_framework:appexecfwk_base",
     "bundle_framework:appexecfwk_core",
     "bundle_framework:libappexecfwk_common",
+    "cJSON:cjson",
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "device_manager:devicemanagersdk",
@@ -63,6 +65,7 @@ ohos_unittest("DbmsServicesKitTest") {
     "resource_management:global_resmgr",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
+    "selinux_adapter:librestorecon",
   ]
   defines = []
   if (current_cpu == "arm64") {
