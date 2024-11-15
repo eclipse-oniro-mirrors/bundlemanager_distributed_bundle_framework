@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022-2024 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -41,9 +41,9 @@
 #endif
 #include "iservice_registry.h"
 #include "json_util.h"
+#include "mock_scope_guard.h"
 #include "nativetoken_kit.h"
 #include "token_setproc.h"
-#include "scope_guard.h"
 #include "service_control.h"
 #include "softbus_common.h"
 #include "status_receiver_host.h"
@@ -238,7 +238,7 @@ sptr<IBundleInstaller> DbmsServicesKitTest::GetInstallerProxy()
 bool DbmsServicesKitTest::InstallBundle(const std::string &bundlePath) const
 {
     setuid(Constants::FOUNDATION_UID);
-    ScopeGuard uidGuard([&] { setuid(Constants::ROOT_UID); });
+    MockScopeGuard uidGuard(std::bind(setuid, Constants::ROOT_UID));
     sptr<IBundleInstaller> installerProxy = GetInstallerProxy();
     if (!installerProxy) {
         APP_LOGE("get bundle installer failed.");
@@ -257,7 +257,7 @@ bool DbmsServicesKitTest::InstallBundle(const std::string &bundlePath) const
 bool DbmsServicesKitTest::UninstallBundle(const std::string &bundleName) const
 {
     setuid(Constants::FOUNDATION_UID);
-    ScopeGuard uidGuard([&] { setuid(Constants::ROOT_UID); });
+    MockScopeGuard uidGuard(std::bind(setuid, Constants::ROOT_UID));
     sptr<IBundleInstaller> installerProxy = GetInstallerProxy();
     if (!installerProxy) {
         APP_LOGE("get bundle installer failed.");
