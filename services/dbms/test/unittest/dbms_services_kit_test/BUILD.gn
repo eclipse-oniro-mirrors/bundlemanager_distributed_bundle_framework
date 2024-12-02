@@ -21,8 +21,6 @@ ohos_unittest("DbmsServicesKitTest") {
   include_dirs = [
     "${dbms_inner_api_path}/include",
     "${dbms_services_path}/include",
-    "${bundle_framework_path}/services/bundlemgr/include",
-    "${distributeddatamgr_path}/kv_store/interfaces/innerkits/distributeddata/include",
   ]
 
   sources = [
