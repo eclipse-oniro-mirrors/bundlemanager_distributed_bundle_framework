@@ -30,6 +30,8 @@ ohos_shared_library("dbms_fwk") {
     ubsan = true
   }
 
+  cflags = [ "-fstack-protector-strong" ]
+
   sources = [ "src/distributed_bms_proxy.cpp" ]
 
   defines = [

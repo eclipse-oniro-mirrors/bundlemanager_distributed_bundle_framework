@@ -36,6 +36,8 @@ ohos_shared_library("libdbms") {
     ubsan = true
   }
 
+  cflags = [ "-fstack-protector-strong" ]
+
   sources = [
     "src/account_manager_helper.cpp",
     "src/dbms_device_manager.cpp",

@@ -15,6 +15,18 @@ import("//build/ohos.gni")
 import("../../../../dbms.gni")
 
 ohos_shared_library("distributedbundle") {
+  branch_protector_ret = "pac_ret"
+
+  sanitize = {
+    boundary_sanitize = true
+    cfi = true
+    debug = false
+    integer_overflow = true
+    ubsan = true
+  }
+
+  cflags = [ "-fstack-protector-strong" ]
+
   include_dirs = []
   defines = [
     "APP_LOG_TAG = \"DistributedBundleMgrService\"",
