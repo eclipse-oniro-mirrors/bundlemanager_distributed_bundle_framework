@@ -180,7 +180,7 @@ void DbmsServicesKitTest::SetUp()
         .dcaps = NULL,
         .perms = perms,
         .acls = NULL,
-        .processName = "dsoftbus_service",
+        .processName = "dbms_services_kit_test_process_name",
         .aplStr = "system_core",
     };
     tokenId = GetAccessTokenId(&infoInstance);
@@ -188,14 +188,14 @@ void DbmsServicesKitTest::SetUp()
     OHOS::Security::AccessToken::AccessTokenKit::ReloadNativeTokenInfo();
     std::string strExtra = std::to_string(402);
     auto extraArgv = strExtra.c_str();
-    ServiceControlWithExtra("d-bms", START, &extraArgv, 1);
+    ServiceControlWithExtra("d-bms-ut", START, &extraArgv, 1);
 }
 
 void DbmsServicesKitTest::TearDown()
 {
     std::string strExtra = std::to_string(402);
     auto extraArgv = strExtra.c_str();
-    ServiceControlWithExtra("d-bms", STOP, &extraArgv, 1);
+    ServiceControlWithExtra("d-bms-ut", STOP, &extraArgv, 1);
 }
 
 sptr<BundleMgrProxy> DbmsServicesKitTest::GetBundleMgrProxy()
