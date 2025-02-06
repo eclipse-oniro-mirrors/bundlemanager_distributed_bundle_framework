@@ -27,7 +27,11 @@ ohos_shared_library("distributedbundlemanager") {
   }
 
   cflags = [ "-fstack-protector-strong" ]
-  cflags_cc = cflags
+  cflags_cc = [
+    "-Os",
+    "-fno-unwind-tables",
+    "-fstack-protector-strong",
+  ]
 
   defines = [
     "APP_LOG_TAG = \"DistributedBundleMgrService\"",

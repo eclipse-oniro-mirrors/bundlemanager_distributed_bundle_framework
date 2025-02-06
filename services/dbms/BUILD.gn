@@ -37,7 +37,11 @@ ohos_shared_library("libdbms") {
   }
 
   cflags = [ "-fstack-protector-strong" ]
-  cflags_cc = cflags
+  cflags_cc = [
+    "-Os",
+    "-fno-unwind-tables",
+    "-fstack-protector-strong",
+  ]
 
   sources = [
     "src/account_manager_helper.cpp",
