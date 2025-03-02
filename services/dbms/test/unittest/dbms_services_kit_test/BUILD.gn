@@ -13,7 +13,7 @@
 import("//build/test.gni")
 import("../../../../../dbms.gni")
 
-module_output_path = "bundle_framework/distributedbundleservice"
+module_output_path = "distributed_bundle_framework/distributed_bundle_framework"
 
 ohos_unittest("DbmsServicesKitTest") {
   sanitize = {
