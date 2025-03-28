@@ -18,5 +18,5 @@ ohos_copy("copy_ohos_test") {
   part_name = "distributed_bundle_framework"
   subsystem_name = "bundlemanager"
   sources = [ "./ohos_test.xml" ]
-  outputs = [ "$root_out_dir/tests/unittest/bundle_framework/distributedbundleservice/resource/ohos_test.xml" ]
+  outputs = [ "$root_out_dir/tests/unittest/distributed_bundle_framework/distributed_bundle_framework/resource/ohos_test.xml" ]
 }

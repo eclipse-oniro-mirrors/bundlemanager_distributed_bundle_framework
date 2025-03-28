@@ -18,7 +18,7 @@ ohos_hap("distributed_system_module") {
   hap_profile = "entry/src/main/module.json"
   hap_name = "distributed_system_module"
   subsystem_name = "bundlemanager"
-  final_hap_path = "$root_out_dir/tests/unittest/bundle_framework/distributedbundleservice/resource/test_bundle/${hap_name}.hap"
+  final_hap_path = "$root_out_dir/tests/unittest/distributed_bundle_framework/distributed_bundle_framework/resource/test_bundle/${hap_name}.hap"
   testonly = true
   deps = [
     ":hjs_demo_js_assets",
