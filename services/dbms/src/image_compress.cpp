@@ -100,7 +100,7 @@ bool ImageCompress::GetImageTypeString(const std::unique_ptr<uint8_t[]> &fileDat
 {
     ImageType type = GetImageType(fileData, fileLength);
     if (type == ImageType::WORNG_TYPE) {
-        APP_LOGE("input wrong type image!");
+        APP_LOGE("input error type image!");
         return false;
     }
     imageType = type == ImageType::JPEG ? JPEG_FORMAT : PNG_FORMAT;
