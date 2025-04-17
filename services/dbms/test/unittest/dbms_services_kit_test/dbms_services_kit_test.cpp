@@ -321,7 +321,7 @@ std::shared_ptr<EventReport> DbmsServicesKitTest::GetEventReport()
  * @tc.desc: 1. system running normally
  *           2. test ElementName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0001, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0001, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -340,7 +340,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0001, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test ElementName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0002, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0002, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -359,7 +359,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0002, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test ElementName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0003, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0003, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -378,7 +378,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0003, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test ElementName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0004, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0004, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -397,7 +397,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0004, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test ElementName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0005, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0005, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -416,7 +416,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0005, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test bundleName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0006, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0006, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -437,11 +437,11 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0006, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test abilityName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0007, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0007, Function | SmallTest | TestSize.Level0)
 {
     auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
     EXPECT_TRUE(res);
-    
+
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     if (distributedBms != nullptr) {
@@ -463,7 +463,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0007, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test bundleName and abilityName both exist
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0008, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0008, Function | SmallTest | TestSize.Level0)
 {
     auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
     EXPECT_TRUE(res);
@@ -492,7 +492,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0008, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test wrong abilityName
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0009, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0009, Function | SmallTest | TestSize.Level0)
 {
     auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
     EXPECT_TRUE(res);
@@ -519,7 +519,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0009, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test ElementName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0010, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0010, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -538,7 +538,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0010, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test abilityName is empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0011, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0011, Function | SmallTest | TestSize.Level0)
 {
     auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
     EXPECT_TRUE(res);
@@ -567,7 +567,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0011, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test abilityName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0012, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0012, Function | SmallTest | TestSize.Level0)
 {
     auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
     EXPECT_TRUE(res);
@@ -599,7 +599,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0012, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test bundleName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0013, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0013, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -618,7 +618,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0013, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test abilityName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0014, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0014, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -638,7 +638,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0014, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test deviceID empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0015, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0015, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -659,7 +659,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0015, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test ElementName not empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0016, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0016, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -681,7 +681,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0016, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test ElementNames empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0017, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0017, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -700,7 +700,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0017, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test ElementNames not empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0018, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0018, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -730,7 +730,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0018, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test GetAbilityInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0019, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0019, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -751,7 +751,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0019, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test GetAbilityInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0020, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0020, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -772,7 +772,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0020, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test GetAbilityInfos
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0021, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0021, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -796,7 +796,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0021, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test GetAbilityInfos
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0022, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0022, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -820,7 +820,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0022, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test GetDistributedBundleInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0023, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0023, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -839,7 +839,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0023, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test path is not valid
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0031, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0031, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -856,7 +856,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0031, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test get image type
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0032, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0032, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -875,7 +875,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0032, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. get image type failed
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0033, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0033, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -895,7 +895,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0033, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test get image file info failed
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0034, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0034, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -916,7 +916,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0034, Function | SmallTest | L
  * @tc.name: SendSystemEvent
  * @tc.desc: Send System Event failed
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0035, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0035, Function | SmallTest | TestSize.Level0)
 {
     auto eventReport = GetEventReport();
     EXPECT_NE(eventReport, nullptr);
@@ -932,7 +932,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0035, Function | SmallTest | L
  * @tc.name: SendSystemEvent
  * @tc.desc: Send System Event sucess
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0036, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0036, Function | SmallTest | TestSize.Level0)
 {
     auto eventReport = GetEventReport();
     EXPECT_NE(eventReport, nullptr);
@@ -954,7 +954,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0036, Function | SmallTest | L
  * @tc.name: GetKvStore
  * @tc.desc: Get KvStore
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0037, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0037, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -969,7 +969,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0037, Function | SmallTest | L
  * @tc.name: GetLocalUdid
  * @tc.desc: Get Local Udid
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0038, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0038, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -985,7 +985,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0038, Function | SmallTest | L
  * @tc.name: GetUdidByNetworkId
  * @tc.desc: Get Udid By NetworkId
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0039, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0039, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1002,7 +1002,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0039, Function | SmallTest | L
  * @tc.name: ConvertToDistributedBundleInfo
  * @tc.desc: Convert To Distributed BundleInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0040, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0040, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1022,7 +1022,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0040, Function | SmallTest | L
  * @tc.name: ConvertToDistributedBundleInfo
  * @tc.desc: Convert To Distributed BundleInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0041, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0041, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1045,7 +1045,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0041, Function | SmallTest | L
  * @tc.name: UpdateDistributedData
  * @tc.desc: Update Distributed Data
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0042, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0042, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1060,7 +1060,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0042, Function | SmallTest | L
  * @tc.name: CheckKvStore
  * @tc.desc: Check KvStore
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0043, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0043, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1075,7 +1075,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0043, Function | SmallTest | L
  * @tc.name: DeviceAndNameToKey
  * @tc.desc: Device And Name To Key
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0044, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0044, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1092,7 +1092,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0044, Function | SmallTest | L
  * @tc.name: GetStorageDistributeInfo
  * @tc.desc: Get Storage DistributeInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0045, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0045, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1110,7 +1110,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0045, Function | SmallTest | L
  * @tc.name: DeleteStorageDistributeInfo
  * @tc.desc: Delete Storage DistributeInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0046, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0046, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1126,7 +1126,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0046, Function | SmallTest | L
  * @tc.name: InnerSaveStorageDistributeInfo
  * @tc.desc: Inner Save Storage DistributeInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0047, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0047, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1143,7 +1143,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0047, Function | SmallTest | L
  * @tc.name: SaveStorageDistributeInfo
  * @tc.desc: Save Storage DistributeInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0048, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0048, Function | SmallTest | TestSize.Level0)
 {
     auto distributedDataStorage = GetDistributedDataStorage();
     EXPECT_NE(distributedDataStorage, nullptr);
@@ -1159,7 +1159,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0048, Function | SmallTest | L
  * @tc.name: OnStart
  * @tc.desc: On Start
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0049, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0049, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetSptrDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -1173,7 +1173,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0049, Function | SmallTest | L
  * @tc.name: OnStop
  * @tc.desc: On Stop
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0050, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0050, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetSptrDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -1187,7 +1187,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0050, Function | SmallTest | L
  * @tc.name: Init
  * @tc.desc: Init
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0051, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0051, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetSptrDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -1203,7 +1203,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0051, Function | SmallTest | L
  * @tc.name: GetRemoteAbilityInfo
  * @tc.desc: Get Remote AbilityInfo
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0052, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0052, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -1224,7 +1224,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0052, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. The test path is valid
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0053, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0053, Function | SmallTest | TestSize.Level0)
 {
     auto res = InstallBundle(SYSTEM_HAP_FILE_PATH);
     EXPECT_TRUE(res);
@@ -1245,7 +1245,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0053, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. Invalid test path (parameter is "")
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0054, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0054, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1261,7 +1261,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0054, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. Invalid test path (parameter is "null")
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0055, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0055, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1277,7 +1277,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0055, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. Invalid test path (parameter is "/data/data11")
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0056, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0056, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1293,7 +1293,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0056, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test CalculateRatio
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0057, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0057, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1310,7 +1310,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0057, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test CalculateRatio (Invalid imageType parameter is "image")
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0058, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0058, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1327,7 +1327,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0058, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test CalculateRatio (Invalid imageType parameter is "/")
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0059, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0059, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1344,7 +1344,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0059, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test IsImageNeedCompressBySize (parameters are 10241)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0060, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0060, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1361,7 +1361,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0060, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test IsImageNeedCompressBySize (parameters are 10239)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0061, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0061, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1378,7 +1378,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0061, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test Get Image Type (The fileData parameter is valid)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0062, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0062, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1400,7 +1400,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0062, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test Get Image Type (The fileData parameter is invalid)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0063, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0063, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1421,7 +1421,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0063, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test Get Image Type (The fileData parameter is valid)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0064, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0064, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1444,7 +1444,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0064, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test Get Image Type (The fileData parameter is invalid)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0065, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0065, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1466,7 +1466,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0065, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test Get Image File Info (The srcFile parameter is invalid)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0066, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0066, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1484,7 +1484,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0066, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test Get Image File Info (The srcFile parameter is valid)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0067, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0067, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1511,7 +1511,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0067, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test CompressImageByContent (The fileData parameter is invalid)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0068, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0068, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1532,7 +1532,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0068, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test CompressImageByContent (The fileData parameter is valid)
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0069, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0069, Function | SmallTest | TestSize.Level0)
 {
     std::unique_ptr<ImageCompress> imageCompress = std::make_unique<ImageCompress>();
     EXPECT_NE(imageCompress, nullptr);
@@ -1558,7 +1558,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0069, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test CheckElementName
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0070, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0070, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -1578,7 +1578,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0070, Function | SmallTest | L
  * @tc.desc: 1. system running normally
  *           2. test bundleName empty
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0071, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0071, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
@@ -1595,7 +1595,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0071, Function | SmallTest | L
 * @tc.name: GetRemoteAbilityInfo
 * @tc.desc: Get Remote AbilityInfo
 */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0072, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0072, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -1615,7 +1615,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0072, Function | SmallTest | L
 * @tc.name: test GetRemoteAbilityInfos
 * @tc.desc: Get Remote AbilityInfos
 */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0073, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0073, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -1637,7 +1637,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0073, Function | SmallTest | L
 * @tc.name: test GetRemoteAbilityInfos
 * @tc.desc: Get Remote AbilityInfos
 */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0074, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0074, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -1659,7 +1659,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0074, Function | SmallTest | L
  * @tc.name: test GetDistributedBundleName
  * @tc.desc: 1. get distributed bundle name by networkId and accessTokenId
  */
-HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0075, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0075, Function | SmallTest | TestSize.Level0)
 {
     auto distributedBmsProxy = GetDistributedBmsProxy();
     std::string bundleName;
@@ -1676,7 +1676,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0075, Function | SmallTest | L
  * @tc.name: test InitDeviceManager
  * @tc.desc: isInit_ is true, return true.
  */
-HWTEST_F(DbmsServicesKitTest, InitDeviceManager_0100, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, InitDeviceManager_0100, Function | SmallTest | TestSize.Level0)
 {
     DbmsDeviceManager deviceManager;
     deviceManager.isInit_ = true;
@@ -1689,7 +1689,7 @@ HWTEST_F(DbmsServicesKitTest, InitDeviceManager_0100, Function | SmallTest | Lev
  * @tc.name: test InitDeviceManager
  * @tc.desc: isInit_ is false, return true.
  */
-HWTEST_F(DbmsServicesKitTest, InitDeviceManager_0200, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, InitDeviceManager_0200, Function | SmallTest | TestSize.Level0)
 {
     DbmsDeviceManager deviceManager;
     deviceManager.isInit_ = false;
@@ -1702,7 +1702,7 @@ HWTEST_F(DbmsServicesKitTest, InitDeviceManager_0200, Function | SmallTest | Lev
  * @tc.name: test GetUdidByNetworkId
  * @tc.desc: GetUdidByNetworkId is false
  */
-HWTEST_F(DbmsServicesKitTest, GetUdidByNetworkId_0100, Function | SmallTest | Level0)
+HWTEST_F(DbmsServicesKitTest, GetUdidByNetworkId_0100, Function | SmallTest | TestSize.Level0)
 {
     DbmsDeviceManager deviceManager;
     std::string netWorkId = EMPTY_STRING;
@@ -1716,7 +1716,7 @@ HWTEST_F(DbmsServicesKitTest, GetUdidByNetworkId_0100, Function | SmallTest | Le
  * @tc.name: Test VerifyCallingPermission
  * @tc.desc: Verify the VerifyCallingPermission return true.
  */
-HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0100, Function | MediumTest | Level1)
+HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0100, Function | MediumTest | TestSize.Level1)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
@@ -1729,7 +1729,7 @@ HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0100, Function | MediumTes
  * @tc.name: Test VerifyCallingPermission
  * @tc.desc: Verify the VerifyCallingPermission return false.
  */
-HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0200, Function | MediumTest | Level1)
+HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0200, Function | MediumTest | TestSize.Level1)
 {
     auto distributedBms = GetDistributedBms();
     EXPECT_NE(distributedBms, nullptr);

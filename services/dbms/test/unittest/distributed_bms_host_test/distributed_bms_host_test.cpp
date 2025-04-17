@@ -52,7 +52,7 @@ void DistributedBmsHostTest::TearDown()
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0100, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -69,7 +69,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0100, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0200, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0200, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -89,7 +89,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0200, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0300, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0300, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -109,7 +109,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0300, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0400, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0400, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -132,7 +132,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0400, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0500, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0500, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -155,7 +155,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0500, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0600, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0600, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -178,7 +178,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0600, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0700, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0700, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -200,7 +200,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0700, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0800, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0800, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -223,7 +223,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0800, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0900, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0900, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -247,7 +247,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_0900, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1000, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1000, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -271,7 +271,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1000, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1100, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -295,7 +295,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1100, Function | MediumTest | L
  * @tc.name: Test OnRemoteRequest
  * @tc.desc: Verify the OnRemoteRequest return IPC_STUB_UNKNOW_TRANS_ERR.
  */
-HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1200, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1200, Function | MediumTest | TestSize.Level1)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -318,7 +318,7 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1200, Function | MediumTest | L
  * @tc.name: Test HandleGetRemoteAbilityInfo
  * @tc.desc: Verify the HandleGetRemoteAbilityInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0100, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -337,7 +337,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0100, Function | Med
  * @tc.name: Test HandleGetRemoteAbilityInfo
  * @tc.desc: Verify the HandleGetRemoteAbilityInfo return ERR_APPEXECFWK_PARCEL_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0200, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0200, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -351,7 +351,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0200, Function | Med
  * @tc.name: Test HandleGetRemoteAbilityInfo
  * @tc.desc: Verify the HandleGetRemoteAbilityInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0300, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0300, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -368,7 +368,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0300, Function | Med
  * @tc.name: Test HandleGetRemoteAbilityInfo
  * @tc.desc: Verify the HandleGetRemoteAbilityInfo return ERR_APPEXECFWK_PARCEL_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0400, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0400, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -385,7 +385,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfo_0400, Function | Med
  * @tc.name: Test HandleGetRemoteAbilityInfos
  * @tc.desc: Verify the HandleGetRemoteAbilityInfos return ERR_APPEXECFWK_PARCEL_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfos_0100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfos_0100, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -404,7 +404,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfos_0100, Function | Me
  * @tc.name: Test HandleGetRemoteAbilityInfos
  * @tc.desc: Verify the HandleGetRemoteAbilityInfos return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfos_0200, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfos_0200, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -418,7 +418,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfos_0200, Function | Me
  * @tc.name: Test HandleGetRemoteAbilityInfos
  * @tc.desc: Verify the HandleGetRemoteAbilityInfos return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfos_0300, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfos_0300, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -435,7 +435,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetRemoteAbilityInfos_0300, Function | Me
  * @tc.name: Test HandleGetAbilityInfo
  * @tc.desc: Verify the HandleGetAbilityInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0100, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -452,7 +452,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0100, Function | MediumTes
  * @tc.name: Test HandleGetAbilityInfo
  * @tc.desc: Verify the HandleGetAbilityInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0200, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0200, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -471,7 +471,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0200, Function | MediumTes
  * @tc.name: Test HandleGetAbilityInfo
  * @tc.desc: Verify the HandleGetAbilityInfo return ERR_APPEXECFWK_PARCEL_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0300, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0300, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -485,7 +485,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0300, Function | MediumTes
  * @tc.name: Test HandleGetAbilityInfo
  * @tc.desc: Verify the HandleGetAbilityInfo return ERR_APPEXECFWK_PARCEL_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0400, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0400, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -501,7 +501,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0400, Function | MediumTes
  * @tc.name: Test HandleGetAbilityInfos
  * @tc.desc: Verify the HandleGetAbilityInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0100, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -523,7 +523,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0100, Function | MediumTe
  * @tc.name: Test HandleGetAbilityInfos
  * @tc.desc: Verify the HandleGetAbilityInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0200, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0200, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -540,7 +540,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0200, Function | MediumTe
  * @tc.name: Test HandleGetAbilityInfos
  * @tc.desc: Verify the HandleGetAbilityInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0300, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0300, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -560,7 +560,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0300, Function | MediumTe
  * @tc.name: Test HandleGetAbilityInfos
  * @tc.desc: Verify the HandleGetAbilityInfo return ERR_APPEXECFWK_PARCEL_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0400, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0400, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -574,7 +574,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfos_0400, Function | MediumTe
  * @tc.name: Test HandleGetDistributedBundleInfo
  * @tc.desc: Verify the HandleGetDistributedBundleInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0100, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -592,7 +592,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0100, Function |
  * @tc.name: Test HandleGetDistributedBundleInfo
  * @tc.desc: Verify the HandleGetDistributedBundleInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0200, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0200, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -608,7 +608,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0200, Function |
  * @tc.name: Test HandleGetDistributedBundleInfo
  * @tc.desc: Verify the HandleGetDistributedBundleInfo return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0300, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0300, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -624,7 +624,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0300, Function |
  * @tc.name: Test HandleGetDistributedBundleInfo
  * @tc.desc: Verify the HandleGetDistributedBundleInfo return INVALID_OPERATION.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0400, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0400, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -638,7 +638,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleInfo_0400, Function |
  * @tc.name: Test HandleGetDistributedBundleName
  * @tc.desc: Verify the HandleGetDistributedBundleName return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0100, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -656,7 +656,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0100, Function |
  * @tc.name: Test HandleGetDistributedBundleName
  * @tc.desc: Verify the HandleGetDistributedBundleName return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0200, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0200, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -672,7 +672,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0200, Function |
  * @tc.name: Test HandleGetDistributedBundleName
  * @tc.desc: Verify the HandleGetDistributedBundleName return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0300, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0300, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -688,7 +688,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0300, Function |
  * @tc.name: Test HandleGetDistributedBundleName
  * @tc.desc: Verify the HandleGetDistributedBundleName return NO_ERROR.
  */
-HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0400, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0400, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -702,7 +702,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetDistributedBundleName_0400, Function |
  * @tc.name: Test WriteParcelableVector
  * @tc.desc: Verify the WriteParcelableVector return true.
  */
-HWTEST_F(DistributedBmsHostTest, WriteParcelableVector_0100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, WriteParcelableVector_0100, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
@@ -717,7 +717,7 @@ HWTEST_F(DistributedBmsHostTest, WriteParcelableVector_0100, Function | MediumTe
  * @tc.name: Test GetParcelableInfos
  * @tc.desc: Verify the GetParcelableInfos return false.
  */
-HWTEST_F(DistributedBmsHostTest, GetParcelableInfos_0100, Function | MediumTest | Level1)
+HWTEST_F(DistributedBmsHostTest, GetParcelableInfos_0100, Function | MediumTest | TestSize.Level1)
 {
     Parcel data;
     Parcel reply;
