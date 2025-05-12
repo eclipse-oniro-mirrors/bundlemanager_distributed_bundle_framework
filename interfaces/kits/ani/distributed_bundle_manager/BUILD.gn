@@ -1,0 +1,121 @@
+# Copyright (c) 2025 Huawei Device Co., Ltd.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build/config/components/ets_frontend/ets2abc_config.gni")
+import("//build/ohos.gni")
+import("../../../../dbms.gni")
+
+ohos_shared_library("ani_distributed_bundle_manager") {
+  branch_protector_ret = "pac_ret"
+
+  sanitize = {
+    boundary_sanitize = true
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+    integer_overflow = true
+    ubsan = true
+  }
+
+  cflags = [ "-fstack-protector-strong" ]
+  cflags_cc = [
+    "-Os",
+    "-fno-unwind-tables",
+    "-fstack-protector-strong",
+  ]
+
+  defines = [
+    "APP_LOG_TAG = \"DistributedBundleMgrService\"",
+    "LOG_DOMAIN = 0xD0011E0",
+  ]
+
+  include_dirs = [ "${dbms_kits_path}/js/distributedBundle" ]
+
+  sources = [ "ani_distributed_bundle_manager_convert.cpp" ]
+  if (distributed_bundle_framework_enable) {
+    sources += [ "ani_distributed_bundle_manager.cpp" ]
+  } else {
+    sources += [ "ani_distributed_bundle_manager_unsupported.cpp" ]
+  }
+
+  configs = [ "${dbms_services_path}:distributed_bms_config" ]
+
+  deps = [
+    "${dbms_kits_path}/js/distributedBundle:distributed_bundle_common",
+    "${dbms_inner_api_path}:dbms_fwk",
+  ]
+
+  external_deps = [
+    "ability_base:want",
+    "bundle_framework:appexecfwk_base",
+    "bundle_framework:appexecfwk_core",
+    "bundle_framework:bms_ani_common",
+    "bundle_framework:bundle_napi_common",
+    "bundle_framework:libappexecfwk_common",
+    "c_utils:utils",
+    "hilog:libhilog",
+    "napi:ace_napi",
+    "runtime_core:ani",
+    "runtime_core:ani_helpers",
+    "samgr:samgr_proxy",
+  ]
+  public_external_deps = [ "bundle_framework:bundle_napi_common" ]
+
+  subsystem_name = "bundlemanager"
+  part_name = "distributed_bundle_framework"
+}
+
+generate_static_abc("distributed_bundle_manager") {
+  base_url = "./ets"
+  files = [ "./ets/@ohos.bundle.distributedBundleManager.ets" ]
+  is_boot_abc = "True"
+  device_dst_file = "/system/framework/distributed_bundle_manager.abc"
+}
+
+ohos_prebuilt_etc("distributed_bundle_manager_etc") {
+  source = "$target_out_dir/distributed_bundle_manager.abc"
+  module_install_dir = "framework"
+  subsystem_name = "bundlemanager"
+  part_name = "distributed_bundle_framework"
+  deps = [ ":distributed_bundle_manager" ]
+}
+
+generate_static_abc("remote_ability_info") {
+  base_url = "./ets"
+  files = [
+    "./ets/bundleManager/RemoteAbilityInfo.ets",
+    "./ets/bundleManager/RemoteAbilityInfoInner.ets",
+  ]
+  is_boot_abc = "True"
+  device_dst_file = "/system/framework/remote_ability_info.abc"
+}
+
+ohos_prebuilt_etc("remote_ability_info_etc") {
+  source = "$target_out_dir/remote_ability_info.abc"
+  module_install_dir = "framework"
+  subsystem_name = "bundlemanager"
+  part_name = "distributed_bundle_framework"
+  deps = [ ":remote_ability_info" ]
+}
+
+group("ani_dbms_packages") {
+  deps = []
+
+  if (distributed_bundle_framework_graphics) {
+    deps += [
+      ":ani_distributed_bundle_manager",
+      ":distributed_bundle_manager_etc",
+      ":remote_ability_info_etc",
+    ]
+  }
+}
