@@ -36,6 +36,7 @@
                 "napi",
                 "os_account",
                 "resource_management",
+                "runtime_core",
                 "safwk",
                 "samgr",
                 "selinux_adapter",
@@ -50,6 +51,7 @@
         },
         "build": {
             "sub_component": [
+                "//foundation/bundlemanager/distributed_bundle_framework:ani_dbms_packages",
                 "//foundation/bundlemanager/distributed_bundle_framework:inner_api_target",
                 "//foundation/bundlemanager/distributed_bundle_framework:jsapi_target",
                 "//foundation/bundlemanager/distributed_bundle_framework:dbms_target"
