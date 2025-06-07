@@ -29,6 +29,7 @@
 #include "bundle_mgr_proxy.h"
 #include "dbms_device_manager.h"
 #include "distributed_ability_info.h"
+#include "distributed_bms_acl_info.h"
 #include "distributed_bms.h"
 #include "distributed_bms_interface.h"
 #include "distributed_bms_proxy.h"
@@ -1361,5 +1362,101 @@ HWTEST_F(DbmsServicesKitTest, VerifyCallingPermission_0200, Function | MediumTes
     EXPECT_NE(distributedBms, nullptr);
     int res = distributedBms->VerifyCallingPermission("");
     EXPECT_FALSE(res);
+}
+
+/**
+ * @tc.number: DbmsServicesKitTest
+ * @tc.name: test GetAbilityInfo
+ * @tc.require: issueI5MZ8V
+ * @tc.desc: 1. system running normally
+ *           2. test GetAbilityInfos
+ */
+HWTEST_F(DbmsServicesKitTest, GetAbilityInfos_0010, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        std::vector<ElementName> names;
+        ElementName name;
+        name.SetBundleName(BUNDLE_NAME);
+        name.SetModuleName(MODULE_NAME);
+        name.SetAbilityName(WRONG_ABILITY_NAME);
+        names.push_back(name);
+        std::vector<RemoteAbilityInfo> infos;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBmsProxy->GetAbilityInfos(names, "", infos, &aclInfo);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: DbmsServicesKitTest
+ * @tc.name: test GetAbilityInfo
+ * @tc.require: issueI5MZ8V
+ * @tc.desc: 1. system running normally
+ *           2. test GetAbilityInfo
+ */
+HWTEST_F(DbmsServicesKitTest, GetAbilityInfo_0010, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        ElementName name;
+        name.SetBundleName(WRONG_BUNDLE_NAME);
+        name.SetAbilityName(ABILITY_NAME);
+        RemoteAbilityInfo info;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBmsProxy->GetAbilityInfo(name, "localeInfo", info, &aclInfo);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: GetLocalDevice_0010
+ * @tc.name: Test GetLocalDevice
+ * @tc.desc: GetLocalDevice return true.
+ */
+HWTEST_F(DbmsServicesKitTest, GetLocalDevice_0010, Function | MediumTest | TestSize.Level1)
+{
+    auto distributedBms = GetDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    DistributedHardware::DmDeviceInfo dmDeviceInfo;
+    bool res = distributedBms->GetLocalDevice(dmDeviceInfo);
+    EXPECT_TRUE(res);
+}
+
+/**
+ * @tc.number: GetLocalDevice_0110
+ * @tc.name: test GetLocalDevice
+ * @tc.desc: GetLocalDevice is false
+ */
+HWTEST_F(DbmsServicesKitTest, GetLocalDevice_0110, Function | SmallTest | TestSize.Level0)
+{
+    DbmsDeviceManager deviceManager;
+    DistributedHardware::DmDeviceInfo dmDeviceInfo;
+    auto ret = deviceManager.GetLocalDevice(dmDeviceInfo);
+    EXPECT_TRUE(ret);
+}
+
+/**
+ * @tc.number: CheckAclData_0110
+ * @tc.name: test CheckAclData
+ * @tc.desc: CheckAclData is false
+ */
+HWTEST_F(DbmsServicesKitTest, CheckAclData_0110, Function | SmallTest | TestSize.Level0)
+{
+    DbmsDeviceManager deviceManager;
+    DistributedBmsAclInfo aclInfo;
+    aclInfo.networkId = "networkId";
+    aclInfo.accountId = "accountId";
+    aclInfo.pkgName = "pkgName";
+    auto ret = deviceManager.CheckAclData(aclInfo);
+    EXPECT_FALSE(ret);
 }
 } // OHOS

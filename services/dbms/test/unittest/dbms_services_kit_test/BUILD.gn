@@ -81,6 +81,7 @@ ohos_unittest("DbmsServicesKitTest") {
   }
 
   if (account_enable_dbms) {
+    external_deps += [ "os_account:libaccountkits" ]
     external_deps += [ "os_account:os_account_innerkits" ]
     defines += [ "ACCOUNT_ENABLE" ]
   }

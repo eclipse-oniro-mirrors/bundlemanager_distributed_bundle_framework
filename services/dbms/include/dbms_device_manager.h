@@ -21,6 +21,7 @@
 
 #include "device_manager_callback.h"
 #include "dm_device_info.h"
+#include "distributed_bms_acl_info.h"
 #include "system_ability_load_callback_stub.h"
 
 namespace OHOS {
@@ -30,6 +31,8 @@ public:
     DbmsDeviceManager();
     int32_t GetUdidByNetworkId(const std::string &netWorkId, std::string &udid);
     int32_t GetUuidByNetworkId(const std::string &netWorkId, std::string &uuid);
+    bool GetLocalDevice(DistributedHardware::DmDeviceInfo& dmDeviceInfo);
+    bool CheckAclData(DistributedBmsAclInfo info);
 
 private:
     bool InitDeviceManager();

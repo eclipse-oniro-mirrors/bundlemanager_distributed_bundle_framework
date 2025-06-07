@@ -15,6 +15,7 @@
 
 #include "dbms_device_manager.h"
 
+#include "account_manager_helper.h"
 #include "app_log_wrapper.h"
 #include "bundle_constants.h"
 #include "device_manager.h"
@@ -80,6 +81,53 @@ int32_t DbmsDeviceManager::GetUuidByNetworkId(const std::string &netWorkId, std:
         APP_LOGE("GetUuidByNetworkId failed");
     }
     return errCode;
+}
+
+bool DbmsDeviceManager::GetLocalDevice(DistributedHardware::DmDeviceInfo& dmDeviceInfo)
+{
+    APP_LOGI("GetLocalDeviceId");
+    if (!InitDeviceManager()) {
+        return false;
+    }
+    int32_t ret = DistributedHardware::DeviceManager::GetInstance()
+        .GetLocalDeviceInfo(DISTRIBUTED_BUNDLE_NAME, dmDeviceInfo);
+    if (ret != ERR_OK) {
+        APP_LOGE("GetLocalDeviceInfo failed");
+        return false;
+    }
+    return true;
+}
+
+bool DbmsDeviceManager::CheckAclData(DistributedBmsAclInfo info)
+{
+#ifdef ACCOUNT_ENABLE
+    DistributedHardware::DmAccessCaller dmSrecaller = {
+        .networkId = info.networkId,
+        .userId = info.userId,
+        .accountId = info.accountId,
+        .tokenId = info.tokenId,
+        .pkgName = info.pkgName
+    };
+    AccountSA::OhosAccountInfo osAccountInfo;
+    if (!AccountManagerHelper::GetOsAccountData(osAccountInfo)) {
+        APP_LOGE("GetOsAccountData failed");
+        return false;
+    }
+    DistributedHardware::DmDeviceInfo dmDeviceInfo;
+    if (!GetLocalDevice(dmDeviceInfo)) {
+        return false;
+    }
+    DistributedHardware::DmAccessCallee dmDstCallee = {
+        .networkId = dmDeviceInfo.networkId,
+        .userId = AccountManagerHelper::GetCurrentActiveUserId(),
+        .accountId = osAccountInfo.uid_,
+        .tokenId = OHOS::Security::AccessToken::AccessTokenKit::GetHapTokenID(dmDstCallee.userId, info.pkgName, 0)
+    };
+    return DistributedHardware::DeviceManager::GetInstance().CheckAccessControl(dmSrecaller, dmDstCallee);
+#else
+    APP_LOGI("ACCOUNT_ENABLE is false");
+    return false;
+#endif
 }
 }
 }

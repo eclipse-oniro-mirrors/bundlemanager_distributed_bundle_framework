@@ -20,6 +20,7 @@
 #include <vector>
 
 #include "appexecfwk_errors.h"
+#include "distributed_bms_acl_info.h"
 #include "distributed_bundle_info.h"
 #include "element_name.h"
 #include "iremote_broker.h"
@@ -98,10 +99,11 @@ public:
      * @param elementName Indicates the elementName.
      * @param localeInfo Indicates the localeInfo.
      * @param remoteAbilityInfo Indicates the remote ability info.
+     * @param info Indicates the acl info.
      * @return Returns result code when get ability info.
      */
     virtual int32_t GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elementName, const std::string &localeInfo,
-        RemoteAbilityInfo &remoteAbilityInfo)
+        RemoteAbilityInfo &remoteAbilityInfo, DistributedBmsAclInfo *info = nullptr)
     {
         return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
     }
@@ -123,10 +125,11 @@ public:
      * @param elementNames Indicates the elementNames.
      * @param localeInfo Indicates the localeInfo.
      * @param remoteAbilityInfos Indicates the remote ability infos.
+     * @param info Indicates the acl info.
      * @return Returns result code when get ability infos.
      */
     virtual int32_t GetAbilityInfos(const std::vector<ElementName> &elementNames, const std::string &localeInfo,
-        std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
+        std::vector<RemoteAbilityInfo> &remoteAbilityInfos, DistributedBmsAclInfo *info = nullptr)
     {
         return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
     }

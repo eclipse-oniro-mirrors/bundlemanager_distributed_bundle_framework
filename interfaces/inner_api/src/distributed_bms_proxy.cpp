@@ -122,7 +122,8 @@ int32_t DistributedBmsProxy::GetAbilityInfo(
 
 int32_t DistributedBmsProxy::GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elementName,
                                             const std::string &localeInfo,
-                                            RemoteAbilityInfo &remoteAbilityInfo)
+                                            RemoteAbilityInfo &remoteAbilityInfo,
+                                            DistributedBmsAclInfo *info)
 {
     APP_LOGD("DistributedBmsProxy GetAbilityInfoWithLocale");
     MessageParcel data;
@@ -136,7 +137,19 @@ int32_t DistributedBmsProxy::GetAbilityInfo(const OHOS::AppExecFwk::ElementName 
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
     if (!data.WriteString(localeInfo)) {
-        APP_LOGE("DistributedBmsProxy GetRemoteAbilityInfos write localeInfo error");
+        APP_LOGE("DistributedBmsProxy GetAbilityInfo write localeInfo error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    bool hasInfo = true;
+    if (info == nullptr) {
+        hasInfo = false;
+    }
+    if (!data.WriteBool(hasInfo)) {
+        APP_LOGE("DistributedBmsProxy GetAbilityInfo write hasInfo error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (hasInfo && !data.WriteParcelable(info)) {
+        APP_LOGE("DistributedBmsProxy GetAbilityInfo write info error or info is null");
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
     int32_t result = GetParcelableInfo<RemoteAbilityInfo>(
@@ -157,7 +170,8 @@ int32_t DistributedBmsProxy::GetAbilityInfos(
 
 int32_t DistributedBmsProxy::GetAbilityInfos(const std::vector<ElementName> &elementNames,
                                              const std::string &localeInfo,
-                                             std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
+                                             std::vector<RemoteAbilityInfo> &remoteAbilityInfos,
+                                             DistributedBmsAclInfo *info)
 {
     APP_LOGD("DistributedBmsProxy GetAbilityInfos");
     MessageParcel data;
@@ -171,7 +185,19 @@ int32_t DistributedBmsProxy::GetAbilityInfos(const std::vector<ElementName> &ele
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
     if (!data.WriteString(localeInfo)) {
-        APP_LOGE("DistributedBmsProxy GetRemoteAbilityInfos write localeInfo error");
+        APP_LOGE("DistributedBmsProxy GetAbilityInfos write localeInfo error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    bool hasInfo = true;
+    if (info == nullptr) {
+        hasInfo = false;
+    }
+    if (!data.WriteBool(hasInfo)) {
+        APP_LOGE("DistributedBmsProxy GetAbilityInfos write hasInfo error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (hasInfo && !data.WriteParcelable(info)) {
+        APP_LOGE("DistributedBmsProxy GetAbilityInfos write info error or info is null");
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
     int32_t result = GetParcelableInfos<RemoteAbilityInfo>(
