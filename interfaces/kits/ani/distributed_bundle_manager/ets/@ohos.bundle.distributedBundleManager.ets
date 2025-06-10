@@ -44,9 +44,9 @@ export default namespace distributedBundleManager {
       let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
       let br: BusinessError = new BusinessError();
       callback(br, result);
-    }, (err: BusinessError): void => {
+    }, (err: Error): void => {
       let result: RemoteAbilityInfo = new RemoteAbilityInfoInner;
-      callback(err, result);
+      callback(err as BusinessError, result);
     });
   }
 
@@ -59,8 +59,8 @@ export default namespace distributedBundleManager {
       p1.then((e: NullishType) => {
         let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
         resolve(result);
-      }, (err: BusinessError): void => {
-        reject(err);
+      }, (err: Error): void => {
+        reject(err as BusinessError);
       });
     });
     return p;
@@ -75,9 +75,9 @@ export default namespace distributedBundleManager {
       let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
       let br: BusinessError = new BusinessError();
       callback(br, resultArray);
-    }, (err: BusinessError): void => {
+    }, (err: Error): void => {
       let resultArray: Array<RemoteAbilityInfo> = new Array<RemoteAbilityInfo>;
-      callback(err, resultArray);
+      callback(err as BusinessError, resultArray);
     });
   }
 
@@ -90,8 +90,8 @@ export default namespace distributedBundleManager {
       p1.then((e: NullishType) => {
         let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
         resolve(resultArray);
-      }, (err: BusinessError): void => {
-        reject(err);
+      }, (err: Error): void => {
+        reject(err as BusinessError);
       });
     });
     return p;
@@ -106,9 +106,9 @@ export default namespace distributedBundleManager {
       let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
       let br: BusinessError = new BusinessError();
       callback(br, result);
-    }, (err: BusinessError): void => {
+    }, (err: Error): void => {
       let result: RemoteAbilityInfo = new RemoteAbilityInfoInner;
-      callback(err, result);
+      callback(err as BusinessError, result);
     });
   }
 
@@ -121,8 +121,8 @@ export default namespace distributedBundleManager {
       p1.then((e: NullishType) => {
         let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
         resolve(result);
-      }, (err: BusinessError): void => {
-        reject(err);
+      }, (err: Error): void => {
+        reject(err as BusinessError);
       });
     });
     return p;
@@ -137,9 +137,9 @@ export default namespace distributedBundleManager {
       let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
       let br: BusinessError = new BusinessError();
       callback(br, resultArray);
-    }, (err: BusinessError): void => {
+    }, (err: Error): void => {
       let resultArray: Array<RemoteAbilityInfo> = new Array<RemoteAbilityInfo>;
-      callback(err, resultArray);
+      callback(err as BusinessError, resultArray);
     });
   }
 
@@ -152,8 +152,8 @@ export default namespace distributedBundleManager {
       p1.then((e: NullishType) => {
         let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
         resolve(resultArray);
-      }, (err: BusinessError): void => {
-        reject(err);
+      }, (err: Error): void => {
+        reject(err as BusinessError);
       });
     });
     return p;
