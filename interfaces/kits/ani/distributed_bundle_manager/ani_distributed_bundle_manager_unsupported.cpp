@@ -22,18 +22,17 @@
 namespace OHOS {
 namespace AppExecFwk {
 namespace {
-constexpr const char* NS_NAME_DISTRIBUTEDBUNDLEMANAGER =
-    "@ohos.bundle.distributedBundleManager.distributedBundleManager";
+constexpr const char* NS_NAME_DISTRIBUTEDMANAGER = "@ohos.bundle.distributedBundleManager.distributedBundleManager";
 } // namespace
 
-ani_object GetRemoteAbilityInfo(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
+ani_object AniGetRemoteAbilityInfo(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
 {
     APP_LOGI("SystemCapability.BundleManager.DistributedBundleFramework not supported.");
     BusinessErrorAni::ThrowCommonError(env, ERROR_SYSTEM_ABILITY_NOT_FOUND, RESOURCE_NAME_GET_REMOTE_ABILITY_INFO, "");
     return nullptr;
 }
 
-ani_object GetRemoteAbilityInfos(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
+ani_object AniGetRemoteAbilityInfos(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
 {
     APP_LOGI("SystemCapability.BundleManager.DistributedBundleFramework not supported.");
     BusinessErrorAni::ThrowCommonError(env, ERROR_SYSTEM_ABILITY_NOT_FOUND, RESOURCE_NAME_GET_REMOTE_ABILITY_INFO, "");
@@ -48,24 +47,23 @@ ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
     ani_status status = vm->GetEnv(ANI_VERSION_1, &env);
     RETURN_ANI_STATUS_IF_NOT_OK(status, "Unsupported ANI_VERSION_1");
 
-    arkts::ani_signature::Namespace freeInstallNS =
-        arkts::ani_signature::Builder::BuildNamespace(NS_NAME_DISTRIBUTEDBUNDLEMANAGER);
+    arkts::ani_signature::Namespace naName = arkts::ani_signature::Builder::BuildNamespace(NS_NAME_DISTRIBUTEDMANAGER);
     ani_namespace kitNs = nullptr;
-    status = env->FindNamespace(freeInstallNS.Descriptor().c_str(), &kitNs);
+    status = env->FindNamespace(naName.Descriptor().c_str(), &kitNs);
     if (status != ANI_OK) {
-        APP_LOGE("FindNamespace: %{public}s fail with %{public}d", NS_NAME_DISTRIBUTEDBUNDLEMANAGER, status);
+        APP_LOGE("FindNamespace: %{public}s fail with %{public}d", NS_NAME_DISTRIBUTEDMANAGER, status);
         return status;
     }
 
     std::array methods = {
-        ani_native_function {"getRemoteAbilityInfoNative", nullptr, reinterpret_cast<void*>(GetRemoteAbilityInfo) },
-        ani_native_function { "getRemoteAbilityInfosNative", nullptr, reinterpret_cast<void*>(GetRemoteAbilityInfos) }
+        ani_native_function { "getRemoteAbilityInfoNative", nullptr, reinterpret_cast<void*>(AniGetRemoteAbilityInfo) },
+        ani_native_function { "getRemoteAbilityInfosNative", nullptr,
+            reinterpret_cast<void*>(AniGetRemoteAbilityInfos) }
     };
 
     status = env->Namespace_BindNativeFunctions(kitNs, methods.data(), methods.size());
     if (status != ANI_OK) {
-        APP_LOGE("Namespace_BindNativeFunctions: %{public}s fail with %{public}d",
-            NS_NAME_DISTRIBUTEDBUNDLEMANAGER, status);
+        APP_LOGE("Namespace_BindNativeFunctions: %{public}s fail with %{public}d", NS_NAME_DISTRIBUTEDMANAGER, status);
         return status;
     }
 

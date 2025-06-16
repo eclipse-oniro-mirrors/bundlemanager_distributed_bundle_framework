@@ -25,8 +25,7 @@
 namespace OHOS {
 namespace AppExecFwk {
 namespace {
-constexpr const char* NS_NAME_DISTRIBUTEDBUNDLEMANAGER =
-    "@ohos.bundle.distributedBundleManager.distributedBundleManager";
+constexpr const char* NS_NAME_DISTRIBUTEDMANAGER = "@ohos.bundle.distributedBundleManager.distributedBundleManager";
 } // namespace
 
 static ani_object GetRemoteAbilityInfoInner(ani_env *env,
@@ -39,9 +38,11 @@ static ani_object GetRemoteAbilityInfoInner(ani_env *env,
         return nullptr;
     }
 
-    std::string locale = CommonFunAni::AniStrToString(env, aniLocale);
-    if (locale.empty()) {
-        APP_LOGW("Locale undefined");
+    std::string locale;
+    if (!CommonFunAni::ParseString(env, aniLocale, locale)) {
+        APP_LOGE("parse locale failed");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_LOCALE, TYPE_STRING);
+        return nullptr;
     }
 
     if (elementNames.size() > GET_REMOTE_ABILITY_INFO_MAX_SIZE) {
@@ -53,7 +54,7 @@ static ani_object GetRemoteAbilityInfoInner(ani_env *env,
     std::vector<RemoteAbilityInfo> remoteAbilityInfos;
     int32_t ret = DistributedHelper::InnerGetRemoteAbilityInfo(elementNames, locale, isArray, remoteAbilityInfos);
     if (ret != ERR_OK) {
-        APP_LOGE("GetRemoteAbilityInfo failed ret: %{public}d", ret);
+        APP_LOGE("InnerGetRemoteAbilityInfo failed ret: %{public}d", ret);
         BusinessErrorAni::ThrowCommonError(env, ret,
             RESOURCE_NAME_GET_REMOTE_ABILITY_INFO, Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED);
         return nullptr;
@@ -64,6 +65,7 @@ static ani_object GetRemoteAbilityInfoInner(ani_env *env,
             AniDistributedbundleManagerConvert::ConvertRemoteAbilityInfo);
         if (remoteAbilityInfosObject == nullptr) {
             APP_LOGE("nullptr remoteAbilityInfosObject");
+            return nullptr;
         }
         return remoteAbilityInfosObject;
     } else {
@@ -71,13 +73,15 @@ static ani_object GetRemoteAbilityInfoInner(ani_env *env,
     }
 }
 
-static ani_object GetRemoteAbilityInfo(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
+static ani_object AniGetRemoteAbilityInfo(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
 {
+    APP_LOGD("ani GetRemoteAbilityInfo called");
     return GetRemoteAbilityInfoInner(env, aniElementNames, aniLocale, false);
 }
 
-static ani_object GetRemoteAbilityInfos(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
+static ani_object AniGetRemoteAbilityInfos(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
 {
+    APP_LOGD("ani GetRemoteAbilityInfos called");
     return GetRemoteAbilityInfoInner(env, aniElementNames, aniLocale, true);
 }
 
@@ -89,24 +93,23 @@ ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
     ani_status status = vm->GetEnv(ANI_VERSION_1, &env);
     RETURN_ANI_STATUS_IF_NOT_OK(status, "Unsupported ANI_VERSION_1");
 
-    arkts::ani_signature::Namespace freeInstallNS =
-        arkts::ani_signature::Builder::BuildNamespace(NS_NAME_DISTRIBUTEDBUNDLEMANAGER);
+    arkts::ani_signature::Namespace naName = arkts::ani_signature::Builder::BuildNamespace(NS_NAME_DISTRIBUTEDMANAGER);
     ani_namespace kitNs = nullptr;
-    status = env->FindNamespace(freeInstallNS.Descriptor().c_str(), &kitNs);
+    status = env->FindNamespace(naName.Descriptor().c_str(), &kitNs);
     if (status != ANI_OK) {
-        APP_LOGE("FindNamespace: %{public}s fail with %{public}d", NS_NAME_DISTRIBUTEDBUNDLEMANAGER, status);
+        APP_LOGE("FindNamespace: %{public}s fail with %{public}d", NS_NAME_DISTRIBUTEDMANAGER, status);
         return status;
     }
 
     std::array methods = {
-        ani_native_function { "getRemoteAbilityInfoNative", nullptr, reinterpret_cast<void*>(GetRemoteAbilityInfo) },
-        ani_native_function { "getRemoteAbilityInfosNative", nullptr, reinterpret_cast<void*>(GetRemoteAbilityInfos) }
+        ani_native_function { "getRemoteAbilityInfoNative", nullptr, reinterpret_cast<void*>(AniGetRemoteAbilityInfo) },
+        ani_native_function { "getRemoteAbilityInfosNative", nullptr,
+            reinterpret_cast<void*>(AniGetRemoteAbilityInfos) }
     };
 
     status = env->Namespace_BindNativeFunctions(kitNs, methods.data(), methods.size());
     if (status != ANI_OK) {
-        APP_LOGE("Namespace_BindNativeFunctions: %{public}s fail with %{public}d",
-            NS_NAME_DISTRIBUTEDBUNDLEMANAGER, status);
+        APP_LOGE("Namespace_BindNativeFunctions: %{public}s fail with %{public}d", NS_NAME_DISTRIBUTEDMANAGER, status);
         return status;
     }
 
