@@ -37,7 +37,10 @@ ohos_shared_library("dbms_fwk") {
     "-fstack-protector-strong",
   ]
 
-  sources = [ "src/distributed_bms_proxy.cpp" ]
+  sources = [
+    "src/distributed_bms_acl_info.cpp",
+    "src/distributed_bms_proxy.cpp"
+  ]
 
   defines = [
     "APP_LOG_TAG = \"DistributedBundleMgrService\"",

@@ -81,10 +81,11 @@ public:
      * @param elementName Indicates the elementName.
      * @param localeInfo Indicates the localeInfo.
      * @param remoteAbilityInfo Indicates the remote ability info.
+     * @param info Indicates the acl info.
      * @return Returns result code when get ability info.
      */
     int32_t GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elementName, const std::string &localeInfo,
-        RemoteAbilityInfo &remoteAbilityInfo) override;
+        RemoteAbilityInfo &remoteAbilityInfo, DistributedBmsAclInfo *info = nullptr) override;
 
     /**
      * @brief get ability infos
@@ -100,10 +101,11 @@ public:
      * @param elementNames Indicates the elementNames.
      * @param localeInfo Indicates the localeInfo.
      * @param remoteAbilityInfos Indicates the remote ability infos.
+     * @param info Indicates the acl info.
      * @return Returns result code when get ability infos.
      */
     int32_t GetAbilityInfos(const std::vector<ElementName> &elementNames, const std::string &localeInfo,
-        std::vector<RemoteAbilityInfo> &remoteAbilityInfos) override;
+        std::vector<RemoteAbilityInfo> &remoteAbilityInfos, DistributedBmsAclInfo *info = nullptr) override;
     
     bool GetDistributedBundleInfo(const std::string &networkId, const std::string &bundleName,
         DistributedBundleInfo &distributedBundleInfo) override;

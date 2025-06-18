@@ -57,7 +57,6 @@ namespace {
     const unsigned char DECODE_VALUE_CHAR_THREE = 3;
     const uint8_t DECODE_VALUE_FOUR = 4;
     const uint8_t DECODE_VALUE_SIX = 6;
-    const uint32_t DBMS_UID = 6000;
     const unsigned char DECODE_VALUE_CHAR_FIFTEEN = 15;
     const unsigned char DECODE_VALUE_CHAR_SIXTY_THREE = 63;
     const std::vector<char> DECODE_TABLE = {
@@ -215,6 +214,15 @@ int32_t DistributedBms::GetUuidByNetworkId(const std::string &networkId, std::st
     return dbmsDeviceManager_->GetUuidByNetworkId(networkId, uuid);
 }
 
+bool DistributedBms::GetLocalDevice(DistributedHardware::DmDeviceInfo& dmDeviceInfo)
+{
+    if (dbmsDeviceManager_ == nullptr) {
+        APP_LOGI("deviceManager_ is nullptr");
+        InitDeviceManager();
+    }
+    return dbmsDeviceManager_->GetLocalDevice(dmDeviceInfo);
+}
+
 static OHOS::sptr<OHOS::AppExecFwk::IDistributedBms> GetDistributedBundleMgr(const std::string &deviceId)
 {
     auto samgr = OHOS::SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
@@ -262,7 +270,8 @@ int32_t DistributedBms::GetRemoteAbilityInfo(const OHOS::AppExecFwk::ElementName
         HiviewDFX::XCollie::GetInstance().CancelTimer(timerId);
 #endif
         APP_LOGD("GetDistributedBundleMgr get remote d-bms");
-        resultCode = iDistBundleMgr->GetAbilityInfo(elementName, localeInfo, remoteAbilityInfo);
+        DistributedBmsAclInfo info = BuildDistributedBmsAclInfo();
+        resultCode = iDistBundleMgr->GetAbilityInfo(elementName, localeInfo, remoteAbilityInfo, &info);
     }
 
 #ifdef HISYSEVENT_ENABLE
@@ -305,13 +314,46 @@ int32_t DistributedBms::GetRemoteAbilityInfos(const std::vector<ElementName> &el
         HiviewDFX::XCollie::GetInstance().CancelTimer(timerId);
 #endif
         APP_LOGD("GetDistributedBundleMgr get remote d-bms");
-        resultCode = iDistBundleMgr->GetAbilityInfos(elementNames, localeInfo, remoteAbilityInfos);
+        DistributedBmsAclInfo info = BuildDistributedBmsAclInfo();
+        resultCode = iDistBundleMgr->GetAbilityInfos(elementNames, localeInfo, remoteAbilityInfos, &info);
     }
 #ifdef HISYSEVENT_ENABLE
     EventReport::SendSystemEvent(
         DBMSEventType::GET_REMOTE_ABILITY_INFOS, GetEventInfo(elementNames, localeInfo, resultCode));
 #endif
     return resultCode;
+}
+
+DistributedBmsAclInfo DistributedBms::BuildDistributedBmsAclInfo()
+{
+    DistributedBmsAclInfo info;
+    std::string accountId;
+#ifdef ACCOUNT_ENABLE
+        AccountSA::OhosAccountInfo osAccountInfo;
+        if (!AccountManagerHelper::GetOsAccountData(osAccountInfo)) {
+            APP_LOGE("GetOsAccountData failed");
+            return info;
+        }
+        accountId = osAccountInfo.uid_;
+#endif
+        DistributedHardware::DmDeviceInfo dmDeviceInfo;
+        if (!GetLocalDevice(dmDeviceInfo)) {
+            return info;
+        }
+        int32_t userId = AccountManagerHelper::GetCurrentActiveUserId();
+        auto iBundleMgr = GetBundleMgr();
+        if (!iBundleMgr) {
+            APP_LOGE("DistributedBms GetBundleMgr failed");
+            return info;
+        }
+        std::string callingBundleName;
+        iBundleMgr->GetNameForUid(IPCSkeleton::GetCallingUid(), callingBundleName);
+        info.networkId = dmDeviceInfo.networkId;
+        info.userId = userId;
+        info.accountId = accountId;
+        info.tokenId = OHOS::Security::AccessToken::AccessTokenKit::GetHapTokenID(userId, callingBundleName, 0);
+        info.pkgName = callingBundleName;
+        return info;
 }
 
 int32_t DistributedBms::GetAbilityInfo(
@@ -321,11 +363,13 @@ int32_t DistributedBms::GetAbilityInfo(
 }
 
 int32_t DistributedBms::GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elementName,
-    const std::string &localeInfo, RemoteAbilityInfo &remoteAbilityInfo)
+    const std::string &localeInfo, RemoteAbilityInfo &remoteAbilityInfo,
+    DistributedBmsAclInfo *info)
 {
     APP_LOGI("DistributedBms GetAbilityInfo bundleName:%{public}s , abilityName:%{public}s, localeInfo:%{public}s",
         elementName.GetBundleName().c_str(), elementName.GetAbilityName().c_str(), localeInfo.c_str());
-    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED) &&
+        info != nullptr && !CheckAclData(*info)) {
         APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
         return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
     }
@@ -426,16 +470,18 @@ int32_t DistributedBms::GetAbilityInfos(
 }
 
 int32_t DistributedBms::GetAbilityInfos(const std::vector<ElementName> &elementNames,
-    const std::string &localeInfo, std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
+    const std::string &localeInfo, std::vector<RemoteAbilityInfo> &remoteAbilityInfos,
+    DistributedBmsAclInfo *info)
 {
     APP_LOGD("DistributedBms GetAbilityInfos");
-    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED) &&
+        info != nullptr && !CheckAclData(*info)) {
         APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
         return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
     }
     for (auto elementName : elementNames) {
         RemoteAbilityInfo remoteAbilityInfo;
-        int32_t result = GetAbilityInfo(elementName, localeInfo, remoteAbilityInfo);
+        int32_t result = GetAbilityInfo(elementName, localeInfo, remoteAbilityInfo, info);
         if (result) {
             APP_LOGE("get AbilityInfo:%{public}s, %{public}s, %{public}s failed", elementName.GetBundleName().c_str(),
                 elementName.GetModuleName().c_str(), elementName.GetAbilityName().c_str());
@@ -444,6 +490,15 @@ int32_t DistributedBms::GetAbilityInfos(const std::vector<ElementName> &elementN
         remoteAbilityInfos.push_back(remoteAbilityInfo);
     }
     return OHOS::NO_ERROR;
+}
+
+bool DistributedBms::CheckAclData(DistributedBmsAclInfo info)
+{
+    if (dbmsDeviceManager_ == nullptr) {
+        APP_LOGI("deviceManager_ is nullptr");
+        InitDeviceManager();
+    }
+    return dbmsDeviceManager_->CheckAclData(info);
 }
 
 bool DistributedBms::GetMediaBase64(std::unique_ptr<uint8_t[]> &data, int64_t fileLength,
@@ -589,7 +644,7 @@ bool DistributedBms::VerifyCallingPermission(const std::string &permissionName)
     auto uid = IPCSkeleton::GetCallingUid();
     APP_LOGD("VerifyCallingPermission callingUid %{public}d", uid);
     int32_t ret = OHOS::Security::AccessToken::AccessTokenKit::VerifyAccessToken(callerToken, permissionName);
-    if ((ret == OHOS::Security::AccessToken::PermissionState::PERMISSION_GRANTED) || (uid == DBMS_UID)) {
+    if (ret == OHOS::Security::AccessToken::PermissionState::PERMISSION_GRANTED) {
         APP_LOGD("verify permission success");
         return true;
     }

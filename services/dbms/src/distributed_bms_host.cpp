@@ -135,8 +135,18 @@ int DistributedBmsHost::HandleGetAbilityInfo(Parcel &data, Parcel &reply)
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
     std::string localeInfo = data.ReadString();
+    bool hasInfo = data.ReadBool();
+    DistributedBmsAclInfo *info = nullptr;
+    if (hasInfo) {
+        std::unique_ptr<DistributedBmsAclInfo> readInfo(data.ReadParcelable<DistributedBmsAclInfo>());
+        if (readInfo == nullptr) {
+            APP_LOGE("HandleGetAbilityInfo get parcelable info failed");
+            return ERR_APPEXECFWK_PARCEL_ERROR;
+        }
+        info = readInfo.get();
+    }
     RemoteAbilityInfo remoteAbilityInfo;
-    int ret = GetAbilityInfo(*elementName, localeInfo, remoteAbilityInfo);
+    int ret = GetAbilityInfo(*elementName, localeInfo, remoteAbilityInfo, info);
     if (ret != NO_ERROR) {
         APP_LOGE("GetAbilityInfo result:%{public}d", ret);
         return ret;
@@ -161,8 +171,17 @@ int DistributedBmsHost::HandleGetAbilityInfos(Parcel &data, Parcel &reply)
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
     std::string localeInfo = data.ReadString();
+    bool hasInfo = data.ReadBool();
+    DistributedBmsAclInfo *info = nullptr;
+    if (hasInfo) {
+        info = data.ReadParcelable<DistributedBmsAclInfo>();
+        if (info == nullptr) {
+            APP_LOGE("HandleGetAbilityInfos get parcelable info failed");
+            return ERR_APPEXECFWK_PARCEL_ERROR;
+        }
+    }
     std::vector<RemoteAbilityInfo> remoteAbilityInfos;
-    int ret = GetAbilityInfos(elementNames, localeInfo, remoteAbilityInfos);
+    int ret = GetAbilityInfos(elementNames, localeInfo, remoteAbilityInfos, info);
     if (ret != NO_ERROR) {
         APP_LOGE("GetAbilityInfos result:%{public}d", ret);
         return ret;

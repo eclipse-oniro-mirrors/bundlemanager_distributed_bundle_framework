@@ -20,10 +20,6 @@
 #include "app_log_wrapper.h"
 #include "bundle_constants.h"
 
-#ifdef ACCOUNT_ENABLE
-#include "os_account_manager.h"
-#endif
-
 namespace OHOS {
 namespace AppExecFwk {
 int32_t AccountManagerHelper::GetCurrentActiveUserId()
@@ -41,5 +37,17 @@ int32_t AccountManagerHelper::GetCurrentActiveUserId()
     return Constants::INVALID_USERID;
 #endif
 }
+
+#ifdef ACCOUNT_ENABLE
+bool AccountManagerHelper::GetOsAccountData(AccountSA::OhosAccountInfo& osAccountInfo)
+{
+    ErrCode ret = AccountSA::OhosAccountKits::GetInstance().GetOhosAccountInfo(osAccountInfo);
+    if (ret != ERR_OK || osAccountInfo.uid_ == "") {
+        APP_LOGE("GetOhosAccountInfo failed ret:%{public}d", ret);
+        return false;
+    }
+    return true;
+}
+#endif
 }  // namespace AppExecFwk
 }  // namespace OHOS

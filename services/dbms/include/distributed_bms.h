@@ -92,7 +92,7 @@ public:
      * @return Returns true when get remote ability info success; returns false otherwise.
      */
     int32_t GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elementName, const std::string &localeInfo,
-        RemoteAbilityInfo &remoteAbilityInfo) override;
+        RemoteAbilityInfo &remoteAbilityInfo, DistributedBmsAclInfo *info = nullptr) override;
     /**
      * @brief get ability infos
      * @param elementNames Indicates the elementNames.
@@ -110,7 +110,7 @@ public:
      * @return Returns true when get remote ability info success; returns false otherwise.
      */
     int32_t GetAbilityInfos(const std::vector<ElementName> &elementNames, const std::string &localeInfo,
-        std::vector<RemoteAbilityInfo> &remoteAbilityInfos) override;
+        std::vector<RemoteAbilityInfo> &remoteAbilityInfos, DistributedBmsAclInfo *info = nullptr) override;
 
     bool GetDistributedBundleInfo(const std::string &networkId, const std::string &bundleName,
         DistributedBundleInfo &distributedBundleInfo) override;
@@ -127,7 +127,11 @@ public:
 
     int32_t GetUdidByNetworkId(const std::string &networkId, std::string &udid);
     int32_t GetUuidByNetworkId(const std::string &netWorkId, std::string &uuid);
+    bool GetLocalDevice(DistributedHardware::DmDeviceInfo& dmDeviceInfo);
+    
+    bool CheckAclData(DistributedBmsAclInfo info);
 
+    DistributedBmsAclInfo BuildDistributedBmsAclInfo();
     /**
      * @brief Start the bundle manager service.
      * @return

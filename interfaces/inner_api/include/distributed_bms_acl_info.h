@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,25 +13,26 @@
  * limitations under the License.
  */
 
-#ifndef FOUNDATION_APPEXECFWK_SERVICES_DBMS_INCLUDE_ACCOUNT_MANAGER_HELPER_H
-#define FOUNDATION_APPEXECFWK_SERVICES_DBMS_INCLUDE_ACCOUNT_MANAGER_HELPER_H
+#ifndef FOUNDATION_APPEXECFWK_SERVICES_DBMS_INCLUDE_DISTRIBUTED_BMS_ACL_INFO_H
+#define FOUNDATION_APPEXECFWK_SERVICES_DBMS_INCLUDE_DISTRIBUTED_BMS_ACL_INFO_H
 
 #include <string>
-#ifdef ACCOUNT_ENABLE
-#include "accesstoken_kit.h"
-#include "ohos_account_kits.h"
-#include "os_account_manager.h"
-#endif
+
+#include "parcel.h"
 
 namespace OHOS {
 namespace AppExecFwk {
-class AccountManagerHelper {
-public:
-    static int32_t GetCurrentActiveUserId();
-#ifdef ACCOUNT_ENABLE
-    static bool GetOsAccountData(AccountSA::OhosAccountInfo& osAccountInfo);
-#endif
+struct DistributedBmsAclInfo : public Parcelable {
+    std::string networkId;
+    int32_t userId = 0;
+    std::string accountId;
+    uint64_t tokenId = 0;
+    std::string pkgName;
+
+    bool ReadFromParcel(Parcel &parcel);
+    virtual bool Marshalling(Parcel &parcel) const override;
+    static DistributedBmsAclInfo *Unmarshalling(Parcel &parcel);
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS
-#endif  // FOUNDATION_APPEXECFWK_SERVICES_DBMS_INCLUDE_ACCOUNT_MANAGER_HELPER_H
+#endif // FOUNDATION_APPEXECFWK_SERVICES_DBMS_INCLUDE_DISTRIBUTED_BMS_ACL_INFO_H
