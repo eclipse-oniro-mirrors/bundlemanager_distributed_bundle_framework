@@ -21,7 +21,6 @@
 import { AsyncCallback, BusinessError } from '@ohos.base';
 import { ElementName } from 'bundleManager.ElementName';
 import { RemoteAbilityInfo as _RemoteAbilityInfo } from 'bundleManager.RemoteAbilityInfo';
-import { RemoteAbilityInfoInner } from './bundleManager/RemoteAbilityInfoInner';
 
 export default namespace distributedBundleManager {
   loadLibrary("ani_distributed_bundle_manager.z");
@@ -42,11 +41,9 @@ export default namespace distributedBundleManager {
     let p1 = taskpool.execute(cb);
     p1.then((e: NullishType) => {
       let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
-      let br: BusinessError = new BusinessError();
-      callback(br, result);
+      callback(null, result);
     }, (err: Error): void => {
-      let result: RemoteAbilityInfo = new RemoteAbilityInfoInner;
-      callback(err as BusinessError, result);
+      callback(err as BusinessError, undefined);
     });
   }
 
@@ -73,11 +70,9 @@ export default namespace distributedBundleManager {
     let p1 = taskpool.execute(cb);
     p1.then((e: NullishType) => {
       let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
-      let br: BusinessError = new BusinessError();
-      callback(br, resultArray);
+      callback(null, resultArray);
     }, (err: Error): void => {
-      let resultArray: Array<RemoteAbilityInfo> = new Array<RemoteAbilityInfo>;
-      callback(err as BusinessError, resultArray);
+      callback(err as BusinessError, undefined);
     });
   }
 
@@ -104,11 +99,9 @@ export default namespace distributedBundleManager {
     let p1 = taskpool.execute(cb);
     p1.then((e: NullishType) => {
       let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
-      let br: BusinessError = new BusinessError();
-      callback(br, result);
+      callback(null, result);
     }, (err: Error): void => {
-      let result: RemoteAbilityInfo = new RemoteAbilityInfoInner;
-      callback(err as BusinessError, result);
+      callback(err as BusinessError, undefined);
     });
   }
 
@@ -135,11 +128,9 @@ export default namespace distributedBundleManager {
     let p1 = taskpool.execute(cb);
     p1.then((e: NullishType) => {
       let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
-      let br: BusinessError = new BusinessError();
-      callback(br, resultArray);
+      callback(null, resultArray);
     }, (err: Error): void => {
-      let resultArray: Array<RemoteAbilityInfo> = new Array<RemoteAbilityInfo>;
-      callback(err as BusinessError, resultArray);
+      callback(err as BusinessError, undefined);
     });
   }
 
