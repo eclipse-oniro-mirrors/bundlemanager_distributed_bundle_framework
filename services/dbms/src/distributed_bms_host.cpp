@@ -19,6 +19,7 @@
 #include "appexecfwk_errors.h"
 #include "bundle_constants.h"
 #include "bundle_memory_guard.h"
+#include "dbms_scope_guard.h"
 #include "distributed_bundle_ipc_interface_code.h"
 #include "remote_ability_info.h"
 
@@ -137,13 +138,18 @@ int DistributedBmsHost::HandleGetAbilityInfo(Parcel &data, Parcel &reply)
     std::string localeInfo = data.ReadString();
     bool hasInfo = data.ReadBool();
     DistributedBmsAclInfo *info = nullptr;
+    DbmsScopeGuard deletePtrGuard([&info] {
+        if (info != nullptr) {
+            delete info;
+            info = nullptr;
+        }
+    });
     if (hasInfo) {
-        std::unique_ptr<DistributedBmsAclInfo> readInfo(data.ReadParcelable<DistributedBmsAclInfo>());
-        if (readInfo == nullptr) {
-            APP_LOGE("HandleGetAbilityInfo get parcelable info failed");
+        info = data.ReadParcelable<DistributedBmsAclInfo>();
+        if (info == nullptr) {
+            APP_LOGE("HandleGetAbilityInfos get parcelable info failed");
             return ERR_APPEXECFWK_PARCEL_ERROR;
         }
-        info = readInfo.get();
     }
     RemoteAbilityInfo remoteAbilityInfo;
     int ret = GetAbilityInfo(*elementName, localeInfo, remoteAbilityInfo, info);
@@ -173,6 +179,12 @@ int DistributedBmsHost::HandleGetAbilityInfos(Parcel &data, Parcel &reply)
     std::string localeInfo = data.ReadString();
     bool hasInfo = data.ReadBool();
     DistributedBmsAclInfo *info = nullptr;
+    DbmsScopeGuard deletePtrGuard([&info] {
+        if (info != nullptr) {
+            delete info;
+            info = nullptr;
+        }
+    });
     if (hasInfo) {
         info = data.ReadParcelable<DistributedBmsAclInfo>();
         if (info == nullptr) {
