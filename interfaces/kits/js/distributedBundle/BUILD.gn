@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2022-2025 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,6 +13,53 @@
 
 import("//build/ohos.gni")
 import("../../../../dbms.gni")
+
+ohos_shared_library("distributed_bundle_common") {
+  branch_protector_ret = "pac_ret"
+
+  sanitize = {
+    boundary_sanitize = true
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+    integer_overflow = true
+    ubsan = true
+  }
+
+  sources = [ "distributed_helper.cpp" ]
+
+  cflags = [
+    "-Os",
+    "-fstack-protector-strong",
+  ]
+
+  cflags_cc = [
+    "-Os",
+    "-fstack-protector-strong",
+  ]
+
+  deps = [ "${dbms_inner_api_path}:dbms_fwk" ]
+
+  defines = [
+    "APP_LOG_TAG = \"DistributedBundleMgrService\"",
+    "LOG_DOMAIN = 0xD0011E0",
+  ]
+
+  external_deps = [
+    "bundle_framework:appexecfwk_base",
+    "bundle_framework:appexecfwk_core",
+    "bundle_framework:bundle_napi_common",
+    "bundle_framework:libappexecfwk_common",
+    "c_utils:utils",
+    "hilog:libhilog",
+    "ipc:ipc_core",
+    "napi:ace_napi",
+    "samgr:samgr_proxy",
+  ]
+
+  subsystem_name = "bundlemanager"
+  part_name = "distributed_bundle_framework"
+}
 
 ohos_shared_library("distributedbundlemanager") {
   branch_protector_ret = "pac_ret"
@@ -46,7 +93,10 @@ ohos_shared_library("distributedbundlemanager") {
 
   configs = [ "${dbms_services_path}:distributed_bms_config" ]
 
-  deps = [ "${dbms_inner_api_path}:dbms_fwk" ]
+  deps = [
+    ":distributed_bundle_common",
+    "${dbms_inner_api_path}:dbms_fwk",
+  ]
 
   external_deps = [
     "ability_base:want",
@@ -67,7 +117,7 @@ ohos_shared_library("distributedbundlemanager") {
 }
 
 group("jsapi_target") {
-  deps = []
+  deps = [ ":distributed_bundle_common" ]
 
   if (support_jsapi && distributed_bundle_framework_graphics) {
     deps += [ ":distributedbundlemanager" ]
