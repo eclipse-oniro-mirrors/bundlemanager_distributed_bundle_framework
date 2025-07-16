@@ -41,7 +41,7 @@ ohos_shared_library("ani_distributed_bundle_manager") {
 
   include_dirs = [ "${dbms_kits_path}/js/distributedBundle" ]
 
-  sources = [ "ani_distributed_bundle_manager_convert.cpp" ]
+  sources = [ "ani_distributed_bundle_manager_common.cpp" ]
   if (distributed_bundle_framework_enable) {
     sources += [ "ani_distributed_bundle_manager.cpp" ]
   } else {
