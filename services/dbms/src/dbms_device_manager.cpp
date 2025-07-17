@@ -102,11 +102,11 @@ bool DbmsDeviceManager::CheckAclData(DistributedBmsAclInfo info)
 {
 #ifdef ACCOUNT_ENABLE
     DistributedHardware::DmAccessCaller dmSrecaller = {
+        .accountId = info.accountId,
+        .pkgName = info.pkgName,
         .networkId = info.networkId,
         .userId = info.userId,
-        .accountId = info.accountId,
-        .tokenId = info.tokenId,
-        .pkgName = info.pkgName
+        .tokenId = info.tokenId
     };
     AccountSA::OhosAccountInfo osAccountInfo;
     if (!AccountManagerHelper::GetOsAccountData(osAccountInfo)) {
@@ -118,9 +118,9 @@ bool DbmsDeviceManager::CheckAclData(DistributedBmsAclInfo info)
         return false;
     }
     DistributedHardware::DmAccessCallee dmDstCallee = {
+        .accountId = osAccountInfo.uid_,
         .networkId = dmDeviceInfo.networkId,
         .userId = AccountManagerHelper::GetCurrentActiveUserId(),
-        .accountId = osAccountInfo.uid_,
         .tokenId = OHOS::Security::AccessToken::AccessTokenKit::GetHapTokenID(dmDstCallee.userId, info.pkgName, 0)
     };
     return DistributedHardware::DeviceManager::GetInstance().CheckAccessControl(dmSrecaller, dmDstCallee);
