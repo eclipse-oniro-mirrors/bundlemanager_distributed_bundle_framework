@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023-2025 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,29 +14,12 @@
  */
 import file from '@system.file';
 
-import {Core, ExpectExtend, InstrumentLog, ReportExtend} from "deccjsunit/index.ets"
-import GlobalContext from "../MainAbility/GlobalContext.ts"
-
 
 @Entry
 @Component
 struct Index {
   aboutToAppear(){
     console.info("start run testcase!!!!")
-    const core:Core = Core.getInstance()
-    const expectExtend:ExpectExtend = new ExpectExtend({
-      id: 'extend'
-    })
-    core.addService('expect', expectExtend)
-    const reportExtend:ReportExtend = new ReportExtend(file)
-
-    core.addService('report', reportExtend)
-    core.init()
-    core.subscribeEvent('task', reportExtend)
-
-    const globalContext:GlobalContext = new GlobalContext()
-    globalContext.globalContext(core)
-    core.execute()
   }
 
   build() {
