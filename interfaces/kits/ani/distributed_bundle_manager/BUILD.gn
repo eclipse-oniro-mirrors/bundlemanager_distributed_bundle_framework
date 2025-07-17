@@ -16,6 +16,7 @@ import("//build/ohos.gni")
 import("../../../../dbms.gni")
 
 ohos_shared_library("ani_distributed_bundle_manager") {
+  shlib_type = "ani"
   branch_protector_ret = "pac_ret"
 
   sanitize = {
