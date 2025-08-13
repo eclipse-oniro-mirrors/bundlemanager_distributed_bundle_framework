@@ -21,6 +21,12 @@
 
 namespace OHOS {
 namespace AppExecFwk {
+namespace {
+constexpr int32_t GET_REMOTE_ABILITY_INFO_MAX_SIZE = 10;
+constexpr const char* RESOURCE_NAME_GET_REMOTE_ABILITY_INFO = "GetRemoteAbilityInfo";
+constexpr const char* PARAMETER_ELEMENT_NAME = "elementName";
+constexpr const char* PARAMETER_LOCALE = "locale";
+}
 class DistributedHelper {
 public:
     static int32_t InnerGetRemoteAbilityInfo(const std::vector<ElementName> &elementNames, const std::string &locale,

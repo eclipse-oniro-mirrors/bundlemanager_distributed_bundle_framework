@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef DISTRIBUTED_BUNDLE_FRAMEWORK_INTERFACE_KITS_ANI_ANI_DISTRIBUTED_BUNDLE_MANAGER_CONVERT_H
-#define DISTRIBUTED_BUNDLE_FRAMEWORK_INTERFACE_KITS_ANI_ANI_DISTRIBUTED_BUNDLE_MANAGER_CONVERT_H
+#ifndef DISTRIBUTED_BUNDLE_FRAMEWORK_INTERFACE_KITS_ANI_DISTRIBUTED_BUNDLE_MANAGER_CONVERT_H
+#define DISTRIBUTED_BUNDLE_FRAMEWORK_INTERFACE_KITS_ANI_DISTRIBUTED_BUNDLE_MANAGER_CONVERT_H
 
 #include <ani.h>
 #include <string>
@@ -25,10 +25,10 @@
 
 namespace OHOS {
 namespace AppExecFwk {
-class AniDistributedbundleManagerConvert {
-public:
-    static ani_object ConvertRemoteAbilityInfo(ani_env* env, const RemoteAbilityInfo& remoteAbilityInfo);
-};
-}
-}
-#endif // DISTRIBUTED_BUNDLE_FRAMEWORK_INTERFACE_KITS_ANI_ANI_DISTRIBUTED_BUNDLE_MANAGER_CONVERT_H
+namespace AniDistributedbundleManagerCommon {
+ani_object ConvertDistributedBundleElementName(ani_env* env, const ElementName& elementName);
+ani_object ConvertRemoteAbilityInfo(ani_env* env, const RemoteAbilityInfo& remoteAbilityInfo);
+} // AniDistributedbundleManagerCommon
+} // AppExecFwk
+} // OHOS
+#endif // DISTRIBUTED_BUNDLE_FRAMEWORK_INTERFACE_KITS_ANI_DISTRIBUTED_BUNDLE_MANAGER_CONVERT_H

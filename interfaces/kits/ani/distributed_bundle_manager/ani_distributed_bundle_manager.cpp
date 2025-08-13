@@ -14,7 +14,7 @@
  */
 #include <ani_signature_builder.h>
 
-#include "ani_distributed_bundle_manager_convert.h"
+#include "ani_distributed_bundle_manager_common.h"
 #include "app_log_wrapper.h"
 #include "bundle_errors.h"
 #include "business_error_ani.h"
@@ -62,14 +62,14 @@ static ani_object GetRemoteAbilityInfoInner(ani_env *env,
 
     if (isArray) {
         ani_object remoteAbilityInfosObject = CommonFunAni::ConvertAniArray(env, remoteAbilityInfos,
-            AniDistributedbundleManagerConvert::ConvertRemoteAbilityInfo);
+            AniDistributedbundleManagerCommon::ConvertRemoteAbilityInfo);
         if (remoteAbilityInfosObject == nullptr) {
             APP_LOGE("nullptr remoteAbilityInfosObject");
             return nullptr;
         }
         return remoteAbilityInfosObject;
     } else {
-        return AniDistributedbundleManagerConvert::ConvertRemoteAbilityInfo(env, remoteAbilityInfos[0]);
+        return AniDistributedbundleManagerCommon::ConvertRemoteAbilityInfo(env, remoteAbilityInfos[0]);
     }
 }
 
