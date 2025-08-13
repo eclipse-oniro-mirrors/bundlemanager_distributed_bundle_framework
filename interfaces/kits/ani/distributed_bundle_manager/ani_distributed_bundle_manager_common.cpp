@@ -38,7 +38,7 @@ ani_object ConvertDistributedBundleElementName(ani_env* env, const ElementName& 
     ani_class cls = CommonFunAni::CreateClassByName(env, CLASSNAME_ELEMENTNAME);
     RETURN_NULL_IF_NULL(cls);
 
-    ani_object object = CommonFunAni::CreateNewObjectByClass(env, cls);
+    ani_object object = CommonFunAni::CreateNewObjectByClass(env, CLASSNAME_ELEMENTNAME, cls);
     RETURN_NULL_IF_NULL(object);
 
     ani_string string = nullptr;
@@ -71,7 +71,7 @@ ani_object ConvertRemoteAbilityInfo(ani_env* env, const RemoteAbilityInfo& remot
     ani_class cls = CommonFunAni::CreateClassByName(env, CLASSNAME_REMOTEABILITYINFO);
     RETURN_NULL_IF_NULL(cls);
 
-    ani_object object = CommonFunAni::CreateNewObjectByClass(env, cls);
+    ani_object object = CommonFunAni::CreateNewObjectByClass(env, CLASSNAME_REMOTEABILITYINFO, cls);
     RETURN_NULL_IF_NULL(object);
 
     ani_string string = nullptr;
