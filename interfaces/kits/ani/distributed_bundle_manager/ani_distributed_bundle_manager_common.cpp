@@ -13,6 +13,8 @@
  * limitations under the License.
  */
 
+#include <ani_signature_builder.h>
+
 #include "ani_distributed_bundle_manager_common.h"
 #include "common_fun_ani.h"
 
@@ -20,76 +22,91 @@ namespace OHOS {
 namespace AppExecFwk {
 namespace AniDistributedbundleManagerCommon {
 namespace {
-constexpr const char* CLASSNAME_ELEMENTNAME = "bundleManager.ElementNameInner.ElementNameInner";
-constexpr const char* CLASSNAME_REMOTEABILITYINFO = "bundleManager.RemoteAbilityInfoInner.RemoteAbilityInfoInner";
-constexpr const char* PROPERTYNAME_DEVICEID = "deviceId";
-constexpr const char* PROPERTYNAME_BUNDLENAME = "bundleName";
-constexpr const char* PROPERTYNAME_MODULENAME = "moduleName";
-constexpr const char* PROPERTYNAME_ABILITYNAME = "abilityName";
-constexpr const char* PROPERTYNAME_ELEMENTNAME = "elementName";
-constexpr const char* PROPERTYNAME_ICON = "icon";
-constexpr const char* PROPERTYNAME_LABEL = "label";
+constexpr const char* CLASSNAME_ELEMENT_NAME = "bundleManager.ElementNameInner.ElementNameInner";
+constexpr const char* CLASSNAME_REMOTE_ABILITY_INFO = "bundleManager.RemoteAbilityInfoInner.RemoteAbilityInfoInner";
 }
 
 ani_object ConvertDistributedBundleElementName(ani_env* env, const ElementName& elementName)
 {
     RETURN_NULL_IF_NULL(env);
 
-    ani_class cls = CommonFunAni::CreateClassByName(env, CLASSNAME_ELEMENTNAME);
-    RETURN_NULL_IF_NULL(cls);
-
-    ani_object object = CommonFunAni::CreateNewObjectByClass(env, cls);
-    RETURN_NULL_IF_NULL(object);
-
-    ani_string string = nullptr;
+    ani_ref undefinedRef = nullptr;
+    ani_status status = env->GetUndefined(&undefinedRef);
+    if (status != ANI_OK) {
+        APP_LOGE("GetUndefined failed %{public}d", status);
+        return nullptr;
+    }
 
     // deviceId?: string
-    if (CommonFunAni::StringToAniStr(env, elementName.GetDeviceID(), string)) {
-        RETURN_NULL_IF_FALSE(CommonFunAni::CallSetterOptional(env, cls, object, PROPERTYNAME_DEVICEID, string));
+    ani_ref deviceId = undefinedRef;
+    ani_string deviceIdString = nullptr;
+    if (CommonFunAni::StringToAniStr(env, elementName.GetDeviceID(), deviceIdString)) {
+        deviceId = deviceIdString;
     }
 
     // bundleName: string
-    RETURN_NULL_IF_FALSE(CommonFunAni::StringToAniStr(env, elementName.GetBundleName(), string));
-    RETURN_NULL_IF_FALSE(CommonFunAni::CallSetter(env, cls, object, PROPERTYNAME_BUNDLENAME, string));
+    ani_string bundleName = nullptr;
+    RETURN_NULL_IF_FALSE(CommonFunAni::StringToAniStr(env, elementName.GetBundleName(), bundleName));
 
     // moduleName?: string
-    if (CommonFunAni::StringToAniStr(env, elementName.GetModuleName(), string)) {
-        RETURN_NULL_IF_FALSE(CommonFunAni::CallSetterOptional(env, cls, object, PROPERTYNAME_MODULENAME, string));
+    ani_ref moduleName = undefinedRef;
+    ani_string moduleNameString = nullptr;
+    if (CommonFunAni::StringToAniStr(env, elementName.GetModuleName(), moduleNameString)) {
+        moduleName = moduleNameString;
     }
 
     // abilityName: string
-    RETURN_NULL_IF_FALSE(CommonFunAni::StringToAniStr(env, elementName.GetAbilityName(), string));
-    RETURN_NULL_IF_FALSE(CommonFunAni::CallSetter(env, cls, object, PROPERTYNAME_ABILITYNAME, string));
+    ani_string abilityName = nullptr;
+    RETURN_NULL_IF_FALSE(CommonFunAni::StringToAniStr(env, elementName.GetAbilityName(), abilityName));
 
-    return object;
+    ani_value args[] = {
+        { .r = bundleName },
+        { .r = abilityName },
+        { .r = deviceId },
+        { .r = moduleName },
+        { .r = undefinedRef },
+        { .r = undefinedRef },
+    };
+    static const std::string ctorSig =
+        arkts::ani_signature::SignatureBuilder()
+            .AddClass(CommonFunAniNS::CLASSNAME_STRING) // bundleName: string
+            .AddClass(CommonFunAniNS::CLASSNAME_STRING) // abilityName: string
+            .AddClass(CommonFunAniNS::CLASSNAME_STRING) // deviceId?: string
+            .AddClass(CommonFunAniNS::CLASSNAME_STRING) // moduleName?: string
+            .AddClass(CommonFunAniNS::CLASSNAME_STRING) // uri?: string
+            .AddClass(CommonFunAniNS::CLASSNAME_STRING) // shortName?: string
+            .BuildSignatureDescriptor();
+    return CommonFunAni::CreateNewObjectByClassV2(env, CLASSNAME_ELEMENT_NAME, ctorSig, args);
 }
 
 ani_object ConvertRemoteAbilityInfo(ani_env* env, const RemoteAbilityInfo& remoteAbilityInfo)
 {
     RETURN_NULL_IF_NULL(env);
 
-    ani_class cls = CommonFunAni::CreateClassByName(env, CLASSNAME_REMOTEABILITYINFO);
-    RETURN_NULL_IF_NULL(cls);
-
-    ani_object object = CommonFunAni::CreateNewObjectByClass(env, cls);
-    RETURN_NULL_IF_NULL(object);
-
-    ani_string string = nullptr;
-
     // elementName: ElementName
-    ani_object aElementNameObject = ConvertDistributedBundleElementName(env, remoteAbilityInfo.elementName);
-    RETURN_NULL_IF_NULL(aElementNameObject);
-    RETURN_NULL_IF_FALSE(CommonFunAni::CallSetter(env, cls, object, PROPERTYNAME_ELEMENTNAME, aElementNameObject));
+    ani_object elementName = ConvertDistributedBundleElementName(env, remoteAbilityInfo.elementName);
+    RETURN_NULL_IF_NULL(elementName);
 
     // label: string
-    RETURN_NULL_IF_FALSE(CommonFunAni::StringToAniStr(env, remoteAbilityInfo.label, string));
-    RETURN_NULL_IF_FALSE(CommonFunAni::CallSetter(env, cls, object, PROPERTYNAME_LABEL, string));
+    ani_string label = nullptr;
+    RETURN_NULL_IF_FALSE(CommonFunAni::StringToAniStr(env, remoteAbilityInfo.label, label));
 
     // icon: string
-    RETURN_NULL_IF_FALSE(CommonFunAni::StringToAniStr(env, remoteAbilityInfo.icon, string));
-    RETURN_NULL_IF_FALSE(CommonFunAni::CallSetter(env, cls, object, PROPERTYNAME_ICON, string));
+    ani_string icon = nullptr;
+    RETURN_NULL_IF_FALSE(CommonFunAni::StringToAniStr(env, remoteAbilityInfo.icon, icon));
 
-    return object;
+    ani_value args[] = {
+        { .r = elementName },
+        { .r = label },
+        { .r = icon },
+    };
+    static const std::string ctorSig =
+        arkts::ani_signature::SignatureBuilder()
+            .AddClass(CLASSNAME_ELEMENT_NAME)           // elementName: ElementName
+            .AddClass(CommonFunAniNS::CLASSNAME_STRING) // label: string
+            .AddClass(CommonFunAniNS::CLASSNAME_STRING) // icon: string
+            .BuildSignatureDescriptor();
+    return CommonFunAni::CreateNewObjectByClassV2(env, CLASSNAME_REMOTE_ABILITY_INFO, ctorSig, args);
 }
 } // AniDistributedbundleManagerCommon
 } // AppExecFwk
