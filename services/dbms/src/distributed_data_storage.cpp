@@ -35,9 +35,10 @@ const int32_t MINIMUM_WAITING_TIME = 180;   //3 mins
 const int32_t MAX_TIMES = 600;              // 1min
 const int32_t PRINTF_LENGTH = 8;              // print length of udid
 const int32_t SLEEP_INTERVAL = 100 * 1000;  // 100ms
-const int32_t FLAGS = BundleFlag::GET_BUNDLE_WITH_ABILITIES |
-                      ApplicationFlag::GET_APPLICATION_INFO_WITH_DISABLE |
-                      AbilityInfoFlag::GET_ABILITY_INFO_WITH_DISABLE;
+const int32_t FLAGS = static_cast<int32_t>(GetBundleInfoFlag::GET_BUNDLE_INFO_WITH_ABILITY) |
+    static_cast<int32_t>(GetBundleInfoFlag::GET_BUNDLE_INFO_WITH_HAP_MODULE) |
+    static_cast<int32_t>(GetBundleInfoFlag::GET_BUNDLE_INFO_WITH_APPLICATION) |
+    static_cast<int32_t>(GetBundleInfoFlag::GET_BUNDLE_INFO_WITH_DISABLE);
 const uint32_t DEVICE_UDID_LENGTH = 65;
 const std::string EMPTY_DEVICE_ID = "";
 }  // namespace
@@ -92,8 +93,8 @@ void DistributedDataStorage::SaveStorageDistributeInfo(const std::string &bundle
         return;
     }
     BundleInfo bundleInfo;
-    bool ret = bundleMgr->GetBundleInfo(bundleName, FLAGS, bundleInfo, currentUserId);
-    if (!ret) {
+    auto ret = bundleMgr->GetBundleInfoV9(bundleName, FLAGS, bundleInfo, currentUserId);
+    if (ret != ERR_OK) {
         APP_LOGW("GetBundleInfo:%{public}s  userid:%{public}d failed", bundleName.c_str(), currentUserId);
         DeleteStorageDistributeInfo(bundleName, currentUserId);
         return;
@@ -440,7 +441,7 @@ void DistributedDataStorage::UpdateDistributedData(int32_t userId)
         return;
     }
     std::vector<BundleInfo> bundleInfos;
-    if (!bundleMgr->GetBundleInfos(FLAGS, bundleInfos, userId)) {
+    if (bundleMgr->GetBundleInfosV9(FLAGS, bundleInfos, userId) != ERR_OK) {
         APP_LOGE("get bundleInfos failed");
         return;
     }
