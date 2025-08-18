@@ -29,4 +29,11 @@ export class RemoteAbilityInfoInner implements RemoteAbilityInfo {
   }
   public readonly label: string = '';
   public readonly icon: string = '';
+
+  constructor() { }
+  constructor(elementName: ElementName, label: string, icon: string) {
+    this.elementName = elementName;
+    this.label = label;
+    this.icon = icon;
+  }
 }
