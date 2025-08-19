@@ -25,6 +25,39 @@ import { RemoteAbilityInfo as _RemoteAbilityInfo } from 'bundleManager.RemoteAbi
 export default namespace distributedBundleManager {
   loadLibrary("ani_distributed_bundle_manager.z");
 
+  const ERROR_PARAM_CHECK_ERROR: int = 401;
+  const GET_REMOTE_ABILITY_INFO_MAX_SIZE: int = 10;
+  const ELEMENT_NAMES_SIZE_ERROR: string = "BusinessError 401: The number of ElementNames is greater than 10";
+  const ELEMENT_NAME_ERROR: string = "BusinessError 401: Parameter error. The type of elementName must be object.";
+
+  function createBusinessError(code: int, message: string) {
+    let err = new BusinessError();
+    err.code = code;
+    err.name = 'Error';
+    err.message = message;
+    return err;
+  }
+
+  function checkElementName(elementName: ElementName) {
+    if (elementName.deviceId === undefined) {
+      throw createBusinessError(ERROR_PARAM_CHECK_ERROR, ELEMENT_NAME_ERROR);
+    }
+  }
+
+  function checkElementNames(elementNames: Array<ElementName>) {
+    if (elementNames.length === 0) {
+      throw createBusinessError(ERROR_PARAM_CHECK_ERROR, ELEMENT_NAME_ERROR);
+    }
+    for (const elementName of elementNames) {
+      if (elementName.deviceId === undefined) {
+        throw createBusinessError(ERROR_PARAM_CHECK_ERROR, ELEMENT_NAME_ERROR);
+      }
+    }
+    if (elementNames.length > GET_REMOTE_ABILITY_INFO_MAX_SIZE) {
+      throw createBusinessError(ERROR_PARAM_CHECK_ERROR, ELEMENT_NAMES_SIZE_ERROR);
+    }
+  }
+
   export native function getRemoteAbilityInfoNative(elementNames: Array<ElementName>, locale: string): RemoteAbilityInfo;
   export native function getRemoteAbilityInfosNative(elementNames: Array<ElementName>, locale: string): Array<RemoteAbilityInfo>;
 
@@ -35,6 +68,7 @@ export default namespace distributedBundleManager {
   }
 
   function getRemoteAbilityInfo(elementName: ElementName, callback: AsyncCallback<RemoteAbilityInfo>): void {
+    checkElementName(elementName);
     let cb = (): RemoteAbilityInfo => {
       return distributedBundleManager.getRemoteAbilityInfoNative(elementName2Array(elementName), '');
     };
@@ -48,6 +82,7 @@ export default namespace distributedBundleManager {
   }
 
   function getRemoteAbilityInfo(elementName: ElementName): Promise<RemoteAbilityInfo> {
+    checkElementName(elementName);
     let p = new Promise<RemoteAbilityInfo>((resolve: (remoteAbilityInfo: RemoteAbilityInfo) => void, reject: (error: BusinessError) => void) => {
       let cb = (): RemoteAbilityInfo => {
         return distributedBundleManager.getRemoteAbilityInfoNative(elementName2Array(elementName), '');
@@ -64,6 +99,7 @@ export default namespace distributedBundleManager {
   }
 
   function getRemoteAbilityInfo(elementNames: Array<ElementName>, callback: AsyncCallback<Array<RemoteAbilityInfo>>): void {
+    checkElementNames(elementNames);
     let cb = (): (Array<RemoteAbilityInfo>) => {
       return distributedBundleManager.getRemoteAbilityInfosNative(elementNames, '');
     };
@@ -77,6 +113,7 @@ export default namespace distributedBundleManager {
   }
 
   function getRemoteAbilityInfo(elementNames: Array<ElementName>): Promise<Array<RemoteAbilityInfo>> {
+    checkElementNames(elementNames);
     let p = new Promise<Array<RemoteAbilityInfo>>((resolve: (arrRemoteAbilityInfo: Array<RemoteAbilityInfo>) => void, reject: (error: BusinessError) => void) => {
       let cb = (): (Array<RemoteAbilityInfo>) => {
         return distributedBundleManager.getRemoteAbilityInfosNative(elementNames, '');
@@ -93,6 +130,7 @@ export default namespace distributedBundleManager {
   }
 
   function getRemoteAbilityInfo(elementName: ElementName, locale: string, callback: AsyncCallback<RemoteAbilityInfo>): void {
+    checkElementName(elementName);
     let cb = (): RemoteAbilityInfo => {
       return distributedBundleManager.getRemoteAbilityInfoNative(elementName2Array(elementName), locale);
     };
@@ -106,6 +144,7 @@ export default namespace distributedBundleManager {
   }
 
   function getRemoteAbilityInfo(elementName: ElementName, locale: string): Promise<RemoteAbilityInfo> {
+    checkElementName(elementName);
     let p = new Promise<RemoteAbilityInfo>((resolve: (remoteAbilityInfo: RemoteAbilityInfo) => void, reject: (error: BusinessError) => void) => {
       let cb = (): RemoteAbilityInfo => {
         return distributedBundleManager.getRemoteAbilityInfoNative(elementName2Array(elementName), locale);
@@ -122,6 +161,7 @@ export default namespace distributedBundleManager {
   }
 
   function getRemoteAbilityInfo(elementNames: Array<ElementName>, locale: string, callback: AsyncCallback<Array<RemoteAbilityInfo>>): void {
+    checkElementNames(elementNames);
     let cb = (): (Array<RemoteAbilityInfo>) => {
       return distributedBundleManager.getRemoteAbilityInfosNative(elementNames, locale);
     };
@@ -135,6 +175,7 @@ export default namespace distributedBundleManager {
   }
 
   function getRemoteAbilityInfo(elementNames: Array<ElementName>, locale: string): Promise<Array<RemoteAbilityInfo>> {
+    checkElementNames(elementNames);
     let p = new Promise<Array<RemoteAbilityInfo>>((resolve: (arrRemoteAbilityInfo: Array<RemoteAbilityInfo>) => void, reject: (error: BusinessError) => void) => {
       let cb = (): (Array<RemoteAbilityInfo>) => {
         return distributedBundleManager.getRemoteAbilityInfosNative(elementNames, locale);
