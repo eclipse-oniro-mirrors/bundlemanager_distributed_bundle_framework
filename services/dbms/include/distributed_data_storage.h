@@ -83,7 +83,7 @@ private:
     const DistributedKv::StoreId storeId_ {DISTRIBUTE_DATA_STORE_ID};
     DistributedKv::DistributedKvDataManager dataManager_;
     std::shared_ptr<DistributedKv::SingleKvStore> kvStorePtr_;
-    mutable std::mutex kvStorePtrMutex_;
+    static std::mutex kvStorePtrMutex_;
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS
