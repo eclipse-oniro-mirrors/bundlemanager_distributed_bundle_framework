@@ -22,7 +22,8 @@ namespace OHOS {
 namespace AppExecFwk {
 namespace AniDistributedbundleManagerCommon {
 namespace {
-constexpr const char* CLASSNAME_ELEMENT_NAME = "bundleManager.ElementNameInner.ElementNameInner";
+constexpr const char* CLASSNAME_ELEMENT_NAME = "bundleManager.ElementName.ElementName";
+constexpr const char* CLASSNAME_ELEMENT_NAME_INNER = "bundleManager.ElementNameInner.ElementNameInner";
 constexpr const char* CLASSNAME_REMOTE_ABILITY_INFO = "bundleManager.RemoteAbilityInfoInner.RemoteAbilityInfoInner";
 }
 
@@ -76,7 +77,7 @@ ani_object ConvertDistributedBundleElementName(ani_env* env, const ElementName& 
             .AddClass(CommonFunAniNS::CLASSNAME_STRING) // uri?: string
             .AddClass(CommonFunAniNS::CLASSNAME_STRING) // shortName?: string
             .BuildSignatureDescriptor();
-    return CommonFunAni::CreateNewObjectByClassV2(env, CLASSNAME_ELEMENT_NAME, ctorSig, args);
+    return CommonFunAni::CreateNewObjectByClassV2(env, CLASSNAME_ELEMENT_NAME_INNER, ctorSig, args);
 }
 
 ani_object ConvertRemoteAbilityInfo(ani_env* env, const RemoteAbilityInfo& remoteAbilityInfo)
