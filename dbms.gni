@@ -21,6 +21,8 @@ dbms_services_path =
     "${bundlemanager_path}/distributed_bundle_framework/services/dbms"
 distributeddatamgr_path = "//foundation/distributeddatamgr"
 kits_path = "${bundle_framework_path}/interfaces/kits"
+dbms_kits_path =
+    "${bundlemanager_path}/distributed_bundle_framework/interfaces/kits"
 
 declare_args() {
   distributed_bundle_framework_graphics = true
