@@ -45,6 +45,7 @@ const std::string EMPTY_DEVICE_ID = "";
 
 std::shared_ptr<DistributedDataStorage> DistributedDataStorage::instance_ = nullptr;
 std::mutex DistributedDataStorage::mutex_;
+std::mutex DistributedDataStorage::kvStorePtrMutex_;
 
 std::shared_ptr<DistributedDataStorage> DistributedDataStorage::GetInstance()
 {
@@ -72,12 +73,9 @@ DistributedDataStorage::~DistributedDataStorage()
 void DistributedDataStorage::SaveStorageDistributeInfo(const std::string &bundleName, int32_t userId)
 {
     APP_LOGI("save DistributedBundleInfo data");
-    {
-        std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
-        if (!CheckKvStore()) {
-            APP_LOGE("kvStore is nullptr");
-            return;
-        }
+    if (!CheckKvStore()) {
+        APP_LOGE("kvStore is nullptr");
+        return;
     }
     int32_t currentUserId = AccountManagerHelper::GetCurrentActiveUserId();
     if (currentUserId == Constants::INVALID_USERID) {
@@ -116,6 +114,11 @@ bool DistributedDataStorage::InnerSaveStorageDistributeInfo(const DistributedBun
     std::string keyOfData = DeviceAndNameToKey(udid, distributedBundleInfo.bundleName);
     Key key(keyOfData);
     Value value(distributedBundleInfo.ToString());
+    std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
+    if (kvStorePtr_ == nullptr) {
+        APP_LOGE("kvStorePtr_ is null");
+        return false;
+    }
     Status status = kvStorePtr_->Put(key, value);
     if (status == Status::IPC_ERROR) {
         status = kvStorePtr_->Put(key, value);
@@ -132,12 +135,9 @@ bool DistributedDataStorage::InnerSaveStorageDistributeInfo(const DistributedBun
 void DistributedDataStorage::DeleteStorageDistributeInfo(const std::string &bundleName, int32_t userId)
 {
     APP_LOGI("delete DistributedBundleInfo");
-    {
-        std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
-        if (!CheckKvStore()) {
-            APP_LOGE("kvStore is nullptr");
-            return;
-        }
+    if (!CheckKvStore()) {
+        APP_LOGE("kvStore is nullptr");
+        return;
     }
     int32_t currentUserId = AccountManagerHelper::GetCurrentActiveUserId();
     if (userId != currentUserId) {
@@ -152,6 +152,11 @@ void DistributedDataStorage::DeleteStorageDistributeInfo(const std::string &bund
     }
     std::string keyOfData = DeviceAndNameToKey(udid, bundleName);
     Key key(keyOfData);
+    std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
+    if (kvStorePtr_ == nullptr) {
+        APP_LOGE("kvStorePtr_ is null");
+        return;
+    }
     Status status = kvStorePtr_->Delete(key);
     if (status == Status::IPC_ERROR) {
         status = kvStorePtr_->Delete(key);
@@ -168,12 +173,9 @@ bool DistributedDataStorage::GetStorageDistributeInfo(const std::string &network
     const std::string &bundleName, DistributedBundleInfo &info)
 {
     APP_LOGI("get DistributedBundleInfo");
-    {
-        std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
-        if (!CheckKvStore()) {
-            APP_LOGE("kvStore is nullptr");
-            return false;
-        }
+    if (!CheckKvStore()) {
+        APP_LOGE("kvStore is nullptr");
+        return false;
     }
     std::string udid;
     int32_t ret = GetUdidByNetworkId(networkId, udid);
@@ -190,6 +192,11 @@ bool DistributedDataStorage::GetStorageDistributeInfo(const std::string &network
     APP_LOGI("keyOfData: [%{public}s]", AnonymizeUdid(keyOfData).c_str());
     Key key(keyOfData);
     Value value;
+    std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
+    if (kvStorePtr_ == nullptr) {
+        APP_LOGE("kvStorePtr_ is null");
+        return false;
+    }
     Status status = kvStorePtr_->Get(key, value);
     if (status == Status::IPC_ERROR) {
         status = kvStorePtr_->Get(key, value);
@@ -210,12 +217,9 @@ bool DistributedDataStorage::GetStorageDistributeInfo(const std::string &network
 int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &networkId, uint32_t accessTokenId,
     std::string &bundleName)
 {
-    {
-        std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
-        if (!CheckKvStore()) {
-            APP_LOGE("kvStore is nullptr");
-            return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
-        }
+    if (!CheckKvStore()) {
+        APP_LOGE("kvStore is nullptr");
+        return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
     }
     std::string udid;
     int32_t ret = GetUdidByNetworkId(networkId, udid);
@@ -234,10 +238,17 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
     }
     Key allEntryKeyPrefix("");
     std::vector<Entry> allEntries;
-    Status status = kvStorePtr_->GetEntries(allEntryKeyPrefix, allEntries);
-    if (status != Status::SUCCESS) {
-        APP_LOGE("dataManager_ GetEntries error: %{public}d", status);
-        return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
+    {
+        std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
+        if (kvStorePtr_ == nullptr) {
+            APP_LOGE("kvStorePtr_ is null");
+            return ERR_APPEXECFWK_NULL_PTR;
+        }
+        Status status = kvStorePtr_->GetEntries(allEntryKeyPrefix, allEntries);
+        if (status != Status::SUCCESS) {
+            APP_LOGE("dataManager_ GetEntries error: %{public}d", status);
+            return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
+        }
     }
     for (auto entry : allEntries) {
         std::string key = entry.key.ToString();
@@ -275,19 +286,26 @@ std::string DistributedDataStorage::DeviceAndNameToKey(
 
 bool DistributedDataStorage::CheckKvStore()
 {
-    if (kvStorePtr_ != nullptr) {
-        return true;
+    {
+        std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
+        if (kvStorePtr_ != nullptr) {
+            return true;
+        }
     }
     int32_t tryTimes = MAX_TIMES;
     while (tryTimes > 0) {
         Status status = GetKvStore();
-        if (status == Status::SUCCESS && kvStorePtr_ != nullptr) {
-            return true;
+        {
+            std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
+            if (status == Status::SUCCESS && kvStorePtr_ != nullptr) {
+                return true;
+            }
         }
         APP_LOGI("CheckKvStore, Times: %{public}d", tryTimes);
         usleep(SLEEP_INTERVAL);
         tryTimes--;
     }
+    std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
     return kvStorePtr_ != nullptr;
 }
 
@@ -318,10 +336,17 @@ bool DistributedDataStorage::SyncAndCompleted(const std::string &udid, const std
     std::vector<std::string> networkIdList = {udid};
     std::shared_ptr<DistributedDataStorageCallback> syncCallback = std::make_shared<DistributedDataStorageCallback>();
     syncCallback->setUuid(uuid);
-    Status status = kvStorePtr_->Sync(networkIdList, DistributedKv::SyncMode::PUSH_PULL, dataQuery, syncCallback);
-    if (status != Status::SUCCESS) {
-        APP_LOGE("distribute database start sync data: %{public}d", status);
-        return false;
+    {
+        std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
+        if (kvStorePtr_ == nullptr) {
+            APP_LOGE("kvStorePtr_ is null");
+            return false;
+        }
+        Status status = kvStorePtr_->Sync(networkIdList, DistributedKv::SyncMode::PUSH_PULL, dataQuery, syncCallback);
+        if (status != Status::SUCCESS) {
+            APP_LOGE("distribute database start sync data: %{public}d", status);
+            return false;
+        }
     }
     APP_LOGI("distribute database start sync data success");
     Status statusResult = syncCallback->GetResultCode();
@@ -344,6 +369,7 @@ Status DistributedDataStorage::GetKvStore()
         .kvStoreType = KvStoreType::SINGLE_VERSION,
         .baseDir = BMS_KV_BASE_DIR + appId_.appId
     };
+    std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
     Status status = dataManager_.GetSingleKvStore(options, appId_, storeId_, kvStorePtr_);
     if (status != Status::SUCCESS) {
         APP_LOGE("return error: %{public}d", status);
@@ -473,6 +499,7 @@ std::map<std::string, DistributedBundleInfo> DistributedDataStorage::GetAllOldDi
 {
     APP_LOGD("start");
     std::map<std::string, DistributedBundleInfo> oldDistributedBundleInfos;
+    std::lock_guard<std::mutex> lock(kvStorePtrMutex_);
     if (kvStorePtr_ == nullptr) {
         APP_LOGE("kvStorePtr_ is null");
         return oldDistributedBundleInfos;
