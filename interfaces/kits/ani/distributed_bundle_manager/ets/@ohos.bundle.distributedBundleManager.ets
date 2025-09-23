@@ -58,8 +58,8 @@ export default namespace distributedBundleManager {
     }
   }
 
-  export native function getRemoteAbilityInfoNative(elementNames: Array<ElementName>, locale: string): RemoteAbilityInfo;
-  export native function getRemoteAbilityInfosNative(elementNames: Array<ElementName>, locale: string): Array<RemoteAbilityInfo>;
+  native function getRemoteAbilityInfoNative(elementNames: Array<ElementName>, locale: string): RemoteAbilityInfo;
+  native function getRemoteAbilityInfosNative(elementNames: Array<ElementName>, locale: string): Array<RemoteAbilityInfo>;
 
   function elementName2Array(elementName: ElementName): Array<ElementName> {
     let elementNames: Array<ElementName> = new Array<ElementName>();
@@ -70,7 +70,7 @@ export default namespace distributedBundleManager {
   function getRemoteAbilityInfo(elementName: ElementName, callback: AsyncCallback<RemoteAbilityInfo>): void {
     checkElementName(elementName);
     let cb = (): RemoteAbilityInfo => {
-      return distributedBundleManager.getRemoteAbilityInfoNative(elementName2Array(elementName), '');
+      return getRemoteAbilityInfoNative(elementName2Array(elementName), '');
     };
     let p1 = taskpool.execute(cb);
     p1.then((e: NullishType) => {
@@ -85,7 +85,7 @@ export default namespace distributedBundleManager {
     checkElementName(elementName);
     let p = new Promise<RemoteAbilityInfo>((resolve: (remoteAbilityInfo: RemoteAbilityInfo) => void, reject: (error: BusinessError) => void) => {
       let cb = (): RemoteAbilityInfo => {
-        return distributedBundleManager.getRemoteAbilityInfoNative(elementName2Array(elementName), '');
+        return getRemoteAbilityInfoNative(elementName2Array(elementName), '');
       };
       let p1 = taskpool.execute(cb);
       p1.then((e: NullishType) => {
@@ -101,7 +101,7 @@ export default namespace distributedBundleManager {
   function getRemoteAbilityInfo(elementNames: Array<ElementName>, callback: AsyncCallback<Array<RemoteAbilityInfo>>): void {
     checkElementNames(elementNames);
     let cb = (): (Array<RemoteAbilityInfo>) => {
-      return distributedBundleManager.getRemoteAbilityInfosNative(elementNames, '');
+      return getRemoteAbilityInfosNative(elementNames, '');
     };
     let p1 = taskpool.execute(cb);
     p1.then((e: NullishType) => {
@@ -116,7 +116,7 @@ export default namespace distributedBundleManager {
     checkElementNames(elementNames);
     let p = new Promise<Array<RemoteAbilityInfo>>((resolve: (arrRemoteAbilityInfo: Array<RemoteAbilityInfo>) => void, reject: (error: BusinessError) => void) => {
       let cb = (): (Array<RemoteAbilityInfo>) => {
-        return distributedBundleManager.getRemoteAbilityInfosNative(elementNames, '');
+        return getRemoteAbilityInfosNative(elementNames, '');
       };
       let p1 = taskpool.execute(cb);
       p1.then((e: NullishType) => {
@@ -132,7 +132,7 @@ export default namespace distributedBundleManager {
   function getRemoteAbilityInfo(elementName: ElementName, locale: string, callback: AsyncCallback<RemoteAbilityInfo>): void {
     checkElementName(elementName);
     let cb = (): RemoteAbilityInfo => {
-      return distributedBundleManager.getRemoteAbilityInfoNative(elementName2Array(elementName), locale);
+      return getRemoteAbilityInfoNative(elementName2Array(elementName), locale);
     };
     let p1 = taskpool.execute(cb);
     p1.then((e: NullishType) => {
@@ -147,7 +147,7 @@ export default namespace distributedBundleManager {
     checkElementName(elementName);
     let p = new Promise<RemoteAbilityInfo>((resolve: (remoteAbilityInfo: RemoteAbilityInfo) => void, reject: (error: BusinessError) => void) => {
       let cb = (): RemoteAbilityInfo => {
-        return distributedBundleManager.getRemoteAbilityInfoNative(elementName2Array(elementName), locale);
+        return getRemoteAbilityInfoNative(elementName2Array(elementName), locale);
       };
       let p1 = taskpool.execute(cb);
       p1.then((e: NullishType) => {
@@ -163,7 +163,7 @@ export default namespace distributedBundleManager {
   function getRemoteAbilityInfo(elementNames: Array<ElementName>, locale: string, callback: AsyncCallback<Array<RemoteAbilityInfo>>): void {
     checkElementNames(elementNames);
     let cb = (): (Array<RemoteAbilityInfo>) => {
-      return distributedBundleManager.getRemoteAbilityInfosNative(elementNames, locale);
+      return getRemoteAbilityInfosNative(elementNames, locale);
     };
     let p1 = taskpool.execute(cb);
     p1.then((e: NullishType) => {
@@ -178,7 +178,7 @@ export default namespace distributedBundleManager {
     checkElementNames(elementNames);
     let p = new Promise<Array<RemoteAbilityInfo>>((resolve: (arrRemoteAbilityInfo: Array<RemoteAbilityInfo>) => void, reject: (error: BusinessError) => void) => {
       let cb = (): (Array<RemoteAbilityInfo>) => {
-        return distributedBundleManager.getRemoteAbilityInfosNative(elementNames, locale);
+        return getRemoteAbilityInfosNative(elementNames, locale);
       };
       let p1 = taskpool.execute(cb);
       p1.then((e: NullishType) => {
