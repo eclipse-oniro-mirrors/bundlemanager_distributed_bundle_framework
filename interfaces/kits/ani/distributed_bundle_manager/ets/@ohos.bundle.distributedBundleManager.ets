@@ -73,7 +73,7 @@ export default namespace distributedBundleManager {
       return getRemoteAbilityInfoNative(elementName2Array(elementName), '');
     };
     let p1 = taskpool.execute(cb);
-    p1.then((e: NullishType) => {
+    p1.then((e: Any) => {
       let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
       callback(null, result);
     }, (err: Error): void => {
@@ -88,7 +88,7 @@ export default namespace distributedBundleManager {
         return getRemoteAbilityInfoNative(elementName2Array(elementName), '');
       };
       let p1 = taskpool.execute(cb);
-      p1.then((e: NullishType) => {
+      p1.then((e: Any) => {
         let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
         resolve(result);
       }, (err: Error): void => {
@@ -104,7 +104,7 @@ export default namespace distributedBundleManager {
       return getRemoteAbilityInfosNative(elementNames, '');
     };
     let p1 = taskpool.execute(cb);
-    p1.then((e: NullishType) => {
+    p1.then((e: Any) => {
       let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
       callback(null, resultArray);
     }, (err: Error): void => {
@@ -119,7 +119,7 @@ export default namespace distributedBundleManager {
         return getRemoteAbilityInfosNative(elementNames, '');
       };
       let p1 = taskpool.execute(cb);
-      p1.then((e: NullishType) => {
+      p1.then((e: Any) => {
         let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
         resolve(resultArray);
       }, (err: Error): void => {
@@ -135,7 +135,7 @@ export default namespace distributedBundleManager {
       return getRemoteAbilityInfoNative(elementName2Array(elementName), locale);
     };
     let p1 = taskpool.execute(cb);
-    p1.then((e: NullishType) => {
+    p1.then((e: Any) => {
       let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
       callback(null, result);
     }, (err: Error): void => {
@@ -150,7 +150,7 @@ export default namespace distributedBundleManager {
         return getRemoteAbilityInfoNative(elementName2Array(elementName), locale);
       };
       let p1 = taskpool.execute(cb);
-      p1.then((e: NullishType) => {
+      p1.then((e: Any) => {
         let result: RemoteAbilityInfo = e as RemoteAbilityInfo;
         resolve(result);
       }, (err: Error): void => {
@@ -166,7 +166,7 @@ export default namespace distributedBundleManager {
       return getRemoteAbilityInfosNative(elementNames, locale);
     };
     let p1 = taskpool.execute(cb);
-    p1.then((e: NullishType) => {
+    p1.then((e: Any) => {
       let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
       callback(null, resultArray);
     }, (err: Error): void => {
@@ -181,7 +181,7 @@ export default namespace distributedBundleManager {
         return getRemoteAbilityInfosNative(elementNames, locale);
       };
       let p1 = taskpool.execute(cb);
-      p1.then((e: NullishType) => {
+      p1.then((e: Any) => {
         let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
         resolve(resultArray);
       }, (err: Error): void => {
