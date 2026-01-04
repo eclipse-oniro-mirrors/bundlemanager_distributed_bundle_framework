@@ -19,6 +19,7 @@
 #include "app_log_wrapper.h"
 #include "bundle_constants.h"
 #include "device_manager.h"
+#include "ipc_skeleton.h"
 #include "service_control.h"
 #include "system_ability_definition.h"
 
@@ -104,7 +105,7 @@ bool DbmsDeviceManager::CheckAclData(DistributedBmsAclInfo info)
     DistributedHardware::DmAccessCaller dmSrecaller = {
         .accountId = info.accountId,
         .pkgName = info.pkgName,
-        .networkId = info.networkId,
+        .networkId = IPCSkeleton::GetCallingDeviceID(),
         .userId = info.userId,
         .tokenId = info.tokenId
     };

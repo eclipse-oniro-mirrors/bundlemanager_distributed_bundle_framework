@@ -164,6 +164,7 @@ private:
     bool VerifyTokenNative(Security::AccessToken::AccessTokenID callerToken);
     bool VerifyTokenShell(Security::AccessToken::AccessTokenID callerToken);
     bool VerifyCallingPermission(const std::string &permissionName);
+    bool VerifyCallingPermissionOrAclCheck(DistributedBmsAclInfo *info);
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS
