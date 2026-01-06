@@ -368,9 +368,8 @@ int32_t DistributedBms::GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elem
 {
     APP_LOGI("DistributedBms GetAbilityInfo bundleName:%{public}s , abilityName:%{public}s, localeInfo:%{public}s",
         elementName.GetBundleName().c_str(), elementName.GetAbilityName().c_str(), localeInfo.c_str());
-    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED) &&
-        info != nullptr && !CheckAclData(*info)) {
-        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
+    if (!VerifyCallingPermissionOrAclCheck(info)) {
+        APP_LOGE("verify permission failed");
         return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
     }
     auto iBundleMgr = GetBundleMgr();
@@ -474,9 +473,8 @@ int32_t DistributedBms::GetAbilityInfos(const std::vector<ElementName> &elementN
     DistributedBmsAclInfo *info)
 {
     APP_LOGD("DistributedBms GetAbilityInfos");
-    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED) &&
-        info != nullptr && !CheckAclData(*info)) {
-        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
+    if (!VerifyCallingPermissionOrAclCheck(info)) {
+        APP_LOGE("verify permission failed");
         return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
     }
     for (auto elementName : elementNames) {
@@ -650,6 +648,26 @@ bool DistributedBms::VerifyCallingPermission(const std::string &permissionName)
     }
     APP_LOGE("permission %{public}s: PERMISSION_DENIED", permissionName.c_str());
     return false;
+}
+
+bool DistributedBms::VerifyCallingPermissionOrAclCheck(DistributedBmsAclInfo *info)
+{
+    DistributedHardware::DmDeviceInfo dmDeviceInfo;
+    if (!GetLocalDevice(dmDeviceInfo)) {
+        APP_LOGE("GetLocalDevice failed");
+        return false;
+    }
+    std::string callingDeviceID = IPCSkeleton::GetCallingDeviceID();
+    if (callingDeviceID.empty() || std::string(dmDeviceInfo.networkId) == callingDeviceID) {
+        if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+            APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
+            return false;
+        }
+    } else if (info != nullptr && !CheckAclData(*info)) {
+        APP_LOGE("check ack failed");
+        return false;
+    }
+    return true;
 }
 }
 }
