@@ -258,6 +258,56 @@ int32_t DistributedBmsProxy::GetDistributedBundleName(const std::string &network
     return result;
 }
 
+int32_t DistributedBmsProxy::GetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
+    uint32_t &versionCode)
+{
+    APP_LOGD("DistributedBmsProxy GetRemoteBundleVersionCode");
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(GetDescriptor())) {
+        APP_LOGE("fail to GetRemoteBundleVersionCode due to write InterfaceToken fail");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteString(deviceId)) {
+        APP_LOGE("DistributedBmsProxy GetRemoteBundleVersionCode write deviceId error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteString(bundleName)) {
+        APP_LOGE("DistributedBmsProxy GetRemoteBundleVersionCode write bundleName error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    MessageParcel reply;
+    int32_t result = SendRequest(DistributedInterfaceCode::GET_REMOTE_BUNDLE_VERSION_CODE, data, reply);
+    if (result == OHOS::NO_ERROR) {
+        versionCode = reply.ReadUint32();
+    }
+    return result;
+}
+
+int32_t DistributedBmsProxy::GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
+    DistributedBmsAclInfo &info)
+{
+    APP_LOGD("DistributedBmsProxy GetBundleVersionCode");
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(GetDescriptor())) {
+        APP_LOGE("fail to GetBundleVersionCode due to write InterfaceToken fail");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteString(bundleName)) {
+        APP_LOGE("DistributedBmsProxy GetBundleVersionCode write bundleName error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteParcelable(&info)) {
+        APP_LOGE("DistributedBmsProxy GetBundleVersionCode write info error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    MessageParcel reply;
+    int32_t result = SendRequest(DistributedInterfaceCode::GET_BUNDLE_VERSION_CODE, data, reply);
+    if (result == OHOS::NO_ERROR) {
+        versionCode = reply.ReadUint32();
+    }
+    return result;
+}
+
 template<typename T>
 bool DistributedBmsProxy::WriteParcelableVector(const std::vector<T> &parcelableVector, Parcel &data)
 {

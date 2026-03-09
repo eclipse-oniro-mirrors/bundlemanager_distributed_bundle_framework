@@ -29,6 +29,8 @@ export default namespace distributedBundleManager {
   const GET_REMOTE_ABILITY_INFO_MAX_SIZE: int = 10;
   const ELEMENT_NAMES_SIZE_ERROR: string = "BusinessError 401: The number of ElementNames is greater than 10";
   const ELEMENT_NAME_ERROR: string = "BusinessError 401: Parameter error. The type of elementName must be object.";
+  const DEVICE_ID_ERROR: string = "BusinessError 401: Parameter error. The type of deviceId must be string.";
+  const BUNDLE_NAME_ERROR: string = "BusinessError 401: Parameter error. The type of bundleName must be string.";
 
   function createBusinessError(code: int, message: string) {
     let err = new BusinessError();
@@ -60,6 +62,7 @@ export default namespace distributedBundleManager {
 
   native function getRemoteAbilityInfoNative(elementNames: Array<ElementName>, locale: string): RemoteAbilityInfo;
   native function getRemoteAbilityInfosNative(elementNames: Array<ElementName>, locale: string): Array<RemoteAbilityInfo>;
+  native function getRemoteBundleVersionCodeNative(deviceId: string, bundleName: string): long;
 
   function elementName2Array(elementName: ElementName): Array<ElementName> {
     let elementNames: Array<ElementName> = new Array<ElementName>();
@@ -184,6 +187,29 @@ export default namespace distributedBundleManager {
       p1.then((e: Any) => {
         let resultArray: Array<RemoteAbilityInfo> = e as Array<RemoteAbilityInfo>;
         resolve(resultArray);
+      }, (err: Error): void => {
+        reject(err as BusinessError);
+      });
+    });
+    return p;
+  }
+
+
+  function getRemoteBundleVersionCode(deviceId: string, bundleName: string): Promise<long> {
+    if (deviceId === undefined || typeof deviceId !== 'string') {
+      throw createBusinessError(ERROR_PARAM_CHECK_ERROR, DEVICE_ID_ERROR);
+    }
+    if (bundleName === undefined || typeof bundleName !== 'string') {
+      throw createBusinessError(ERROR_PARAM_CHECK_ERROR, BUNDLE_NAME_ERROR);
+    }
+    let p = new Promise<long>((resolve: (versionCode: long) => void, reject: (error: BusinessError) => void) => {
+      let cb = (): long => {
+        return getRemoteBundleVersionCodeNative(deviceId, bundleName);
+      };
+      let p1 = taskpool.execute(cb);
+      p1.then((e: Any) => {
+        let result: long = e as long;
+        resolve(result);
       }, (err: Error): void => {
         reject(err as BusinessError);
       });

@@ -545,6 +545,76 @@ int32_t DistributedBms::GetDistributedBundleName(const std::string &networkId,  
     return ret;
 }
 
+int32_t DistributedBms::GetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
+    uint32_t &versionCode)
+{
+    if (!VerifySystemApp()) {
+        APP_LOGE("verify system app failed");
+        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
+    }
+    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
+    }
+    if (deviceId.empty()) {
+        APP_LOGE("deviceId is empty");
+        return ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST;
+    }
+    if (bundleName.empty()) {
+        APP_LOGE("bundleName is empty");
+        return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
+    }
+    auto iDistBundleMgr = GetDistributedBundleMgr(deviceId);
+    int32_t resultCode = 0;
+    if (!iDistBundleMgr) {
+        APP_LOGE("GetDistributedBundle object failed");
+        return ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST;
+    }
+#ifdef HICOLLIE_ENABLE
+    int timerId = HiviewDFX::XCollie::GetInstance().SetTimer("GetRemoteBundleVersionCode", REMOTE_TIME_OUT_SECONDS,
+        nullptr, nullptr, HiviewDFX::XCOLLIE_FLAG_RECOVERY);
+#endif
+    DistributedBmsAclInfo info = BuildDistributedBmsAclInfo();
+    resultCode = iDistBundleMgr->GetBundleVersionCode(bundleName, versionCode, info);
+#ifdef HICOLLIE_ENABLE
+    HiviewDFX::XCollie::GetInstance().CancelTimer(timerId);
+#endif
+    return resultCode;
+}
+
+int32_t DistributedBms::GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
+    DistributedBmsAclInfo &info)
+{
+    APP_LOGI("DistributedBms GetBundleVersionCode bundleName:%{public}s", bundleName.c_str());
+    if (!CheckAclData(info)) {
+        APP_LOGE("verify permission failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
+    }
+    if (bundleName.empty()) {
+        APP_LOGE("bundleName is empty");
+        return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
+    }
+    auto iBundleMgr = GetBundleMgr();
+    if (!iBundleMgr) {
+        APP_LOGE("DistributedBms GetBundleMgr failed");
+        return ERR_APPEXECFWK_FAILED_SERVICE_DIED;
+    }
+    int32_t userId = AccountManagerHelper::GetCurrentActiveUserId();
+    if (userId == Constants::INVALID_USERID) {
+        APP_LOGE("GetCurrentUserId failed");
+        return ERR_BUNDLE_MANAGER_INVALID_USER_ID;
+    }
+    ApplicationInfo appInfo;
+    auto ret = iBundleMgr->GetApplicationInfoV9(bundleName,
+        static_cast<uint32_t>(ApplicationFlag::GET_BASIC_APPLICATION_INFO), userId, appInfo);
+    if (ret != ERR_OK) {
+        APP_LOGE("DistributedBms GetBundleInfo failed, ret:%{public}d", ret);
+        return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
+    }
+    versionCode = appInfo.versionCode;
+    return ERR_OK;
+}
+
 std::unique_ptr<char[]> DistributedBms::EncodeBase64(std::unique_ptr<uint8_t[]> &data, int srcLen)
 {
     int len = (srcLen / DECODE_VALUE_THREE) * DECODE_VALUE_FOUR; // Split 3 bytes to 4 parts, each containing 6 bits.

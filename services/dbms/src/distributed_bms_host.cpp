@@ -67,6 +67,10 @@ int DistributedBmsHost::OnRemoteRequest(uint32_t code, MessageParcel &data, Mess
             return HandleGetDistributedBundleInfo(data, reply);
         case static_cast<uint32_t>(DistributedInterfaceCode::GET_DISTRIBUTED_BUNDLE_NAME):
             return HandleGetDistributedBundleName(data, reply);
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_REMOTE_BUNDLE_VERSION_CODE):
+            return HandleGetRemoteBundleVersionCode(data, reply);
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_BUNDLE_VERSION_CODE):
+            return HandleGetBundleVersionCode(data, reply);
         default:
             APP_LOGW("DistributedBmsHost receives unknown code, code = %{public}d", code);
             return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
@@ -243,6 +247,46 @@ int32_t DistributedBmsHost::HandleGetDistributedBundleName(Parcel &data, Parcel 
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
     return ret;
+}
+
+int32_t DistributedBmsHost::HandleGetRemoteBundleVersionCode(Parcel &data, Parcel &reply)
+{
+    APP_LOGI("DistributedBmsHost handle get remote bundle version code");
+    std::string deviceId = data.ReadString();
+    std::string bundleName = data.ReadString();
+    uint32_t versionCode = 0;
+    int32_t ret = GetRemoteBundleVersionCode(deviceId, bundleName, versionCode);
+    if (ret != NO_ERROR) {
+        APP_LOGE("GetRemoteBundleVersionCode result:%{public}d", ret);
+        return ret;
+    }
+    if (!reply.WriteUint32(versionCode)) {
+        APP_LOGE("GetRemoteBundleVersionCode write failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    return NO_ERROR;
+}
+
+int32_t DistributedBmsHost::HandleGetBundleVersionCode(Parcel &data, Parcel &reply)
+{
+    APP_LOGI("DistributedBmsHost handle get bundle version code");
+    std::string bundleName = data.ReadString();
+    DistributedBmsAclInfo *info = data.ReadParcelable<DistributedBmsAclInfo>();
+    if (!info) {
+        APP_LOGE("HandleGetBundleVersionCode get parcelable info failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    uint32_t versionCode = 0;
+    int32_t ret = GetBundleVersionCode(bundleName, versionCode, *info);
+    if (ret != NO_ERROR) {
+        APP_LOGE("GetBundleVersionCode result:%{public}d", ret);
+        return ret;
+    }
+    if (!reply.WriteUint32(versionCode)) {
+        APP_LOGE("GetBundleVersionCode write failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    return NO_ERROR;
 }
 
 template<typename T>

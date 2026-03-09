@@ -125,6 +125,12 @@ public:
     int32_t GetDistributedBundleName(const std::string &networkId,  uint32_t accessTokenId,
         std::string &bundleName) override;
 
+    int32_t GetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
+        uint32_t &versionCode) override;
+
+    int32_t GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
+        DistributedBmsAclInfo &info) override;
+
     int32_t GetUdidByNetworkId(const std::string &networkId, std::string &udid);
     int32_t GetUuidByNetworkId(const std::string &netWorkId, std::string &uuid);
     bool GetLocalDevice(DistributedHardware::DmDeviceInfo& dmDeviceInfo);

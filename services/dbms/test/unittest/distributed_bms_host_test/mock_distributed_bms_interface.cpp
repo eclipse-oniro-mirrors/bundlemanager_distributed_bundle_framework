@@ -50,7 +50,7 @@ int32_t MockDistributedBmsHost::GetAbilityInfo(
 }
 
 int32_t MockDistributedBmsHost::GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elementName,
-    const std::string &localeInfo, RemoteAbilityInfo &remoteAbilityInfo)
+    const std::string &localeInfo, RemoteAbilityInfo &remoteAbilityInfo, DistributedBmsAclInfo *info)
 {
     return 0;
 }
@@ -62,7 +62,7 @@ int32_t MockDistributedBmsHost::GetAbilityInfos(
 }
 
 int32_t MockDistributedBmsHost::GetAbilityInfos(const std::vector<ElementName> &elementNames,
-    const std::string &localeInfo, std::vector<RemoteAbilityInfo> &remoteAbilityInfos)
+    const std::string &localeInfo, std::vector<RemoteAbilityInfo> &remoteAbilityInfos, DistributedBmsAclInfo *info)
 {
     return 0;
 }
@@ -75,6 +75,18 @@ bool MockDistributedBmsHost::GetDistributedBundleInfo(
 
 int32_t MockDistributedBmsHost::GetDistributedBundleName(const std::string &networkId, uint32_t accessTokenId,
     std::string &bundleName)
+{
+    return 0;
+}
+
+int32_t MockDistributedBmsHost::GetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
+    uint32_t &versionCode)
+{
+    return 0;
+}
+
+int32_t MockDistributedBmsHost::GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
+    DistributedBmsAclInfo &info)
 {
     return 0;
 }

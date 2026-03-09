@@ -26,8 +26,8 @@
 namespace OHOS {
 namespace AppExecFwk {
 namespace AniDistributedbundleManagerCommon {
-ani_object ConvertDistributedBundleElementName(ani_env* env, const ElementName& elementName);
-ani_object ConvertRemoteAbilityInfo(ani_env* env, const RemoteAbilityInfo& remoteAbilityInfo);
+    ani_object ConvertDistributedBundleElementName(ani_env* env, const ElementName& elementName);
+    ani_object ConvertRemoteAbilityInfo(ani_env* env, const RemoteAbilityInfo& remoteAbilityInfo);
 } // AniDistributedbundleManagerCommon
 } // AppExecFwk
 } // OHOS

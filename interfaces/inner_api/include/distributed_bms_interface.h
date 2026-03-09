@@ -152,6 +152,32 @@ public:
     {
         return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
     }
+
+    /**
+     * @brief get remote bundle version code
+     * @param deviceId Indicates the deviceId of remote device.
+     * @param bundleName Indicates the bundleName.
+     * @param versionCode Indicates the version code.
+     * @return Returns ERR_OK on success, others on failure when get remote bundle version code.
+     */
+    virtual int32_t GetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
+        uint32_t &versionCode)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
+
+    /**
+     * @brief get bundle version code
+     * @param bundleName Indicates the bundleName.
+     * @param versionCode Indicates the version code.
+     * @param info Indicates the acl info.
+     * @return Returns ERR_OK on success, others on failure when get bundle version code.
+     */
+    virtual int32_t GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
+        DistributedBmsAclInfo &info)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS

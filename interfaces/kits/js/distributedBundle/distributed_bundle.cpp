@@ -270,5 +270,87 @@ napi_value GetRemoteAbilityInfo(napi_env env, napi_callback_info info)
     APP_LOGD("GetRemoteAbilityInfo end");
     return promise;
 }
+
+void GetRemoteBundleVersionCodeExec(napi_env env, void *data)
+{
+    GetRemoteBundleVersionCodeCallbackInfo *asyncCallbackInfo =
+        reinterpret_cast<GetRemoteBundleVersionCodeCallbackInfo*>(data);
+    if (asyncCallbackInfo == nullptr) {
+        APP_LOGE("asyncCallbackInfo is null");
+        return;
+    }
+    asyncCallbackInfo->err = DistributedHelper::InnerGetRemoteBundleVersionCode(asyncCallbackInfo->deviceId,
+        asyncCallbackInfo->bundleName, asyncCallbackInfo->versionCode);
+}
+
+void GetRemoteBundleVersionCodeComplete(napi_env env, napi_status status, void *data)
+{
+    GetRemoteBundleVersionCodeCallbackInfo *asyncCallbackInfo =
+        reinterpret_cast<GetRemoteBundleVersionCodeCallbackInfo*>(data);
+    if (asyncCallbackInfo == nullptr) {
+        APP_LOGE("asyncCallbackInfo is null in %{public}s", __func__);
+        return;
+    }
+    std::unique_ptr<GetRemoteBundleVersionCodeCallbackInfo> callbackPtr {asyncCallbackInfo};
+    napi_value result[ARGS_SIZE_TWO] = {0};
+    if (asyncCallbackInfo->err == SUCCESS) {
+        NAPI_CALL_RETURN_VOID(env, napi_get_null(env, &result[0]));
+        NAPI_CALL_RETURN_VOID(env, napi_create_uint32(env, asyncCallbackInfo->versionCode, &result[ARGS_SIZE_ONE]));
+    } else {
+        result[0] = BusinessError::CreateCommonError(env, asyncCallbackInfo->err,
+            RESOURCE_NAME_GET_REMOTE_BUNDLE_VERSION_CODE, Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED);
+    }
+    if (asyncCallbackInfo->deferred) {
+        if (asyncCallbackInfo->err == SUCCESS) {
+            NAPI_CALL_RETURN_VOID(env, napi_resolve_deferred(env, asyncCallbackInfo->deferred, result[ARGS_SIZE_ONE]));
+        } else {
+            NAPI_CALL_RETURN_VOID(env, napi_reject_deferred(env, asyncCallbackInfo->deferred, result[0]));
+        }
+    } else {
+        napi_value callback = nullptr;
+        napi_value placeHolder = nullptr;
+        NAPI_CALL_RETURN_VOID(env, napi_get_reference_value(env, asyncCallbackInfo->callback, &callback));
+        NAPI_CALL_RETURN_VOID(env, napi_call_function(env, nullptr, callback,
+            sizeof(result) / sizeof(result[0]), result, &placeHolder));
+    }
+}
+
+napi_value GetRemoteBundleVersionCode(napi_env env, napi_callback_info info)
+{
+    APP_LOGD("begin to GetRemoteBundleVersionCode");
+    NapiArg args(env, info);
+    GetRemoteBundleVersionCodeCallbackInfo *asyncCallbackInfo =
+        new (std::nothrow) GetRemoteBundleVersionCodeCallbackInfo(env);
+    if (asyncCallbackInfo == nullptr) {
+        return nullptr;
+    }
+    std::unique_ptr<GetRemoteBundleVersionCodeCallbackInfo> callbackPtr {asyncCallbackInfo};
+    if (!args.Init(ARGS_SIZE_TWO, ARGS_SIZE_THREE)) {
+        APP_LOGE("param count invalid.");
+        BusinessError::ThrowTooFewParametersError(env, ERROR_PARAM_CHECK_ERROR);
+        return nullptr;
+    }
+    for (size_t i = 0; i < args.GetMaxArgc(); ++i) {
+        napi_valuetype valueType = napi_undefined;
+        napi_typeof(env, args[i], &valueType);
+        if ((i == ARGS_POS_ZERO) && !CommonFunc::ParseString(env, args[i], asyncCallbackInfo->deviceId)) {
+            BusinessError::ThrowParameterTypeError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_DEVICE_ID, TYPE_STRING);
+            return nullptr;
+        } else if ((i == ARGS_POS_ONE) && !CommonFunc::ParseString(env, args[i], asyncCallbackInfo->bundleName)) {
+            BusinessError::ThrowParameterTypeError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_BUNDLE_NAME, TYPE_STRING);
+            return nullptr;
+        } else if (((i == ARGS_POS_ONE) && (valueType == napi_function)) ||
+                   ((i == ARGS_POS_TWO) && (valueType == napi_function))) {
+            NAPI_CALL(env, napi_create_reference(env, args[i], NAPI_RETURN_ONE, &asyncCallbackInfo->callback));
+            break;
+        }
+    }
+    auto promise = CommonFunc::AsyncCallNativeMethod<GetRemoteBundleVersionCodeCallbackInfo>(env, asyncCallbackInfo,
+        RESOURCE_NAME_GET_REMOTE_BUNDLE_VERSION_CODE, GetRemoteBundleVersionCodeExec,
+        GetRemoteBundleVersionCodeComplete);
+    callbackPtr.release();
+    APP_LOGD("GetRemoteBundleVersionCode end");
+    return promise;
+}
 }  // namespace AppExecFwk
 }  // namespace OHOS

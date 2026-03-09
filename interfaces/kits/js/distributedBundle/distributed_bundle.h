@@ -33,7 +33,15 @@ struct GetRemoteAbilityInfoCallbackInfo : public BaseCallbackInfo {
     bool isArray = false;
 };
 
+struct GetRemoteBundleVersionCodeCallbackInfo : public BaseCallbackInfo {
+    explicit GetRemoteBundleVersionCodeCallbackInfo(napi_env napiEnv) : BaseCallbackInfo(napiEnv) {}
+    std::string deviceId;
+    std::string bundleName;
+    uint32_t versionCode = 0;
+};
+
 napi_value GetRemoteAbilityInfo(napi_env env, napi_callback_info info);
+napi_value GetRemoteBundleVersionCode(napi_env env, napi_callback_info info);
 }  // namespace AppExecFwk
 }  // namespace OHOS
 #endif // BUNDLE_MANAGER_FRAMEWORK_DISTRIBUTEBUNDLEMGR_INTERFACES_KITS_JS_DISTRIBUTE_BUNDLE_H
