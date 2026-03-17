@@ -493,7 +493,7 @@ HWTEST_F(DistributedBmsHostTest, HandleGetAbilityInfo_0400, Function | MediumTes
     std::string localeInfo = "localeInfo";
     data.WriteString(localeInfo);
     int res = host.HandleGetAbilityInfo(data, reply);
-    EXPECT_EQ(res, NO_ERROR);
+    EXPECT_EQ(res, ERR_APPEXECFWK_PARCEL_ERROR);
 }
 
 /**
@@ -725,5 +725,159 @@ HWTEST_F(DistributedBmsHostTest, GetParcelableInfos_0100, Function | MediumTest 
     std::vector<ElementName> vector;
     int res = host.GetParcelableInfos<ElementName>(data, vector);
     EXPECT_TRUE(res);
+}
+
+/**
+ * @tc.number: HandleGetRemoteBundleVersionCode_0100
+ * @tc.name: Test HandleGetRemoteBundleVersionCode
+ * @tc.desc: Verify the HandleGetRemoteBundleVersionCode return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteBundleVersionCode_0100, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string deviceId = "deviceId";
+    std::string bundleName = "bundleName";
+    data.WriteString(deviceId);
+    data.WriteString(bundleName);
+    int32_t res = host.HandleGetRemoteBundleVersionCode(data, reply);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetRemoteBundleVersionCode_0200
+ * @tc.name: Test HandleGetRemoteBundleVersionCode
+ * @tc.desc: Verify the HandleGetRemoteBundleVersionCode return ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteBundleVersionCode_0200, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string deviceId = "";
+    std::string bundleName = "bundleName";
+    data.WriteString(deviceId);
+    data.WriteString(bundleName);
+    int32_t res = host.HandleGetRemoteBundleVersionCode(data, reply);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetRemoteBundleVersionCode_0300
+ * @tc.name: Test HandleGetRemoteBundleVersionCode
+ * @tc.desc: Verify the HandleGetRemoteBundleVersionCode return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteBundleVersionCode_0300, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string deviceId = "deviceId";
+    std::string bundleName = "";
+    data.WriteString(deviceId);
+    data.WriteString(bundleName);
+    int32_t res = host.HandleGetRemoteBundleVersionCode(data, reply);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetBundleVersionCode_0100
+ * @tc.name: Test HandleGetBundleVersionCode
+ * @tc.desc: Verify the HandleGetBundleVersionCode return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetBundleVersionCode_0100, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string bundleName = "bundleName";
+    DistributedBmsAclInfo aclInfo;
+    aclInfo.networkId = "networkId";
+    aclInfo.accountId = "accountId";
+    aclInfo.pkgName = "pkgName";
+    data.WriteString(bundleName);
+    data.WriteParcelable(&aclInfo);
+    int32_t res = host.HandleGetBundleVersionCode(data, reply);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetBundleVersionCode_0200
+ * @tc.name: Test HandleGetBundleVersionCode
+ * @tc.desc: Verify the HandleGetBundleVersionCode return ERR_APPEXECFWK_PARCEL_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetBundleVersionCode_0200, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string bundleName = "bundleName";
+    data.WriteString(bundleName);
+    int32_t res = host.HandleGetBundleVersionCode(data, reply);
+    EXPECT_EQ(res, ERR_APPEXECFWK_PARCEL_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetBundleVersionCode_0300
+ * @tc.name: Test HandleGetBundleVersionCode
+ * @tc.desc: Verify the HandleGetBundleVersionCode return ERR_APPEXECFWK_PARCEL_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetBundleVersionCode_0300, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    int32_t res = host.HandleGetBundleVersionCode(data, reply);
+    EXPECT_EQ(res, ERR_APPEXECFWK_PARCEL_ERROR);
+}
+
+/**
+ * @tc.number: OnRemoteRequest_1300
+ * @tc.name: Test OnRemoteRequest with GET_REMOTE_BUNDLE_VERSION_CODE
+ * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1300, Function | MediumTest | TestSize.Level1)
+{
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    data.WriteInterfaceToken(DistributedBmsHost::GetDescriptor());
+    std::string deviceId = "deviceId";
+    std::string bundleName = "bundleName";
+    data.WriteString(deviceId);
+    data.WriteString(bundleName);
+
+    MockDistributedBmsHost host;
+    int res = host.OnRemoteRequest(static_cast<uint32_t>
+        (DistributedInterfaceCode::GET_REMOTE_BUNDLE_VERSION_CODE), data, reply, option);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: OnRemoteRequest_1400
+ * @tc.name: Test OnRemoteRequest with GET_BUNDLE_VERSION_CODE
+ * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1400, Function | MediumTest | TestSize.Level1)
+{
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    data.WriteInterfaceToken(DistributedBmsHost::GetDescriptor());
+    std::string bundleName = "bundleName";
+    DistributedBmsAclInfo aclInfo;
+    aclInfo.networkId = "networkId";
+    aclInfo.accountId = "accountId";
+    aclInfo.pkgName = "pkgName";
+    data.WriteString(bundleName);
+    data.WriteParcelable(&aclInfo);
+
+    MockDistributedBmsHost host;
+    int res = host.OnRemoteRequest(static_cast<uint32_t>
+        (DistributedInterfaceCode::GET_BUNDLE_VERSION_CODE), data, reply, option);
+    EXPECT_EQ(res, NO_ERROR);
 }
 }

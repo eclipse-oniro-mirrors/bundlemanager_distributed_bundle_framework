@@ -37,6 +37,8 @@ private:
     int HandleGetAbilityInfos(Parcel &data, Parcel &reply);
     int HandleGetDistributedBundleInfo(Parcel &data, Parcel &reply);
     int HandleGetDistributedBundleName(Parcel &data, Parcel &reply);
+    int HandleGetRemoteBundleVersionCode(Parcel &data, Parcel &reply);
+    int HandleGetBundleVersionCode(Parcel &data, Parcel &reply);
     template <typename T>
     bool GetParcelableInfos(Parcel &data, std::vector<T> &parcelableInfos);
     template<typename T>

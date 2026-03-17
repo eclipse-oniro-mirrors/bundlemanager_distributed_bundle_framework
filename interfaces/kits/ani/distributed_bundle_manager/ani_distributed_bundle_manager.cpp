@@ -85,6 +85,60 @@ static ani_object AniGetRemoteAbilityInfos(ani_env *env, ani_object aniElementNa
     return GetRemoteAbilityInfoInner(env, aniElementNames, aniLocale, true);
 }
 
+static ani_long AniGetRemoteBundleVersionCode(ani_env *env, ani_string aniDeviceId, ani_string aniBundleName)
+{
+    APP_LOGD("ani GetRemoteBundleVersionCode called");
+    
+    if (aniDeviceId == nullptr) {
+        APP_LOGE("aniDeviceId is null");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_DEVICE_ID, TYPE_STRING);
+        return 0;
+    }
+    
+    if (aniBundleName == nullptr) {
+        APP_LOGE("aniBundleName is null");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_BUNDLE_NAME, TYPE_STRING);
+        return 0;
+    }
+    
+    std::string deviceId;
+    if (!CommonFunAni::ParseString(env, aniDeviceId, deviceId)) {
+        APP_LOGE("parse deviceId failed");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_DEVICE_ID, TYPE_STRING);
+        return 0;
+    }
+    
+    std::string bundleName;
+    if (!CommonFunAni::ParseString(env, aniBundleName, bundleName)) {
+        APP_LOGE("parse bundleName failed");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_BUNDLE_NAME, TYPE_STRING);
+        return 0;
+    }
+    
+    if (deviceId.empty()) {
+        APP_LOGE("deviceId is empty");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_DEVICE_ID, TYPE_STRING);
+        return 0;
+    }
+    
+    if (bundleName.empty()) {
+        APP_LOGE("bundleName is empty");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_BUNDLE_NAME, TYPE_STRING);
+        return 0;
+    }
+    
+    uint32_t versionCode = 0;
+    int32_t ret = DistributedHelper::InnerGetRemoteBundleVersionCode(deviceId, bundleName, versionCode);
+    if (ret != ERR_OK) {
+        APP_LOGE("InnerGetRemoteBundleVersionCode failed ret: %{public}d", ret);
+        BusinessErrorAni::ThrowCommonError(env, ret,
+            RESOURCE_NAME_GET_REMOTE_BUNDLE_VERSION_CODE, Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED);
+        return 0;
+    }
+
+    return static_cast<ani_long>(versionCode);
+}
+
 extern "C" {
 ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
 {
@@ -104,7 +158,9 @@ ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
     std::array methods = {
         ani_native_function { "getRemoteAbilityInfoNative", nullptr, reinterpret_cast<void*>(AniGetRemoteAbilityInfo) },
         ani_native_function { "getRemoteAbilityInfosNative", nullptr,
-            reinterpret_cast<void*>(AniGetRemoteAbilityInfos) }
+            reinterpret_cast<void*>(AniGetRemoteAbilityInfos) },
+        ani_native_function { "getRemoteBundleVersionCodeNative", nullptr,
+            reinterpret_cast<void*>(AniGetRemoteBundleVersionCode) }
     };
 
     status = env->Namespace_BindNativeFunctions(kitNs, methods.data(), methods.size());

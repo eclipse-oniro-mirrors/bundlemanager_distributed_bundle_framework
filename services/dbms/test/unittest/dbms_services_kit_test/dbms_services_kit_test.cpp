@@ -1459,4 +1459,197 @@ HWTEST_F(DbmsServicesKitTest, CheckAclData_0110, Function | SmallTest | TestSize
     auto ret = deviceManager.CheckAclData(aclInfo);
     EXPECT_FALSE(ret);
 }
+
+/**
+ * @tc.number: DbmsServicesKitTest
+ * @tc.name: test GetRemoteBundleVersionCode
+ * @tc.desc: 1. system running normally
+ *           2. test GetRemoteBundleVersionCode with empty deviceId
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteBundleVersionCode_0010, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        uint32_t versionCode = 0;
+        auto ret = distributedBmsProxy->GetRemoteBundleVersionCode("", BUNDLE_NAME, versionCode);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: DbmsServicesKitTest
+ * @tc.name: test GetRemoteBundleVersionCode
+ * @tc.desc: 1. system running normally
+ *           2. test GetRemoteBundleVersionCode with empty bundleName
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteBundleVersionCode_0020, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        uint32_t versionCode = 0;
+        auto ret = distributedBmsProxy->GetRemoteBundleVersionCode(DEVICE_ID, "", versionCode);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: DbmsServicesKitTest
+ * @tc.name: test GetRemoteBundleVersionCode
+ * @tc.desc: 1. system running normally
+ *           2. test GetRemoteBundleVersionCode with valid parameters
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteBundleVersionCode_0030, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        uint32_t versionCode = 0;
+        auto ret = distributedBmsProxy->GetRemoteBundleVersionCode(DEVICE_ID, BUNDLE_NAME, versionCode);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: DbmsServicesKitTest
+ * @tc.name: test GetBundleVersionCode
+ * @tc.desc: 1. system running normally
+ *           2. test GetBundleVersionCode with empty bundleName
+ */
+HWTEST_F(DbmsServicesKitTest, GetBundleVersionCode_0010, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        uint32_t versionCode = 0;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBmsProxy->GetBundleVersionCode("", versionCode, aclInfo);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: DbmsServicesKitTest
+ * @tc.name: test GetBundleVersionCode
+ * @tc.desc: 1. system running normally
+ *           2. test GetBundleVersionCode with valid parameters
+ */
+HWTEST_F(DbmsServicesKitTest, GetBundleVersionCode_0020, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        uint32_t versionCode = 0;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBmsProxy->GetBundleVersionCode(BUNDLE_NAME, versionCode, aclInfo);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: GetRemoteBundleVersionCode_0040
+ * @tc.name: GetRemoteBundleVersionCode
+ * @tc.desc: Test GetRemoteBundleVersionCode with empty deviceId
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteBundleVersionCode_0040, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        uint32_t versionCode = 0;
+        auto ret = distributedBms->GetRemoteBundleVersionCode("", BUNDLE_NAME, versionCode);
+#ifdef ON_64BIT_SYSTEM
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
+#else
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST);
+#endif
+    }
+}
+
+/**
+ * @tc.number: GetRemoteBundleVersionCode_0050
+ * @tc.name: GetRemoteBundleVersionCode
+ * @tc.desc: Test GetRemoteBundleVersionCode with empty bundleName
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteBundleVersionCode_0050, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        uint32_t versionCode = 0;
+        auto ret = distributedBms->GetRemoteBundleVersionCode(DEVICE_ID, "", versionCode);
+#ifdef ON_64BIT_SYSTEM
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
+#else
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST);
+#endif
+    }
+}
+
+/**
+ * @tc.number: GetRemoteBundleVersionCode_0060
+ * @tc.name: GetRemoteBundleVersionCode
+ * @tc.desc: Test GetRemoteBundleVersionCode with valid parameters
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteBundleVersionCode_0060, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        uint32_t versionCode = 0;
+        auto ret = distributedBms->GetRemoteBundleVersionCode(DEVICE_ID, BUNDLE_NAME, versionCode);
+#ifdef ON_64BIT_SYSTEM
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
+#else
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST);
+#endif
+    }
+}
+
+/**
+ * @tc.number: GetBundleVersionCode_0030
+ * @tc.name: GetBundleVersionCode
+ * @tc.desc: Test GetBundleVersionCode with empty bundleName
+ */
+HWTEST_F(DbmsServicesKitTest, GetBundleVersionCode_0030, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        uint32_t versionCode = 0;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBms->GetBundleVersionCode("", versionCode, aclInfo);
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
+    }
+}
+
+/**
+ * @tc.number: GetBundleVersionCode_0040
+ * @tc.name: GetBundleVersionCode
+ * @tc.desc: Test GetBundleVersionCode with valid parameters
+ */
+HWTEST_F(DbmsServicesKitTest, GetBundleVersionCode_0040, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        uint32_t versionCode = 0;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBms->GetBundleVersionCode(BUNDLE_NAME, versionCode, aclInfo);
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
+    }
+}
 } // OHOS

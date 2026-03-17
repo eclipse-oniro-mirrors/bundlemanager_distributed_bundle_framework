@@ -119,6 +119,26 @@ public:
      */
     int32_t GetDistributedBundleName(const std::string &networkId, uint32_t accessTokenId,
         std::string &bundleName) override;
+
+    /**
+     * @brief get remote bundle version code
+     * @param deviceId Indicates the deviceId of remote device.
+     * @param bundleName Indicates the bundleName.
+     * @param versionCode Indicates the version code.
+     * @return Returns ERR_OK on success, others on failure when get remote bundle version code.
+     */
+    int32_t GetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
+        uint32_t &versionCode) override;
+
+    /**
+     * @brief get bundle version code
+     * @param bundleName Indicates to bundleName.
+     * @param versionCode Indicates to version code.
+     * @param info Indicates to acl info.
+     * @return Returns ERR_OK on success, others on failure when get bundle version code.
+     */
+    int32_t GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
+        DistributedBmsAclInfo &info) override;
 private:
     int32_t SendRequest(DistributedInterfaceCode code, MessageParcel &data, MessageParcel &reply);
     template<typename T>

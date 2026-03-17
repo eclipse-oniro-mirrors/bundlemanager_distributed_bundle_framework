@@ -39,6 +39,14 @@ ani_object AniGetRemoteAbilityInfos(ani_env *env, ani_object aniElementNames, an
     return nullptr;
 }
 
+ani_long AniGetRemoteAbilityInfos(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
+{
+    APP_LOGI("SystemCapability.BundleManager.DistributedBundleFramework not supported.");
+    BusinessErrorAni::ThrowCommonError(env, ERROR_SYSTEM_ABILITY_NOT_FOUND,
+        RESOURCE_NAME_GET_REMOTE_BUNDLE_VERSION_CODE, "");
+    return nullptr;
+}
+
 extern "C" {
 ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
 {
@@ -58,7 +66,9 @@ ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
     std::array methods = {
         ani_native_function { "getRemoteAbilityInfoNative", nullptr, reinterpret_cast<void*>(AniGetRemoteAbilityInfo) },
         ani_native_function { "getRemoteAbilityInfosNative", nullptr,
-            reinterpret_cast<void*>(AniGetRemoteAbilityInfos) }
+            reinterpret_cast<void*>(AniGetRemoteAbilityInfos) },
+        ani_native_function { "getRemoteBundleVersionCodeNative", nullptr,
+            reinterpret_cast<void*>(AniGetRemoteBundleVersionCode) }
     };
 
     status = env->Namespace_BindNativeFunctions(kitNs, methods.data(), methods.size());

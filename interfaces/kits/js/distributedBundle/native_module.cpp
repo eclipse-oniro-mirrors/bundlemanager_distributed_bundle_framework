@@ -35,6 +35,7 @@ static napi_value Init(napi_env env, napi_value exports)
      */
     napi_property_descriptor desc[] = {
         DECLARE_NAPI_FUNCTION("getRemoteAbilityInfo", GetRemoteAbilityInfo),
+        DECLARE_NAPI_FUNCTION("getRemoteBundleVersionCode", GetRemoteBundleVersionCode),
     };
     NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc));
     APP_LOGI("distributedBundle -----Init end------");

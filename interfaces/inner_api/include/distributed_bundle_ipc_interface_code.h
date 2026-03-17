@@ -30,6 +30,8 @@ enum class DistributedInterfaceCode : uint32_t {
     GET_ABILITY_INFOS_WITH_LOCALE,
     GET_DISTRIBUTED_BUNDLE_INFO,
     GET_DISTRIBUTED_BUNDLE_NAME,
+    GET_REMOTE_BUNDLE_VERSION_CODE,
+    GET_BUNDLE_VERSION_CODE,
 };
 } // namespace AppExecFwk
 } // namespace OHOS

@@ -38,15 +38,19 @@ public:
     int32_t GetAbilityInfo(
         const OHOS::AppExecFwk::ElementName &elementName, RemoteAbilityInfo &remoteAbilityInfo) override;
     int32_t GetAbilityInfo(const OHOS::AppExecFwk::ElementName &elementName, const std::string &localeInfo,
-        RemoteAbilityInfo &remoteAbilityInfo) override;
+        RemoteAbilityInfo &remoteAbilityInfo, DistributedBmsAclInfo *info = nullptr) override;
     int32_t GetAbilityInfos(
         const std::vector<ElementName> &elementNames, std::vector<RemoteAbilityInfo> &remoteAbilityInfos) override;
     int32_t GetAbilityInfos(const std::vector<ElementName> &elementNames, const std::string &localeInfo,
-        std::vector<RemoteAbilityInfo> &remoteAbilityInfos) override;
+        std::vector<RemoteAbilityInfo> &remoteAbilityInfos, DistributedBmsAclInfo *info = nullptr) override;
     bool GetDistributedBundleInfo(const std::string &networkId, const std::string &bundleName,
         DistributedBundleInfo &distributedBundleInfo) override;
     int32_t GetDistributedBundleName(const std::string &networkId,  uint32_t accessTokenId,
         std::string &bundleName) override;
+    int32_t GetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
+        uint32_t &versionCode) override;
+    int32_t GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
+        DistributedBmsAclInfo &info) override;
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS

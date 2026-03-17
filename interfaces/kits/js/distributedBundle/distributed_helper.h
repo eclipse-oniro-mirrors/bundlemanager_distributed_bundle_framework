@@ -24,13 +24,18 @@ namespace AppExecFwk {
 namespace {
 constexpr int32_t GET_REMOTE_ABILITY_INFO_MAX_SIZE = 10;
 constexpr const char* RESOURCE_NAME_GET_REMOTE_ABILITY_INFO = "GetRemoteAbilityInfo";
+constexpr const char* RESOURCE_NAME_GET_REMOTE_BUNDLE_VERSION_CODE = "GetRemoteBundleVersionCode";
 constexpr const char* PARAMETER_ELEMENT_NAME = "elementName";
 constexpr const char* PARAMETER_LOCALE = "locale";
+constexpr const char* PARAMETER_DEVICE_ID = "deviceId";
+constexpr const char* PARAMETER_BUNDLE_NAME = "bundleName";
 }
 class DistributedHelper {
 public:
     static int32_t InnerGetRemoteAbilityInfo(const std::vector<ElementName> &elementNames, const std::string &locale,
         bool isArray, std::vector<RemoteAbilityInfo> &remoteAbilityInfos);
+    static int32_t InnerGetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
+        uint32_t &versionCode);
 };
 }
 }

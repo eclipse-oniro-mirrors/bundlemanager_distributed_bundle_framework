@@ -73,5 +73,28 @@ int32_t DistributedHelper::InnerGetRemoteAbilityInfo(const std::vector<ElementNa
     }
     return CommonFunc::ConvertErrCode(result);
 }
+
+int32_t DistributedHelper::InnerGetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
+    uint32_t &versionCode)
+{
+    if (deviceId.empty()) {
+        APP_LOGE("InnerGetRemoteBundleVersionCode deviceId is empty");
+        return ERROR_PARAM_CHECK_ERROR;
+    }
+    if (bundleName.empty()) {
+        APP_LOGE("InnerGetRemoteBundleVersionCode bundleName is empty");
+        return ERROR_PARAM_CHECK_ERROR;
+    }
+    auto iDistBundleMgr = GetDistributedBundleMgr();
+    if (iDistBundleMgr == nullptr) {
+        APP_LOGE("can not get iDistBundleMgr");
+        return ERROR_DISTRIBUTED_SERVICE_NOT_RUNNING;
+    }
+    int32_t result = iDistBundleMgr->GetRemoteBundleVersionCode(deviceId, bundleName, versionCode);
+    if (result != 0) {
+        APP_LOGE("InnerGetRemoteBundleVersionCode failed");
+    }
+    return CommonFunc::ConvertErrCode(result);
+}
 } // AppExecFwk
 } // OHOS
