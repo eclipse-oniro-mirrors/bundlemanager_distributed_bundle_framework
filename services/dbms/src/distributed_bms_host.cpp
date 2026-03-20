@@ -271,7 +271,7 @@ int32_t DistributedBmsHost::HandleGetBundleVersionCode(Parcel &data, Parcel &rep
 {
     APP_LOGI("DistributedBmsHost handle get bundle version code");
     std::string bundleName = data.ReadString();
-    DistributedBmsAclInfo *info = data.ReadParcelable<DistributedBmsAclInfo>();
+    std::unique_ptr<DistributedBmsAclInfo> info(data.ReadParcelable<DistributedBmsAclInfo>());
     if (!info) {
         APP_LOGE("HandleGetBundleVersionCode get parcelable info failed");
         return ERR_APPEXECFWK_PARCEL_ERROR;
