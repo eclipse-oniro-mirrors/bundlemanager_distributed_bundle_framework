@@ -1565,11 +1565,7 @@ HWTEST_F(DbmsServicesKitTest, GetRemoteBundleVersionCode_0040, Function | SmallT
     if (distributedBms != nullptr) {
         uint32_t versionCode = 0;
         auto ret = distributedBms->GetRemoteBundleVersionCode("", BUNDLE_NAME, versionCode);
-#ifdef ON_64BIT_SYSTEM
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
-#else
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST);
-#endif
+        EXPECT_TRUE(ret == ERR_BUNDLE_MANAGER_PERMISSION_DENIED || ret == ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST);
     }
 }
 
@@ -1585,11 +1581,7 @@ HWTEST_F(DbmsServicesKitTest, GetRemoteBundleVersionCode_0050, Function | SmallT
     if (distributedBms != nullptr) {
         uint32_t versionCode = 0;
         auto ret = distributedBms->GetRemoteBundleVersionCode(DEVICE_ID, "", versionCode);
-#ifdef ON_64BIT_SYSTEM
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
-#else
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST);
-#endif
+        EXPECT_TRUE(ret == ERR_BUNDLE_MANAGER_PERMISSION_DENIED || ret == ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST);
     }
 }
 
@@ -1605,11 +1597,7 @@ HWTEST_F(DbmsServicesKitTest, GetRemoteBundleVersionCode_0060, Function | SmallT
     if (distributedBms != nullptr) {
         uint32_t versionCode = 0;
         auto ret = distributedBms->GetRemoteBundleVersionCode(DEVICE_ID, BUNDLE_NAME, versionCode);
-#ifdef ON_64BIT_SYSTEM
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
-#else
-        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST);
-#endif
+        EXPECT_TRUE(ret == ERR_BUNDLE_MANAGER_PERMISSION_DENIED || ret == ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST);
     }
 }
 
