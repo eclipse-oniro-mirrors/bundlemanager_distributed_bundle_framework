@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Huawei Device Co., Ltd.
+ * Copyright (c) 2026 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -39,12 +39,12 @@ ani_object AniGetRemoteAbilityInfos(ani_env *env, ani_object aniElementNames, an
     return nullptr;
 }
 
-ani_long AniGetRemoteAbilityInfos(ani_env *env, ani_object aniElementNames, ani_string aniLocale)
+ani_long AniGetRemoteBundleVersionCode(ani_env *env, ani_string aniDeviceId, ani_string aniBundleName)
 {
     APP_LOGI("SystemCapability.BundleManager.DistributedBundleFramework not supported.");
     BusinessErrorAni::ThrowCommonError(env, ERROR_SYSTEM_ABILITY_NOT_FOUND,
         RESOURCE_NAME_GET_REMOTE_BUNDLE_VERSION_CODE, "");
-    return nullptr;
+    return 0;
 }
 
 extern "C" {
