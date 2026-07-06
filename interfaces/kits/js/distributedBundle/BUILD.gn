@@ -54,7 +54,9 @@ ohos_shared_library("distributed_bundle_common") {
     "device_manager:devicemanagersdk",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "libuv:uv",
     "napi:ace_napi",
+    "node:node_header_notice",
     "samgr:samgr_proxy",
   ]
 
@@ -108,7 +110,9 @@ ohos_shared_library("distributedbundlemanager") {
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "libuv:uv",
     "napi:ace_napi",
+    "node:node_header_notice",
     "samgr:samgr_proxy",
   ]
   public_external_deps = [ "bundle_framework:bundle_napi_common" ]
