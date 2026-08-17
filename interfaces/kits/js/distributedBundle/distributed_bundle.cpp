@@ -345,6 +345,10 @@ napi_value GetRemoteBundleVersionCode(napi_env env, napi_callback_info info)
             break;
         }
     }
+    if (asyncCallbackInfo->deviceId.empty() || asyncCallbackInfo->bundleName.empty()) {
+        BusinessError::ThrowError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_EMPTY_ERROR);
+        return nullptr;
+    }
     auto promise = CommonFunc::AsyncCallNativeMethod<GetRemoteBundleVersionCodeCallbackInfo>(env, asyncCallbackInfo,
         RESOURCE_NAME_GET_REMOTE_BUNDLE_VERSION_CODE, GetRemoteBundleVersionCodeExec,
         GetRemoteBundleVersionCodeComplete);

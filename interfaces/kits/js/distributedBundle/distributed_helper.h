@@ -29,6 +29,8 @@ constexpr const char* PARAMETER_ELEMENT_NAME = "elementName";
 constexpr const char* PARAMETER_LOCALE = "locale";
 constexpr const char* PARAMETER_DEVICE_ID = "deviceId";
 constexpr const char* PARAMETER_BUNDLE_NAME = "bundleName";
+constexpr const char* PARAMETER_EMPTY_ERROR =
+    "BusinessError 401: Parameter error. parameter deviceId or bundleName is empty";
 }
 class DistributedHelper {
 public:
