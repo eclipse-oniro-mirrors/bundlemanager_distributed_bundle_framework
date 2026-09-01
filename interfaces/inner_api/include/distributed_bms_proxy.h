@@ -106,7 +106,7 @@ public:
      */
     int32_t GetAbilityInfos(const std::vector<ElementName> &elementNames, const std::string &localeInfo,
         std::vector<RemoteAbilityInfo> &remoteAbilityInfos, DistributedBmsAclInfo *info = nullptr) override;
-    
+
     bool GetDistributedBundleInfo(const std::string &networkId, const std::string &bundleName,
         DistributedBundleInfo &distributedBundleInfo) override;
 
@@ -139,6 +139,12 @@ public:
      */
     int32_t GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
         DistributedBmsAclInfo &info) override;
+
+    int32_t GetRemoteMetadata(const std::string &networkId, const std::string &bundleName,
+        std::vector<ModuleMetadata> &metadataInfos) override;
+
+    int32_t GetMetadataByBundleName(const std::string &bundleName,
+        ApplicationInfo &appInfo, DistributedBmsAclInfo &info) override;
 private:
     int32_t SendRequest(DistributedInterfaceCode code, MessageParcel &data, MessageParcel &reply);
     template<typename T>

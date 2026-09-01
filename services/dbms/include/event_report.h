@@ -26,7 +26,9 @@ namespace AppExecFwk {
 enum class DBMSEventType {
     UNKNOW = 0,
     GET_REMOTE_ABILITY_INFO,
-    GET_REMOTE_ABILITY_INFOS
+    GET_REMOTE_ABILITY_INFOS,
+    GET_REMOTE_METADATA,
+    GET_METADATA_BY_BUNDLE_NAME,
 };
 
 struct DBMSEventInfo {

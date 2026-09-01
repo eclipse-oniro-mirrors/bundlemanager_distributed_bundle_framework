@@ -67,6 +67,7 @@ namespace {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
     };
     const std::string POSTFIX = "_Compress.";
+    constexpr const char* VALUE_STRING_PREFIX = "$string:";
 #ifdef HISYSEVENT_ENABLE
     DBMSEventInfo GetEventInfo(
         const std::vector<ElementName> &elements, const std::string &localeInfo, int32_t resultCode)
@@ -623,6 +624,102 @@ int32_t DistributedBms::GetBundleVersionCode(const std::string &bundleName, uint
     }
     versionCode = appInfo.versionCode;
     return ERR_OK;
+}
+
+int32_t DistributedBms::GetRemoteMetadata(const std::string &networkId,
+    const std::string &bundleName, std::vector<ModuleMetadata> &metadataInfos)
+{
+    if (!VerifySystemApp()) {
+        APP_LOGE("verify system app failed");
+        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
+    }
+    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
+    }
+    if (networkId.empty()) {
+        APP_LOGE("networkId is empty");
+        return ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST;
+    }
+    if (bundleName.empty()) {
+        APP_LOGE("bundleName is empty");
+        return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
+    }
+    auto iDistBundleMgr = GetDistributedBundleMgr(networkId);
+    if (!iDistBundleMgr) {
+        APP_LOGE("GetDistributedBundle object failed");
+        return ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST;
+    }
+#ifdef HICOLLIE_ENABLE
+    int timerId = HiviewDFX::XCollie::GetInstance().SetTimer("GetRemoteMetadata",
+        REMOTE_TIME_OUT_SECONDS, nullptr, nullptr, HiviewDFX::XCOLLIE_FLAG_RECOVERY);
+#endif
+    DistributedBmsAclInfo info = BuildDistributedBmsAclInfo();
+    ApplicationInfo appInfo;
+    int32_t resultCode = iDistBundleMgr->GetMetadataByBundleName(bundleName, appInfo, info);
+#ifdef HICOLLIE_ENABLE
+    HiviewDFX::XCollie::GetInstance().CancelTimer(timerId);
+#endif
+#ifdef HISYSEVENT_ENABLE
+    EventReport::SendSystemEvent(DBMSEventType::GET_REMOTE_METADATA,
+        {networkId, bundleName, "", "", resultCode});
+#endif
+    if (resultCode != ERR_OK) {
+        return resultCode;
+    }
+    metadataInfos.clear();
+    for (const auto &item : appInfo.metadata) {
+        ModuleMetadata metadataInfo;
+        metadataInfo.moduleName = item.first;
+        metadataInfo.metadata = item.second;
+        metadataInfos.push_back(metadataInfo);
+    }
+    return ERR_OK;
+}
+
+int32_t DistributedBms::GetMetadataByBundleName(const std::string &bundleName,
+    ApplicationInfo &appInfo, DistributedBmsAclInfo &info)
+{
+    APP_LOGI("DistributedBms GetMetadataByBundleName bundleName:%{public}s", bundleName.c_str());
+    if (!CheckAclData(info)) {
+        APP_LOGE("verify permission failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
+    }
+    if (bundleName.empty()) {
+        APP_LOGE("bundleName is empty");
+        return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
+    }
+    auto iBundleMgr = GetBundleMgr();
+    if (!iBundleMgr) {
+        APP_LOGE("DistributedBms GetBundleMgr failed");
+        return ERR_APPEXECFWK_FAILED_SERVICE_DIED;
+    }
+    int32_t userId = AccountManagerHelper::GetCurrentActiveUserId();
+    if (userId == Constants::INVALID_USERID) {
+        APP_LOGE("GetRemoteMeta GetCurrentActiveUserId failed");
+        return ERR_BUNDLE_MANAGER_INVALID_USER_ID;
+    }
+    int32_t ret = iBundleMgr->GetMetadataByBundleName(bundleName, appInfo);
+    if (ret != ERR_OK) {
+        APP_LOGE("GetRemoteMeta BMS GetMetadataByBundleName failed ret:%{public}d", ret);
+        return ret;
+    }
+    for (auto &moduleItem : appInfo.metadata) {
+        const std::string &moduleName = moduleItem.first;
+        for (auto &metadata : moduleItem.second) {
+            if (metadata.valueId == 0 ||
+                metadata.value.find(VALUE_STRING_PREFIX) != 0) {
+                continue;
+            }
+            std::string resolvedValue = iBundleMgr->GetStringById(
+                bundleName, moduleName, metadata.valueId, userId);
+            if (!resolvedValue.empty()) {
+                metadata.value = resolvedValue;
+            }
+        }
+    }
+    APP_LOGI("GetRemoteMetadata DistributedBms GetMetadata success");
+    return ret;
 }
 
 std::unique_ptr<char[]> DistributedBms::EncodeBase64(std::unique_ptr<uint8_t[]> &data, int srcLen)

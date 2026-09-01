@@ -84,6 +84,9 @@ public:
     int32_t GetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
         uint32_t &versionCode);
 
+    int32_t GetRemoteMetadata(const std::string &networkId, const std::string &bundleName,
+        std::vector<ModuleMetadata> &metadataInfos);
+
     void ResetDistributedBundleMgrProxy();
 private:
     sptr<IDistributedBms> dProxy_;

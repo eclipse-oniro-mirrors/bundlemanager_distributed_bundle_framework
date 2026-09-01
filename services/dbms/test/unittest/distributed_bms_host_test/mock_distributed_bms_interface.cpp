@@ -90,5 +90,24 @@ int32_t MockDistributedBmsHost::GetBundleVersionCode(const std::string &bundleNa
 {
     return 0;
 }
+
+int32_t MockDistributedBmsHost::GetRemoteMetadata(const std::string &networkId,
+    const std::string &bundleName, std::vector<ModuleMetadata> &metadataInfos)
+{
+    ModuleMetadata metadata;
+    metadata.moduleName = "testModule";
+    Metadata meta;
+    meta.name = "testName";
+    meta.value = "testValue";
+    metadata.metadata.push_back(meta);
+    metadataInfos.push_back(metadata);
+    return 0;
+}
+
+int32_t MockDistributedBmsHost::GetMetadataByBundleName(const std::string &bundleName,
+    ApplicationInfo &appInfo, DistributedBmsAclInfo &info)
+{
+    return 0;
+}
 } // namespace AppExecFwk
 } // namespace OHOS

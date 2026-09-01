@@ -88,7 +88,6 @@ static ani_object AniGetRemoteAbilityInfos(ani_env *env, ani_object aniElementNa
 static ani_long AniGetRemoteBundleVersionCode(ani_env *env, ani_string aniDeviceId, ani_string aniBundleName)
 {
     APP_LOGD("ani GetRemoteBundleVersionCode called");
-    
     if (aniDeviceId == nullptr) {
         APP_LOGE("aniDeviceId is null");
         BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_DEVICE_ID, TYPE_STRING);
@@ -139,6 +138,57 @@ static ani_long AniGetRemoteBundleVersionCode(ani_env *env, ani_string aniDevice
     return static_cast<ani_long>(versionCode);
 }
 
+static ani_object AniGetRemoteMetadata(ani_env *env, ani_string aniDeviceId, ani_string aniBundleName)
+{
+    APP_LOGD("ani GetRemoteMetadata called");
+    if (aniDeviceId == nullptr) {
+        APP_LOGE("aniDeviceId is null");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_DEVICE_ID, TYPE_STRING);
+        return nullptr;
+    }
+    if (aniBundleName == nullptr) {
+        APP_LOGE("aniBundleName is null");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_BUNDLE_NAME, TYPE_STRING);
+        return nullptr;
+    }
+    std::string deviceId;
+    if (!CommonFunAni::ParseString(env, aniDeviceId, deviceId)) {
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_DEVICE_ID, TYPE_STRING);
+        return nullptr;
+    }
+    std::string bundleName;
+    if (!CommonFunAni::ParseString(env, aniBundleName, bundleName)) {
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_BUNDLE_NAME, TYPE_STRING);
+        return nullptr;
+    }
+    if (deviceId.empty()) {
+        APP_LOGE("deviceId is empty");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_DEVICE_ID, TYPE_STRING);
+        return nullptr;
+    }
+
+    if (bundleName.empty()) {
+        APP_LOGE("bundleName is empty");
+        BusinessErrorAni::ThrowCommonError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_BUNDLE_NAME, TYPE_STRING);
+        return nullptr;
+    }
+    std::vector<ModuleMetadata> metadataInfos;
+    int32_t ret = DistributedHelper::InnerGetRemoteMetadata(deviceId, bundleName, metadataInfos);
+    if (ret != ERR_OK) {
+        APP_LOGE("InnerGetRemoteMetadata failed ret: %{public}d", ret);
+        BusinessErrorAni::ThrowCommonError(env, ret,
+            RESOURCE_NAME_GET_REMOTE_METADATA, Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED);
+        return nullptr;
+    }
+    ani_object metadataArray = CommonFunAni::ConvertAniArray(env, metadataInfos,
+        AniDistributedbundleManagerCommon::ConvertModuleMetadata);
+    if (metadataArray == nullptr) {
+        APP_LOGE("ConvertAniArray metadataInfos failed");
+        return nullptr;
+    }
+    return metadataArray;
+}
+
 extern "C" {
 ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
 {
@@ -160,7 +210,9 @@ ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
         ani_native_function { "getRemoteAbilityInfosNative", nullptr,
             reinterpret_cast<void*>(AniGetRemoteAbilityInfos) },
         ani_native_function { "getRemoteBundleVersionCodeNative", nullptr,
-            reinterpret_cast<void*>(AniGetRemoteBundleVersionCode) }
+            reinterpret_cast<void*>(AniGetRemoteBundleVersionCode) },
+        ani_native_function { "getRemoteMetadataNative", nullptr,
+            reinterpret_cast<void*>(AniGetRemoteMetadata) }
     };
 
     status = env->Namespace_BindNativeFunctions(kitNs, methods.data(), methods.size());

@@ -72,6 +72,10 @@ int DistributedBmsHost::OnRemoteRequest(uint32_t code, MessageParcel &data, Mess
             return HandleGetRemoteBundleVersionCode(data, reply);
         case static_cast<uint32_t>(DistributedInterfaceCode::GET_BUNDLE_VERSION_CODE):
             return HandleGetBundleVersionCode(data, reply);
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_REMOTE_METADATA):
+            return HandleGetRemoteMetadata(data, reply);
+        case static_cast<uint32_t>(DistributedInterfaceCode::GET_METADATA_BY_BUNDLE_NAME):
+            return HandleGetMetadataByBundleName(data, reply);
         default:
             APP_LOGW("DistributedBmsHost receives unknown code, code = %{public}d", code);
             return IPCObjectStub::OnRemoteRequest(code, data, reply, option);
@@ -285,6 +289,52 @@ int32_t DistributedBmsHost::HandleGetBundleVersionCode(Parcel &data, Parcel &rep
     }
     if (!reply.WriteUint32(versionCode)) {
         APP_LOGE("GetBundleVersionCode write failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    return NO_ERROR;
+}
+
+int32_t DistributedBmsHost::HandleGetRemoteMetadata(Parcel &data, Parcel &reply)
+{
+    APP_LOGI("DistributedBmsHost handle get distributed metadata by bundle name");
+    std::string networkId = data.ReadString();
+    std::string bundleName = data.ReadString();
+    std::vector<ModuleMetadata> metadataInfos;
+    int32_t ret = GetRemoteMetadata(networkId, bundleName, metadataInfos);
+    if (ret != NO_ERROR) {
+        APP_LOGE("GetRemoteMetadata result:%{public}d", ret);
+        return ret;
+    }
+    if (!reply.WriteInt32(static_cast<int32_t>(metadataInfos.size()))) {
+        APP_LOGE("GetRemoteMetadata write size failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    for (const auto &item : metadataInfos) {
+        if (!reply.WriteParcelable(&item)) {
+            APP_LOGE("GetRemoteMetadata write failed");
+            return ERR_APPEXECFWK_PARCEL_ERROR;
+        }
+    }
+    return NO_ERROR;
+}
+
+int32_t DistributedBmsHost::HandleGetMetadataByBundleName(Parcel &data, Parcel &reply)
+{
+    APP_LOGI("DistributedBmsHost handle get metadata by bundle name");
+    std::string bundleName = data.ReadString();
+    std::unique_ptr<DistributedBmsAclInfo> info(data.ReadParcelable<DistributedBmsAclInfo>());
+    if (!info) {
+        APP_LOGE("HandleGetMetadataByBundleName get parcelable info failed");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    ApplicationInfo appInfo;
+    int32_t ret = GetMetadataByBundleName(bundleName, appInfo, *info);
+    if (ret != NO_ERROR) {
+        APP_LOGE("GetMetadataByBundleName result:%{public}d", ret);
+        return ret;
+    }
+    if (!reply.WriteParcelable(&appInfo)) {
+        APP_LOGE("GetMetadataByBundleName write failed");
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
     return NO_ERROR;

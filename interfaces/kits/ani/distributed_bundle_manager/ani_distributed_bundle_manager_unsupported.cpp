@@ -19,6 +19,8 @@
 #include "business_error_ani.h"
 #include "napi_constants.h"
 
+#include "distributed_helper.h"
+
 namespace OHOS {
 namespace AppExecFwk {
 namespace {
@@ -47,6 +49,14 @@ ani_long AniGetRemoteBundleVersionCode(ani_env *env, ani_string aniDeviceId, ani
     return 0;
 }
 
+ani_object AniGetRemoteMetadata(ani_env *env, ani_string aniDeviceId, ani_string aniBundleName)
+{
+    APP_LOGI("SystemCapability.BundleManager.DistributedBundleFramework not supported.");
+    BusinessErrorAni::ThrowCommonError(env, ERROR_SYSTEM_ABILITY_NOT_FOUND,
+        RESOURCE_NAME_GET_REMOTE_METADATA, "");
+    return nullptr;
+}
+
 extern "C" {
 ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
 {
@@ -68,7 +78,9 @@ ANI_EXPORT ani_status ANI_Constructor(ani_vm* vm, uint32_t* result)
         ani_native_function { "getRemoteAbilityInfosNative", nullptr,
             reinterpret_cast<void*>(AniGetRemoteAbilityInfos) },
         ani_native_function { "getRemoteBundleVersionCodeNative", nullptr,
-            reinterpret_cast<void*>(AniGetRemoteBundleVersionCode) }
+            reinterpret_cast<void*>(AniGetRemoteBundleVersionCode) },
+        ani_native_function { "getRemoteMetadataNative", nullptr,
+            reinterpret_cast<void*>(AniGetRemoteMetadata) }
     };
 
     status = env->Namespace_BindNativeFunctions(kitNs, methods.data(), methods.size());

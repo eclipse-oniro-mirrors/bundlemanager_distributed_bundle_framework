@@ -27,6 +27,8 @@ namespace AppExecFwk {
 namespace {
 const std::string GET_REMOTE_ABILITY_INFO = "GET_REMOTE_ABILITY_INFO";
 const std::string GET_REMOTE_ABILITY_INFOS = "GET_REMOTE_ABILITY_INFOS";
+const std::string GET_REMOTE_METADATA = "GET_REMOTE_METADATA";
+const std::string GET_METADATA_BY_BUNDLE_NAME = "GET_METADATA_BY_BUNDLE_NAME";
 
 const std::string DEVICE_ID = "DEVICE_ID";
 const std::string BUNDLE_NAME = "BUNDLE_NAME";
@@ -37,6 +39,8 @@ const std::string RESULT_CODE = "RESULT_CODE";
 const std::unordered_map<DBMSEventType, std::string> DBMS_EVENT_STR_MAP = {
     { DBMSEventType::GET_REMOTE_ABILITY_INFO, GET_REMOTE_ABILITY_INFO },
     { DBMSEventType::GET_REMOTE_ABILITY_INFOS, GET_REMOTE_ABILITY_INFOS },
+    { DBMSEventType::GET_REMOTE_METADATA, GET_REMOTE_METADATA },
+    { DBMSEventType::GET_METADATA_BY_BUNDLE_NAME, GET_METADATA_BY_BUNDLE_NAME },
 };
 }
 

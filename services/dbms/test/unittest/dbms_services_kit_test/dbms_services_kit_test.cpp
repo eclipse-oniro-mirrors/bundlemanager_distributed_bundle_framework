@@ -1575,4 +1575,183 @@ HWTEST_F(DbmsServicesKitTest, GetBundleVersionCode_0040, Function | SmallTest | 
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
     }
 }
+
+/**
+ * @tc.number: GetRemoteMetadata_0010
+ * @tc.name: GetRemoteMetadata
+ * @tc.desc: Test GetRemoteMetadata with empty networkId.
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteMetadata_0010, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        std::vector<ModuleMetadata> metadataInfos;
+        auto ret = distributedBmsProxy->GetRemoteMetadata("", BUNDLE_NAME, metadataInfos);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: GetRemoteMetadata_0020
+ * @tc.name: GetRemoteMetadata
+ * @tc.desc: Test GetRemoteMetadata with empty bundleName.
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteMetadata_0020, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        std::vector<ModuleMetadata> metadataInfos;
+        auto ret = distributedBmsProxy->GetRemoteMetadata(DEVICE_ID, "", metadataInfos);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: GetRemoteMetadata_0030
+ * @tc.name: GetRemoteMetadata
+ * @tc.desc: Test GetRemoteMetadata with valid parameters.
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteMetadata_0030, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        std::vector<ModuleMetadata> metadataInfos;
+        auto ret = distributedBmsProxy->GetRemoteMetadata(DEVICE_ID, BUNDLE_NAME, metadataInfos);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: GetMetadataByBundleName_0010
+ * @tc.name: GetMetadataByBundleName
+ * @tc.desc: Test GetMetadataByBundleName with empty bundleName.
+ */
+HWTEST_F(DbmsServicesKitTest, GetMetadataByBundleName_0010, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        ApplicationInfo appInfo;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBmsProxy->GetMetadataByBundleName("", appInfo, aclInfo);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: GetMetadataByBundleName_0020
+ * @tc.name: GetMetadataByBundleName
+ * @tc.desc: Test GetMetadataByBundleName with valid parameters.
+ */
+HWTEST_F(DbmsServicesKitTest, GetMetadataByBundleName_0020, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBmsProxy = GetDistributedBmsProxy();
+    EXPECT_NE(distributedBmsProxy, nullptr);
+    if (distributedBmsProxy != nullptr) {
+        ApplicationInfo appInfo;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBmsProxy->GetMetadataByBundleName(BUNDLE_NAME, appInfo, aclInfo);
+        EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
+    }
+}
+
+/**
+ * @tc.number: GetRemoteMetadata_0040
+ * @tc.name: GetRemoteMetadata
+ * @tc.desc: Test GetRemoteMetadata at service level with empty networkId.
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteMetadata_0040, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        std::vector<ModuleMetadata> metadataInfos;
+        auto ret = distributedBms->GetRemoteMetadata("", BUNDLE_NAME, metadataInfos);
+        EXPECT_TRUE(ret == ERR_BUNDLE_MANAGER_PERMISSION_DENIED
+            || ret == ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST);
+    }
+}
+
+/**
+ * @tc.number: GetRemoteMetadata_0050
+ * @tc.name: GetRemoteMetadata
+ * @tc.desc: Test GetRemoteMetadata at service level with empty bundleName.
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteMetadata_0050, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        std::vector<ModuleMetadata> metadataInfos;
+        auto ret = distributedBms->GetRemoteMetadata(DEVICE_ID, "", metadataInfos);
+        EXPECT_TRUE(ret == ERR_BUNDLE_MANAGER_PERMISSION_DENIED
+            || ret == ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST);
+    }
+}
+
+/**
+ * @tc.number: GetRemoteMetadata_0060
+ * @tc.name: GetRemoteMetadata
+ * @tc.desc: Test GetRemoteMetadata at service level with valid parameters.
+ */
+HWTEST_F(DbmsServicesKitTest, GetRemoteMetadata_0060, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        std::vector<ModuleMetadata> metadataInfos;
+        auto ret = distributedBms->GetRemoteMetadata(DEVICE_ID, BUNDLE_NAME, metadataInfos);
+        EXPECT_TRUE(ret == ERR_BUNDLE_MANAGER_PERMISSION_DENIED
+            || ret == ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST);
+    }
+}
+
+/**
+ * @tc.number: GetMetadataByBundleName_0030
+ * @tc.name: GetMetadataByBundleName
+ * @tc.desc: Test GetMetadataByBundleName at service level with valid parameters.
+ */
+HWTEST_F(DbmsServicesKitTest, GetMetadataByBundleName_0030, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        ApplicationInfo appInfo;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBms->GetMetadataByBundleName(BUNDLE_NAME, appInfo, aclInfo);
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
+    }
+}
+
+/**
+ * @tc.number: GetMetadataByBundleName_0040
+ * @tc.name: GetMetadataByBundleName
+ * @tc.desc: Test GetMetadataByBundleName at service level with empty bundleName.
+ */
+HWTEST_F(DbmsServicesKitTest, GetMetadataByBundleName_0040, Function | SmallTest | TestSize.Level0)
+{
+    auto distributedBms = GetSptrDistributedBms();
+    EXPECT_NE(distributedBms, nullptr);
+    if (distributedBms != nullptr) {
+        ApplicationInfo appInfo;
+        DistributedBmsAclInfo aclInfo;
+        aclInfo.networkId = "networkId";
+        aclInfo.accountId = "accountId";
+        aclInfo.pkgName = "pkgName";
+        auto ret = distributedBms->GetMetadataByBundleName("", appInfo, aclInfo);
+        EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
+    }
+}
 } // OHOS

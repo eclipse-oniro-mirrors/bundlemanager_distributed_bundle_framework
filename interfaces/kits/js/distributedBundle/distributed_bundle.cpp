@@ -356,5 +356,140 @@ napi_value GetRemoteBundleVersionCode(napi_env env, napi_callback_info info)
     APP_LOGD("GetRemoteBundleVersionCode end");
     return promise;
 }
+
+void GetRemoteMetadataExec(napi_env env, void *data)
+{
+    GetRemoteMetadataCallbackInfo *asyncCallbackInfo =
+        reinterpret_cast<GetRemoteMetadataCallbackInfo*>(data);
+    if (asyncCallbackInfo == nullptr) {
+        APP_LOGE("asyncCallbackInfo is null");
+        return;
+    }
+    asyncCallbackInfo->err = DistributedHelper::InnerGetRemoteMetadata(asyncCallbackInfo->deviceId,
+        asyncCallbackInfo->bundleName, asyncCallbackInfo->metadataInfos);
+}
+
+static void ConvertMetadata(napi_env env, const Metadata &metadata, napi_value objMetadata)
+{
+    napi_value nName = nullptr;
+    NAPI_CALL_RETURN_VOID(env, napi_create_string_utf8(env, metadata.name.c_str(),
+        metadata.name.length(), &nName));
+    NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, objMetadata, "name", nName));
+
+    napi_value nValue = nullptr;
+    NAPI_CALL_RETURN_VOID(env, napi_create_string_utf8(env, metadata.value.c_str(),
+        metadata.value.length(), &nValue));
+    NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, objMetadata, "value", nValue));
+
+    napi_value nResource = nullptr;
+    NAPI_CALL_RETURN_VOID(env, napi_create_string_utf8(env, metadata.resource.c_str(),
+        metadata.resource.length(), &nResource));
+    NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, objMetadata, "resource", nResource));
+
+    napi_value nValueId = nullptr;
+    NAPI_CALL_RETURN_VOID(env, napi_create_uint32(env, metadata.valueId, &nValueId));
+    NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, objMetadata, "valueId", nValueId));
+}
+
+static void ConvertModuleMetadata(
+    napi_env env, const ModuleMetadata &moduleMetadata, napi_value objModuleMetadata)
+{
+    napi_value nModuleName = nullptr;
+    NAPI_CALL_RETURN_VOID(env, napi_create_string_utf8(env, moduleMetadata.moduleName.c_str(),
+        moduleMetadata.moduleName.length(), &nModuleName));
+    NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, objModuleMetadata, "moduleName", nModuleName));
+
+    napi_value nMetadataArr = nullptr;
+    NAPI_CALL_RETURN_VOID(env, napi_create_array(env, &nMetadataArr));
+    for (size_t j = 0; j < moduleMetadata.metadata.size(); ++j) {
+        napi_value nMeta = nullptr;
+        NAPI_CALL_RETURN_VOID(env, napi_create_object(env, &nMeta));
+        ConvertMetadata(env, moduleMetadata.metadata[j], nMeta);
+        NAPI_CALL_RETURN_VOID(env, napi_set_element(env, nMetadataArr, j, nMeta));
+    }
+    NAPI_CALL_RETURN_VOID(env, napi_set_named_property(env, objModuleMetadata, "metadata", nMetadataArr));
+}
+
+void GetRemoteMetadataComplete(napi_env env, napi_status status, void *data)
+{
+    GetRemoteMetadataCallbackInfo *asyncCallbackInfo =
+        reinterpret_cast<GetRemoteMetadataCallbackInfo*>(data);
+    if (asyncCallbackInfo == nullptr) {
+        APP_LOGE("asyncCallbackInfo is null in %{public}s", __func__);
+        return;
+    }
+    std::unique_ptr<GetRemoteMetadataCallbackInfo> callbackPtr {asyncCallbackInfo};
+    napi_value result[ARGS_SIZE_TWO] = {0};
+    if (asyncCallbackInfo->err == SUCCESS) {
+        NAPI_CALL_RETURN_VOID(env, napi_get_null(env, &result[0]));
+        napi_value nMetadataInfos = nullptr;
+        NAPI_CALL_RETURN_VOID(env, napi_create_array(env, &nMetadataInfos));
+        for (size_t i = 0; i < asyncCallbackInfo->metadataInfos.size(); ++i) {
+            napi_value nInfo = nullptr;
+            NAPI_CALL_RETURN_VOID(env, napi_create_object(env, &nInfo));
+            ConvertModuleMetadata(env, asyncCallbackInfo->metadataInfos[i], nInfo);
+            NAPI_CALL_RETURN_VOID(env, napi_set_element(env, nMetadataInfos, i, nInfo));
+        }
+        result[ARGS_SIZE_ONE] = nMetadataInfos;
+    } else {
+        result[0] = BusinessError::CreateCommonError(env, asyncCallbackInfo->err,
+            RESOURCE_NAME_GET_REMOTE_METADATA, Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED);
+    }
+    if (asyncCallbackInfo->deferred) {
+        if (asyncCallbackInfo->err == SUCCESS) {
+            NAPI_CALL_RETURN_VOID(env, napi_resolve_deferred(env, asyncCallbackInfo->deferred, result[ARGS_SIZE_ONE]));
+        } else {
+            NAPI_CALL_RETURN_VOID(env, napi_reject_deferred(env, asyncCallbackInfo->deferred, result[0]));
+        }
+    } else {
+        napi_value callback = nullptr;
+        napi_value placeHolder = nullptr;
+        NAPI_CALL_RETURN_VOID(env, napi_get_reference_value(env, asyncCallbackInfo->callback, &callback));
+        NAPI_CALL_RETURN_VOID(env, napi_call_function(env, nullptr, callback,
+            sizeof(result) / sizeof(result[0]), result, &placeHolder));
+    }
+}
+
+napi_value GetRemoteMetadata(napi_env env, napi_callback_info info)
+{
+    APP_LOGD("begin to GetRemoteMetadata");
+    NapiArg args(env, info);
+    GetRemoteMetadataCallbackInfo *asyncCallbackInfo =
+        new (std::nothrow) GetRemoteMetadataCallbackInfo(env);
+    if (asyncCallbackInfo == nullptr) {
+        return nullptr;
+    }
+    std::unique_ptr<GetRemoteMetadataCallbackInfo> callbackPtr {asyncCallbackInfo};
+    if (!args.Init(ARGS_SIZE_TWO, ARGS_SIZE_THREE)) {
+        APP_LOGE("param count invalid.");
+        BusinessError::ThrowTooFewParametersError(env, ERROR_PARAM_CHECK_ERROR);
+        return nullptr;
+    }
+    for (size_t i = 0; i < args.GetMaxArgc(); ++i) {
+        napi_valuetype valueType = napi_undefined;
+        napi_typeof(env, args[i], &valueType);
+        if ((i == ARGS_POS_ZERO) && !CommonFunc::ParseString(env, args[i], asyncCallbackInfo->deviceId)) {
+            BusinessError::ThrowParameterTypeError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_DEVICE_ID, TYPE_STRING);
+            return nullptr;
+        } else if ((i == ARGS_POS_ONE) && !CommonFunc::ParseString(env, args[i], asyncCallbackInfo->bundleName)) {
+            BusinessError::ThrowParameterTypeError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_BUNDLE_NAME, TYPE_STRING);
+            return nullptr;
+        } else if (((i == ARGS_POS_ONE) && (valueType == napi_function)) ||
+                   ((i == ARGS_POS_TWO) && (valueType == napi_function))) {
+            NAPI_CALL(env, napi_create_reference(env, args[i], NAPI_RETURN_ONE, &asyncCallbackInfo->callback));
+            break;
+        }
+    }
+    if (asyncCallbackInfo->deviceId.empty() || asyncCallbackInfo->bundleName.empty()) {
+        BusinessError::ThrowError(env, ERROR_PARAM_CHECK_ERROR, PARAMETER_EMPTY_ERROR);
+        return nullptr;
+    }
+    auto promise = CommonFunc::AsyncCallNativeMethod<GetRemoteMetadataCallbackInfo>(env, asyncCallbackInfo,
+        RESOURCE_NAME_GET_REMOTE_METADATA, GetRemoteMetadataExec,
+        GetRemoteMetadataComplete);
+    callbackPtr.release();
+    APP_LOGD("GetRemoteMetadata end");
+    return promise;
+}
 }  // namespace AppExecFwk
 }  // namespace OHOS

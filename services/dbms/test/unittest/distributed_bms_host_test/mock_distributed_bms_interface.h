@@ -51,6 +51,10 @@ public:
         uint32_t &versionCode) override;
     int32_t GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
         DistributedBmsAclInfo &info) override;
+    int32_t GetRemoteMetadata(const std::string &networkId, const std::string &bundleName,
+        std::vector<ModuleMetadata> &metadataInfos) override;
+    int32_t GetMetadataByBundleName(const std::string &bundleName,
+        ApplicationInfo &appInfo, DistributedBmsAclInfo &info) override;
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS

@@ -20,6 +20,7 @@
 #include <vector>
 
 #include "appexecfwk_errors.h"
+#include "application_info.h"
 #include "distributed_bms_acl_info.h"
 #include "distributed_bundle_info.h"
 #include "element_name.h"
@@ -175,6 +176,18 @@ public:
      */
     virtual int32_t GetBundleVersionCode(const std::string &bundleName, uint32_t &versionCode,
         DistributedBmsAclInfo &info)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
+
+    virtual int32_t GetRemoteMetadata(const std::string &networkId, const std::string &bundleName,
+        std::vector<ModuleMetadata> &metadataInfos)
+    {
+        return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
+    }
+
+    virtual int32_t GetMetadataByBundleName(const std::string &bundleName,
+        ApplicationInfo &appInfo, DistributedBmsAclInfo &info)
     {
         return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
     }

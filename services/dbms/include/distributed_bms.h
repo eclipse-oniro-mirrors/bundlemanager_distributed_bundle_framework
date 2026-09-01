@@ -134,7 +134,7 @@ public:
     int32_t GetUdidByNetworkId(const std::string &networkId, std::string &udid);
     int32_t GetUuidByNetworkId(const std::string &netWorkId, std::string &uuid);
     bool GetLocalDevice(DistributedHardware::DmDeviceInfo& dmDeviceInfo);
-    
+
     bool CheckAclData(DistributedBmsAclInfo info);
 
     DistributedBmsAclInfo BuildDistributedBmsAclInfo();
@@ -148,6 +148,12 @@ public:
      * @return
      */
     virtual void OnStop() override;
+
+    int32_t GetRemoteMetadata(const std::string &networkId, const std::string &bundleName,
+        std::vector<ModuleMetadata> &metadataInfos) override;
+
+    int32_t GetMetadataByBundleName(const std::string &bundleName,
+        ApplicationInfo &appInfo, DistributedBmsAclInfo &info) override;
 
 private:
     OHOS::sptr<OHOS::AppExecFwk::IBundleMgr> bundleMgr_;

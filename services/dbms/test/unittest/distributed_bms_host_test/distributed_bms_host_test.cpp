@@ -880,4 +880,188 @@ HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1400, Function | MediumTest | T
         (DistributedInterfaceCode::GET_BUNDLE_VERSION_CODE), data, reply, option);
     EXPECT_EQ(res, NO_ERROR);
 }
+
+/**
+ * @tc.number: HandleGetRemoteMetadata_0100
+ * @tc.name: Test HandleGetRemoteMetadata
+ * @tc.desc: Verify the HandleGetRemoteMetadata return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteMetadata_0100, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string networkId = "networkId";
+    std::string bundleName = "bundleName";
+    data.WriteString(networkId);
+    data.WriteString(bundleName);
+    int32_t res = host.HandleGetRemoteMetadata(data, reply);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetRemoteMetadata_0200
+ * @tc.name: Test HandleGetRemoteMetadata
+ * @tc.desc: Verify the HandleGetRemoteMetadata with empty networkId.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteMetadata_0200, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string networkId = "";
+    std::string bundleName = "bundleName";
+    data.WriteString(networkId);
+    data.WriteString(bundleName);
+    int32_t res = host.HandleGetRemoteMetadata(data, reply);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetRemoteMetadata_0300
+ * @tc.name: Test HandleGetRemoteMetadata
+ * @tc.desc: Verify the HandleGetRemoteMetadata with empty bundleName.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteMetadata_0300, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string networkId = "networkId";
+    std::string bundleName = "";
+    data.WriteString(networkId);
+    data.WriteString(bundleName);
+    int32_t res = host.HandleGetRemoteMetadata(data, reply);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetRemoteMetadata_0400
+ * @tc.name: Test HandleGetRemoteMetadata
+ * @tc.desc: Verify the HandleGetRemoteMetadata returns metadata correctly.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetRemoteMetadata_0400, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string networkId = "networkId";
+    std::string bundleName = "bundleName";
+    data.WriteString(networkId);
+    data.WriteString(bundleName);
+    int32_t res = host.HandleGetRemoteMetadata(data, reply);
+    EXPECT_EQ(res, NO_ERROR);
+    int32_t size = reply.ReadInt32();
+    EXPECT_EQ(size, 1);
+    auto metadata = std::unique_ptr<ModuleMetadata>(reply.ReadParcelable<ModuleMetadata>());
+    EXPECT_NE(metadata, nullptr);
+    if (metadata != nullptr) {
+        EXPECT_EQ(metadata->moduleName, "testModule");
+        EXPECT_EQ(static_cast<int32_t>(metadata->metadata.size()), 1);
+        if (!metadata->metadata.empty()) {
+            EXPECT_EQ(metadata->metadata[0].name, "testName");
+            EXPECT_EQ(metadata->metadata[0].value, "testValue");
+        }
+    }
+}
+
+/**
+ * @tc.number: HandleGetMetadataByBundleName_0100
+ * @tc.name: Test HandleGetMetadataByBundleName
+ * @tc.desc: Verify the HandleGetMetadataByBundleName return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetMetadataByBundleName_0100, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string bundleName = "bundleName";
+    DistributedBmsAclInfo aclInfo;
+    aclInfo.networkId = "networkId";
+    aclInfo.accountId = "accountId";
+    aclInfo.pkgName = "pkgName";
+    data.WriteString(bundleName);
+    data.WriteParcelable(&aclInfo);
+    int32_t res = host.HandleGetMetadataByBundleName(data, reply);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetMetadataByBundleName_0200
+ * @tc.name: Test HandleGetMetadataByBundleName
+ * @tc.desc: Verify the HandleGetMetadataByBundleName return ERR_APPEXECFWK_PARCEL_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetMetadataByBundleName_0200, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    std::string bundleName = "bundleName";
+    data.WriteString(bundleName);
+    int32_t res = host.HandleGetMetadataByBundleName(data, reply);
+    EXPECT_EQ(res, ERR_APPEXECFWK_PARCEL_ERROR);
+}
+
+/**
+ * @tc.number: HandleGetMetadataByBundleName_0300
+ * @tc.name: Test HandleGetMetadataByBundleName
+ * @tc.desc: Verify the HandleGetMetadataByBundleName return ERR_APPEXECFWK_PARCEL_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, HandleGetMetadataByBundleName_0300, Function | MediumTest | TestSize.Level1)
+{
+    Parcel data;
+    Parcel reply;
+    MockDistributedBmsHost host;
+    int32_t res = host.HandleGetMetadataByBundleName(data, reply);
+    EXPECT_EQ(res, ERR_APPEXECFWK_PARCEL_ERROR);
+}
+
+/**
+ * @tc.number: OnRemoteRequest_1500
+ * @tc.name: Test OnRemoteRequest with GET_REMOTE_METADATA
+ * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1500, Function | MediumTest | TestSize.Level1)
+{
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    data.WriteInterfaceToken(DistributedBmsHost::GetDescriptor());
+    std::string networkId = "networkId";
+    std::string bundleName = "bundleName";
+    data.WriteString(networkId);
+    data.WriteString(bundleName);
+
+    MockDistributedBmsHost host;
+    int res = host.OnRemoteRequest(static_cast<uint32_t>
+        (DistributedInterfaceCode::GET_REMOTE_METADATA), data, reply, option);
+    EXPECT_EQ(res, NO_ERROR);
+}
+
+/**
+ * @tc.number: OnRemoteRequest_1600
+ * @tc.name: Test OnRemoteRequest with GET_METADATA_BY_BUNDLE_NAME
+ * @tc.desc: Verify the OnRemoteRequest return NO_ERROR.
+ */
+HWTEST_F(DistributedBmsHostTest, OnRemoteRequest_1600, Function | MediumTest | TestSize.Level1)
+{
+    MessageParcel data;
+    MessageParcel reply;
+    MessageOption option;
+
+    data.WriteInterfaceToken(DistributedBmsHost::GetDescriptor());
+    std::string bundleName = "bundleName";
+    DistributedBmsAclInfo aclInfo;
+    aclInfo.networkId = "networkId";
+    aclInfo.accountId = "accountId";
+    aclInfo.pkgName = "pkgName";
+    data.WriteString(bundleName);
+    data.WriteParcelable(&aclInfo);
+
+    MockDistributedBmsHost host;
+    int res = host.OnRemoteRequest(static_cast<uint32_t>
+        (DistributedInterfaceCode::GET_METADATA_BY_BUNDLE_NAME), data, reply, option);
+    EXPECT_EQ(res, NO_ERROR);
+}
 }

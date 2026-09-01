@@ -16,6 +16,7 @@
 #ifndef BUNDLE_MANAGER_FRAMEWORK_DISTRIBUTEBUNDLEMGR_INTERFACES_KITS_JS_DISTRIBUTED_HELPER_H
 #define BUNDLE_MANAGER_FRAMEWORK_DISTRIBUTEBUNDLEMGR_INTERFACES_KITS_JS_DISTRIBUTED_HELPER_H
 
+#include "application_info.h"
 #include "element_name.h"
 #include "remote_ability_info.h"
 
@@ -25,6 +26,7 @@ namespace {
 constexpr int32_t GET_REMOTE_ABILITY_INFO_MAX_SIZE = 10;
 constexpr const char* RESOURCE_NAME_GET_REMOTE_ABILITY_INFO = "GetRemoteAbilityInfo";
 constexpr const char* RESOURCE_NAME_GET_REMOTE_BUNDLE_VERSION_CODE = "GetRemoteBundleVersionCode";
+constexpr const char* RESOURCE_NAME_GET_REMOTE_METADATA = "GetRemoteMetadata";
 constexpr const char* PARAMETER_ELEMENT_NAME = "elementName";
 constexpr const char* PARAMETER_LOCALE = "locale";
 constexpr const char* PARAMETER_DEVICE_ID = "deviceId";
@@ -38,6 +40,8 @@ public:
         bool isArray, std::vector<RemoteAbilityInfo> &remoteAbilityInfos);
     static int32_t InnerGetRemoteBundleVersionCode(const std::string &deviceId, const std::string &bundleName,
         uint32_t &versionCode);
+    static int32_t InnerGetRemoteMetadata(const std::string &deviceId,
+        const std::string &bundleName, std::vector<ModuleMetadata> &metadataInfos);
 };
 }
 }
