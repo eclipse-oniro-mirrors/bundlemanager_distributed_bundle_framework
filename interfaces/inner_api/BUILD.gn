@@ -16,6 +16,10 @@ import("../../dbms.gni")
 
 config("dbms_fwk_config") {
   include_dirs = [ "include" ]
+
+  ldflags = [
+    "-Wl,--exclude-libs=libunwind.a",
+  ]
 }
 
 ohos_shared_library("dbms_fwk") {
