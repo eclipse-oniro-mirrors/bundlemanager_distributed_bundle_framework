@@ -187,7 +187,7 @@ public:
     }
 
     virtual int32_t GetMetadataByBundleName(const std::string &bundleName,
-        ApplicationInfo &appInfo, DistributedBmsAclInfo &info)
+        std::vector<ModuleMetadata> &metadataInfos, DistributedBmsAclInfo &info)
     {
         return ERR_APPEXECFWK_SERVICE_INTERNAL_ERROR;
     }

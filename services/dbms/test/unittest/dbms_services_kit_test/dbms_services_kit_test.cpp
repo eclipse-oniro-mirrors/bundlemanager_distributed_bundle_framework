@@ -629,7 +629,7 @@ HWTEST_F(DbmsServicesKitTest, DbmsServicesKitTest_0035, Function | SmallTest | T
         eventReport->SendSystemEvent(dbmsEventType, eventInfo);
     }
 }
-
+ 
 /**
  * @tc.number: DbmsServicesKitTest_0036
  * @tc.name: SendSystemEvent
@@ -1634,12 +1634,12 @@ HWTEST_F(DbmsServicesKitTest, GetMetadataByBundleName_0010, Function | SmallTest
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
     if (distributedBmsProxy != nullptr) {
-        ApplicationInfo appInfo;
+        std::vector<ModuleMetadata> metadataInfos;
         DistributedBmsAclInfo aclInfo;
         aclInfo.networkId = "networkId";
         aclInfo.accountId = "accountId";
         aclInfo.pkgName = "pkgName";
-        auto ret = distributedBmsProxy->GetMetadataByBundleName("", appInfo, aclInfo);
+        auto ret = distributedBmsProxy->GetMetadataByBundleName("", metadataInfos, aclInfo);
         EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
     }
 }
@@ -1654,12 +1654,12 @@ HWTEST_F(DbmsServicesKitTest, GetMetadataByBundleName_0020, Function | SmallTest
     auto distributedBmsProxy = GetDistributedBmsProxy();
     EXPECT_NE(distributedBmsProxy, nullptr);
     if (distributedBmsProxy != nullptr) {
-        ApplicationInfo appInfo;
+        std::vector<ModuleMetadata> metadataInfos;
         DistributedBmsAclInfo aclInfo;
         aclInfo.networkId = "networkId";
         aclInfo.accountId = "accountId";
         aclInfo.pkgName = "pkgName";
-        auto ret = distributedBmsProxy->GetMetadataByBundleName(BUNDLE_NAME, appInfo, aclInfo);
+        auto ret = distributedBmsProxy->GetMetadataByBundleName(BUNDLE_NAME, metadataInfos, aclInfo);
         EXPECT_EQ(ret, ERR_APPEXECFWK_FAILED_GET_REMOTE_PROXY);
     }
 }
@@ -1725,12 +1725,12 @@ HWTEST_F(DbmsServicesKitTest, GetMetadataByBundleName_0030, Function | SmallTest
     auto distributedBms = GetSptrDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     if (distributedBms != nullptr) {
-        ApplicationInfo appInfo;
+        std::vector<ModuleMetadata> metadataInfos;
         DistributedBmsAclInfo aclInfo;
         aclInfo.networkId = "networkId";
         aclInfo.accountId = "accountId";
         aclInfo.pkgName = "pkgName";
-        auto ret = distributedBms->GetMetadataByBundleName(BUNDLE_NAME, appInfo, aclInfo);
+        auto ret = distributedBms->GetMetadataByBundleName(BUNDLE_NAME, metadataInfos, aclInfo);
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
     }
 }
@@ -1745,12 +1745,12 @@ HWTEST_F(DbmsServicesKitTest, GetMetadataByBundleName_0040, Function | SmallTest
     auto distributedBms = GetSptrDistributedBms();
     EXPECT_NE(distributedBms, nullptr);
     if (distributedBms != nullptr) {
-        ApplicationInfo appInfo;
+        std::vector<ModuleMetadata> metadataInfos;
         DistributedBmsAclInfo aclInfo;
         aclInfo.networkId = "networkId";
         aclInfo.accountId = "accountId";
         aclInfo.pkgName = "pkgName";
-        auto ret = distributedBms->GetMetadataByBundleName("", appInfo, aclInfo);
+        auto ret = distributedBms->GetMetadataByBundleName("", metadataInfos, aclInfo);
         EXPECT_EQ(ret, ERR_BUNDLE_MANAGER_PERMISSION_DENIED);
     }
 }

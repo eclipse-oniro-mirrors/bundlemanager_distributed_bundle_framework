@@ -327,15 +327,21 @@ int32_t DistributedBmsHost::HandleGetMetadataByBundleName(Parcel &data, Parcel &
         APP_LOGE("HandleGetMetadataByBundleName get parcelable info failed");
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
-    ApplicationInfo appInfo;
-    int32_t ret = GetMetadataByBundleName(bundleName, appInfo, *info);
+    std::vector<ModuleMetadata> metadataInfos;
+    int32_t ret = GetMetadataByBundleName(bundleName, metadataInfos, *info);
     if (ret != NO_ERROR) {
         APP_LOGE("GetMetadataByBundleName result:%{public}d", ret);
         return ret;
     }
-    if (!reply.WriteParcelable(&appInfo)) {
+    if (!reply.WriteInt32(static_cast<int32_t>(metadataInfos.size()))) {
         APP_LOGE("GetMetadataByBundleName write failed");
         return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    for (const auto &item : metadataInfos) {
+        if (!reply.WriteParcelable(&item)) {
+            APP_LOGE("GetMetadataByBundleName write failed");
+            return ERR_APPEXECFWK_PARCEL_ERROR;
+        }
     }
     return NO_ERROR;
 }

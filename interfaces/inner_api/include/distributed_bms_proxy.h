@@ -144,7 +144,7 @@ public:
         std::vector<ModuleMetadata> &metadataInfos) override;
 
     int32_t GetMetadataByBundleName(const std::string &bundleName,
-        ApplicationInfo &appInfo, DistributedBmsAclInfo &info) override;
+        std::vector<ModuleMetadata> &metadataInfos, DistributedBmsAclInfo &info) override;
 private:
     int32_t SendRequest(DistributedInterfaceCode code, MessageParcel &data, MessageParcel &reply);
     template<typename T>

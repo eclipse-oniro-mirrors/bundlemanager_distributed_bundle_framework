@@ -105,7 +105,7 @@ int32_t MockDistributedBmsHost::GetRemoteMetadata(const std::string &networkId,
 }
 
 int32_t MockDistributedBmsHost::GetMetadataByBundleName(const std::string &bundleName,
-    ApplicationInfo &appInfo, DistributedBmsAclInfo &info)
+    std::vector<ModuleMetadata> &metadataInfos, DistributedBmsAclInfo &info)
 {
     return 0;
 }

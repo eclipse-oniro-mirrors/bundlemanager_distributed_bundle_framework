@@ -328,6 +328,7 @@ int32_t DistributedBmsProxy::GetRemoteMetadata(const std::string &networkId,
     MessageParcel reply;
     int32_t result = SendRequest(DistributedInterfaceCode::GET_REMOTE_METADATA, data, reply);
     if (result != OHOS::NO_ERROR) {
+        APP_LOGE("DistributedBmsProxy GetRemoteMetadata SendRequest failed, result: %{public}d", result);
         return result;
     }
     int32_t infoSize = reply.ReadInt32();
@@ -349,7 +350,7 @@ int32_t DistributedBmsProxy::GetRemoteMetadata(const std::string &networkId,
 }
 
 int32_t DistributedBmsProxy::GetMetadataByBundleName(const std::string &bundleName,
-    ApplicationInfo &appInfo, DistributedBmsAclInfo &info)
+    std::vector<ModuleMetadata> &metadataInfos, DistributedBmsAclInfo &info)
 {
     APP_LOGD("DistributedBmsProxy GetMetadataByBundleName");
     MessageParcel data;
@@ -368,14 +369,24 @@ int32_t DistributedBmsProxy::GetMetadataByBundleName(const std::string &bundleNa
     MessageParcel reply;
     int32_t result = SendRequest(DistributedInterfaceCode::GET_METADATA_BY_BUNDLE_NAME, data, reply);
     if (result != OHOS::NO_ERROR) {
+        APP_LOGE("DistributedBmsProxy GetMetadataByBundleName SendRequest failed, result: %{public}d", result);
         return result;
     }
-    std::unique_ptr<ApplicationInfo> appInfoPtr(reply.ReadParcelable<ApplicationInfo>());
-    if (appInfoPtr == nullptr) {
-        APP_LOGE("read ApplicationInfo failed");
+    int32_t infoSize = reply.ReadInt32();
+    if (infoSize < 0) {
+        APP_LOGE("read ModuleMetadata size invalid: %{public}d", infoSize);
         return ERR_APPEXECFWK_PARCEL_ERROR;
     }
-    appInfo = *appInfoPtr;
+    metadataInfos.clear();
+    metadataInfos.reserve(infoSize);
+    for (int32_t i = 0; i < infoSize; ++i) {
+        auto info = std::unique_ptr<ModuleMetadata>(reply.ReadParcelable<ModuleMetadata>());
+        if (info == nullptr) {
+            APP_LOGE("read ModuleMetadata failed");
+            return ERR_APPEXECFWK_PARCEL_ERROR;
+        }
+        metadataInfos.push_back(*info);
+    }
     return ERR_OK;
 }
 

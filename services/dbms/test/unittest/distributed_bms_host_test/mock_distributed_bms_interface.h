@@ -54,7 +54,7 @@ public:
     int32_t GetRemoteMetadata(const std::string &networkId, const std::string &bundleName,
         std::vector<ModuleMetadata> &metadataInfos) override;
     int32_t GetMetadataByBundleName(const std::string &bundleName,
-        ApplicationInfo &appInfo, DistributedBmsAclInfo &info) override;
+        std::vector<ModuleMetadata> &metadataInfos, DistributedBmsAclInfo &info) override;
 };
 }  // namespace AppExecFwk
 }  // namespace OHOS
