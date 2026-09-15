@@ -19,6 +19,7 @@
 #include <vector>
 #include <string>
 
+#include "application_info.h"
 #include "base_cb_info.h"
 #include "element_name.h"
 #include "remote_ability_info.h"
@@ -40,8 +41,16 @@ struct GetRemoteBundleVersionCodeCallbackInfo : public BaseCallbackInfo {
     uint32_t versionCode = 0;
 };
 
+struct GetRemoteMetadataCallbackInfo : public BaseCallbackInfo {
+    explicit GetRemoteMetadataCallbackInfo(napi_env napiEnv) : BaseCallbackInfo(napiEnv) {}
+    std::string deviceId;
+    std::string bundleName;
+    std::vector<ModuleMetadata> metadataInfos;
+};
+
 napi_value GetRemoteAbilityInfo(napi_env env, napi_callback_info info);
 napi_value GetRemoteBundleVersionCode(napi_env env, napi_callback_info info);
+napi_value GetRemoteMetadata(napi_env env, napi_callback_info info);
 }  // namespace AppExecFwk
 }  // namespace OHOS
 #endif // BUNDLE_MANAGER_FRAMEWORK_DISTRIBUTEBUNDLEMGR_INTERFACES_KITS_JS_DISTRIBUTE_BUNDLE_H

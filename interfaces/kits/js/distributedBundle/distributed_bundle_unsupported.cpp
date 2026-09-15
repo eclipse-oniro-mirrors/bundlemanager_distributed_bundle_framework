@@ -41,5 +41,14 @@ napi_value GetRemoteBundleVersionCode(napi_env env, napi_callback_info info)
     napi_throw(env, error);
     return nullptr;
 }
+
+napi_value GetRemoteMetadata(napi_env env, napi_callback_info info)
+{
+    APP_LOGE("SystemCapability.BundleManager.DistributedBundleFramework not supported.");
+    napi_value error = BusinessError::CreateCommonError(env, ERROR_SYSTEM_ABILITY_NOT_FOUND,
+        "getRemoteMetadata");
+    napi_throw(env, error);
+    return nullptr;
+}
 } // AppExecFwk
 } // OHOS

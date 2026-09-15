@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 
+#include "application_info.h"
 #include "element_name.h"
 #include "remote_ability_info.h"
 
@@ -28,6 +29,7 @@ namespace AppExecFwk {
 namespace AniDistributedbundleManagerCommon {
     ani_object ConvertDistributedBundleElementName(ani_env* env, const ElementName& elementName);
     ani_object ConvertRemoteAbilityInfo(ani_env* env, const RemoteAbilityInfo& remoteAbilityInfo);
+    ani_object ConvertModuleMetadata(ani_env* env, const ModuleMetadata& moduleMetadata);
 } // AniDistributedbundleManagerCommon
 } // AppExecFwk
 } // OHOS

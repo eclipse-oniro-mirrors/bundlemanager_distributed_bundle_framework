@@ -68,5 +68,24 @@ int32_t DistributedHelper::InnerGetRemoteBundleVersionCode(const std::string &de
     }
     return CommonFunc::ConvertErrCode(result);
 }
+
+int32_t DistributedHelper::InnerGetRemoteMetadata(const std::string &deviceId,
+    const std::string &bundleName, std::vector<ModuleMetadata> &metadataInfos)
+{
+    if (deviceId.empty()) {
+        APP_LOGE("InnerGetRemoteMetadata deviceId is empty");
+        return ERROR_PARAM_CHECK_ERROR;
+    }
+    if (bundleName.empty()) {
+        APP_LOGE("InnerGetRemoteMetadata bundleName is empty");
+        return ERROR_PARAM_CHECK_ERROR;
+    }
+    int32_t result = DistributedBundleMgrClient::GetInstance()->GetRemoteMetadata(
+        deviceId, bundleName, metadataInfos);
+    if (result != 0) {
+        APP_LOGE("InnerGetRemoteMetadata failed");
+    }
+    return CommonFunc::ConvertErrCode(result);
+}
 } // AppExecFwk
 } // OHOS

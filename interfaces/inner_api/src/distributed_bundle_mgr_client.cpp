@@ -132,6 +132,17 @@ int32_t DistributedBundleMgrClient::GetRemoteBundleVersionCode(const std::string
     return proxy->GetRemoteBundleVersionCode(deviceId, bundleName, versionCode);
 }
 
+int32_t DistributedBundleMgrClient::GetRemoteMetadata(const std::string &networkId,
+    const std::string &bundleName, std::vector<ModuleMetadata> &metadataInfos)
+{
+    auto proxy = GetDistributedBundleMgrProxy();
+    if (proxy == nullptr) {
+        APP_LOGE_NOFUNC("GetDistributedBundleMgrProxy failed");
+        return ERROR_DISTRIBUTED_SERVICE_NOT_RUNNING;
+    }
+    return proxy->GetRemoteMetadata(networkId, bundleName, metadataInfos);
+}
+
 void DistributedBundleMgrClient::ResetDistributedBundleMgrProxy()
 {
     std::lock_guard<std::mutex> lock(dProxyMutex_);

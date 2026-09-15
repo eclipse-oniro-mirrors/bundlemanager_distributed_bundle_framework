@@ -109,6 +109,16 @@ ani_object ConvertRemoteAbilityInfo(ani_env* env, const RemoteAbilityInfo& remot
             .BuildSignatureDescriptor();
     return CommonFunAni::CreateNewObjectByClassV2(env, CLASSNAME_REMOTE_ABILITY_INFO, ctorSig, args);
 }
+
+// Convert ModuleMetadata to ani object by reusing BMS ConvertModuleMetaInfosItem.
+// ModuleMetadata{moduleName, metadata} -> pair<string, vector<Metadata>> -> ani ModuleMetadataInner.
+ani_object ConvertModuleMetadata(ani_env* env, const ModuleMetadata& moduleMetadata)
+{
+    RETURN_NULL_IF_NULL(env);
+    // moduleName: string; metadata: Array<Metadata>
+    return CommonFunAni::ConvertModuleMetaInfosItem(env,
+        std::pair<std::string, std::vector<Metadata>>{moduleMetadata.moduleName, moduleMetadata.metadata});
+}
 } // AniDistributedbundleManagerCommon
 } // AppExecFwk
 } // OHOS

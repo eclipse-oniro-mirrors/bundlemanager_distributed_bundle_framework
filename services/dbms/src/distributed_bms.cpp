@@ -625,6 +625,58 @@ int32_t DistributedBms::GetBundleVersionCode(const std::string &bundleName, uint
     return ERR_OK;
 }
 
+int32_t DistributedBms::GetRemoteMetadata(const std::string &networkId,
+    const std::string &bundleName, std::vector<ModuleMetadata> &metadataInfos)
+{
+    if (!VerifySystemApp()) {
+        APP_LOGE("verify system app failed");
+        return ERR_BUNDLE_MANAGER_SYSTEM_API_DENIED;
+    }
+    if (!VerifyCallingPermission(Constants::PERMISSION_GET_BUNDLE_INFO_PRIVILEGED)) {
+        APP_LOGE("verify GET_BUNDLE_INFO_PRIVILEGED failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
+    }
+    if (networkId.empty()) {
+        APP_LOGE("networkId is empty");
+        return ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST;
+    }
+    if (bundleName.empty()) {
+        APP_LOGE("bundleName is empty");
+        return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
+    }
+    auto iDistBundleMgr = GetDistributedBundleMgr(networkId);
+    if (!iDistBundleMgr) {
+        APP_LOGE("GetDistributedBundle object failed");
+        return ERR_BUNDLE_MANAGER_DEVICE_ID_NOT_EXIST;
+    }
+    DistributedBmsAclInfo info = BuildDistributedBmsAclInfo();
+    int32_t resultCode = iDistBundleMgr->GetMetadataByBundleName(bundleName, metadataInfos, info);
+    if (resultCode != ERR_OK) {
+        return resultCode;
+    }
+    return ERR_OK;
+}
+
+int32_t DistributedBms::GetMetadataByBundleName(const std::string &bundleName,
+    std::vector<ModuleMetadata> &metadataInfos, DistributedBmsAclInfo &info)
+{
+    APP_LOGI("DistributedBms GetMetadataByBundleName bundleName:%{public}s", bundleName.c_str());
+    if (!CheckAclData(info)) {
+        APP_LOGE("verify permission failed");
+        return ERR_BUNDLE_MANAGER_PERMISSION_DENIED;
+    }
+    if (bundleName.empty()) {
+        APP_LOGE("bundleName is empty");
+        return ERR_BUNDLE_MANAGER_BUNDLE_NOT_EXIST;
+    }
+    auto iBundleMgr = GetBundleMgr();
+    if (!iBundleMgr) {
+        APP_LOGE("DistributedBms GetBundleMgr failed");
+        return ERR_APPEXECFWK_FAILED_SERVICE_DIED;
+    }
+    return iBundleMgr->GetMetadataByBundleName(bundleName, metadataInfos);
+}
+
 std::unique_ptr<char[]> DistributedBms::EncodeBase64(std::unique_ptr<uint8_t[]> &data, int srcLen)
 {
     int len = (srcLen / DECODE_VALUE_THREE) * DECODE_VALUE_FOUR; // Split 3 bytes to 4 parts, each containing 6 bits.

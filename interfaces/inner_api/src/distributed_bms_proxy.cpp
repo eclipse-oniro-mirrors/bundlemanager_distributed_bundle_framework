@@ -308,6 +308,88 @@ int32_t DistributedBmsProxy::GetBundleVersionCode(const std::string &bundleName,
     return result;
 }
 
+int32_t DistributedBmsProxy::GetRemoteMetadata(const std::string &networkId,
+    const std::string &bundleName, std::vector<ModuleMetadata> &metadataInfos)
+{
+    APP_LOGD("DistributedBmsProxy GetRemoteMetadata");
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(GetDescriptor())) {
+        APP_LOGE("fail to GetRemoteMetadata due to write InterfaceToken fail");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteString(networkId)) {
+        APP_LOGE("DistributedBmsProxy GetRemoteMetadata write networkId error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteString(bundleName)) {
+        APP_LOGE("DistributedBmsProxy GetRemoteMetadata write bundleName error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    MessageParcel reply;
+    int32_t result = SendRequest(DistributedInterfaceCode::GET_REMOTE_METADATA, data, reply);
+    if (result != OHOS::NO_ERROR) {
+        APP_LOGE("DistributedBmsProxy GetRemoteMetadata SendRequest failed, result: %{public}d", result);
+        return result;
+    }
+    int32_t infoSize = reply.ReadInt32();
+    if (infoSize < 0) {
+        APP_LOGE("read ModuleMetadata size invalid: %{public}d", infoSize);
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    metadataInfos.clear();
+    metadataInfos.reserve(infoSize);
+    for (int32_t i = 0; i < infoSize; ++i) {
+        auto info = std::unique_ptr<ModuleMetadata>(reply.ReadParcelable<ModuleMetadata>());
+        if (info == nullptr) {
+            APP_LOGE("read ModuleMetadata failed");
+            return ERR_APPEXECFWK_PARCEL_ERROR;
+        }
+        metadataInfos.push_back(*info);
+    }
+    return ERR_OK;
+}
+
+int32_t DistributedBmsProxy::GetMetadataByBundleName(const std::string &bundleName,
+    std::vector<ModuleMetadata> &metadataInfos, DistributedBmsAclInfo &info)
+{
+    APP_LOGD("DistributedBmsProxy GetMetadataByBundleName");
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(GetDescriptor())) {
+        APP_LOGE("fail to GetMetadataByBundleName due to write InterfaceToken fail");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteString(bundleName)) {
+        APP_LOGE("DistributedBmsProxy GetMetadataByBundleName write bundleName error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    if (!data.WriteParcelable(&info)) {
+        APP_LOGE("DistributedBmsProxy GetMetadataByBundleName write info error");
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    MessageParcel reply;
+    int32_t result = SendRequest(DistributedInterfaceCode::GET_METADATA_BY_BUNDLE_NAME, data, reply);
+    if (result != OHOS::NO_ERROR) {
+        APP_LOGE("DistributedBmsProxy GetMetadataByBundleName SendRequest failed, result: %{public}d", result);
+        return result;
+    }
+    int32_t infoSize = reply.ReadInt32();
+    if (infoSize < 0) {
+        APP_LOGE("read ModuleMetadata size invalid: %{public}d", infoSize);
+        return ERR_APPEXECFWK_PARCEL_ERROR;
+    }
+    metadataInfos.clear();
+    metadataInfos.reserve(infoSize);
+    for (int32_t i = 0; i < infoSize; ++i) {
+        auto info = std::unique_ptr<ModuleMetadata>(reply.ReadParcelable<ModuleMetadata>());
+        if (info == nullptr) {
+            APP_LOGE("read ModuleMetadata failed");
+            return ERR_APPEXECFWK_PARCEL_ERROR;
+        }
+        metadataInfos.push_back(*info);
+    }
+    return ERR_OK;
+}
+
 template<typename T>
 bool DistributedBmsProxy::WriteParcelableVector(const std::vector<T> &parcelableVector, Parcel &data)
 {

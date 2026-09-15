@@ -63,6 +63,7 @@ export default namespace distributedBundleManager {
   native function getRemoteAbilityInfoNative(elementNames: Array<ElementName>, locale: string): RemoteAbilityInfo;
   native function getRemoteAbilityInfosNative(elementNames: Array<ElementName>, locale: string): Array<RemoteAbilityInfo>;
   native function getRemoteBundleVersionCodeNative(deviceId: string, bundleName: string): long;
+  native function getRemoteMetadataNative(deviceId: string, bundleName: string): Object;
 
   function elementName2Array(elementName: ElementName): Array<ElementName> {
     let elementNames: Array<ElementName> = new Array<ElementName>();
@@ -209,6 +210,28 @@ export default namespace distributedBundleManager {
       let p1 = taskpool.execute(cb);
       p1.then((e: Any) => {
         let result: long = e as long;
+        resolve(result);
+      }, (err: Error): void => {
+        reject(err as BusinessError);
+      });
+    });
+    return p;
+  }
+
+  function getRemoteMetadata(deviceId: string, bundleName: string): Promise<Object> {
+    if (deviceId === undefined || typeof deviceId !== 'string') {
+      throw createBusinessError(ERROR_PARAM_CHECK_ERROR, DEVICE_ID_ERROR);
+    }
+    if (bundleName === undefined || typeof bundleName !== 'string') {
+      throw createBusinessError(ERROR_PARAM_CHECK_ERROR, BUNDLE_NAME_ERROR);
+    }
+    let p = new Promise<Object>((resolve: (appInfo: Object) => void, reject: (error: BusinessError) => void) => {
+      let cb = (): Object => {
+        return getRemoteMetadataNative(deviceId, bundleName);
+      };
+      let p1 = taskpool.execute(cb);
+      p1.then((e: Any) => {
+        let result: Object = e as Object;
         resolve(result);
       }, (err: Error): void => {
         reject(err as BusinessError);

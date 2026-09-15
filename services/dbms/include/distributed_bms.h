@@ -149,6 +149,12 @@ public:
      */
     virtual void OnStop() override;
 
+    int32_t GetRemoteMetadata(const std::string &networkId, const std::string &bundleName,
+        std::vector<ModuleMetadata> &metadataInfos) override;
+
+    int32_t GetMetadataByBundleName(const std::string &bundleName,
+        std::vector<ModuleMetadata> &metadataInfos, DistributedBmsAclInfo &info) override;
+
 private:
     OHOS::sptr<OHOS::AppExecFwk::IBundleMgr> bundleMgr_;
     std::shared_ptr<DbmsDeviceManager> dbmsDeviceManager_;
