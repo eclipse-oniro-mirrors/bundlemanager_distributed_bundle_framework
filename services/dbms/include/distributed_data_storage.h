@@ -18,6 +18,7 @@
 
 #include <future>
 #include <map>
+#include <mutex>
 
 #include "distributed_bundle_info.h"
 #include "bundle_constants.h"
@@ -76,7 +77,7 @@ private:
         const std::vector<std::string> &bundleNames);
     bool SyncAndCompleted(const std::string &udid, const std::string &networkId);
 private:
-    static std::mutex mutex_;
+    static std::once_flag initFlag_;
     static std::shared_ptr<DistributedDataStorage> instance_;
 
     const DistributedKv::AppId appId_ {APP_ID};

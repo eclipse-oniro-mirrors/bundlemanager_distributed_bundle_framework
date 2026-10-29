@@ -64,7 +64,7 @@ int32_t DbmsDeviceManager::GetUdidByNetworkId(const std::string &netWorkId, std:
 {
     APP_LOGI("GetUdidByNetworkId");
     if (!InitDeviceManager()) {
-        return -1;
+        return DBMS_DEVICE_MANAGER_ERROR;
     }
     return DistributedHardware::DeviceManager::GetInstance().GetUdidByNetworkId(
         DISTRIBUTED_BUNDLE_NAME, netWorkId, udid);
@@ -74,7 +74,7 @@ int32_t DbmsDeviceManager::GetUuidByNetworkId(const std::string &netWorkId, std:
 {
     APP_LOGI("GetUuidByNetworkId");
     if (!InitDeviceManager()) {
-        return -1;
+        return DBMS_DEVICE_MANAGER_ERROR;
     }
     int32_t errCode = DistributedHardware::DeviceManager::GetInstance()
         .GetUuidByNetworkId(DISTRIBUTED_BUNDLE_NAME, netWorkId, uuid);
