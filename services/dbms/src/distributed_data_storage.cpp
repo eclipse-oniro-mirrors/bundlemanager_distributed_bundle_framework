@@ -44,17 +44,14 @@ const std::string EMPTY_DEVICE_ID = "";
 }  // namespace
 
 std::shared_ptr<DistributedDataStorage> DistributedDataStorage::instance_ = nullptr;
-std::mutex DistributedDataStorage::mutex_;
+std::once_flag DistributedDataStorage::initFlag_;
 std::mutex DistributedDataStorage::kvStorePtrMutex_;
 
 std::shared_ptr<DistributedDataStorage> DistributedDataStorage::GetInstance()
 {
-    if (instance_ == nullptr) {
-        std::lock_guard<std::mutex> lock_l(mutex_);
-        if (instance_ == nullptr) {
+    std::call_once(initFlag_, [] {
             instance_ = std::make_shared<DistributedDataStorage>();
-        }
-    }
+    });
     return instance_;
 }
 
@@ -250,10 +247,11 @@ int32_t DistributedDataStorage::GetDistributedBundleName(const std::string &netw
             return ERR_BUNDLE_MANAGER_INTERNAL_ERROR;
         }
     }
+    const std::string keyPrefix = udid + Constants::FILE_UNDERLINE;
     for (auto entry : allEntries) {
         std::string key = entry.key.ToString();
         std::string value =  entry.value.ToString();
-        if (key.find(udid) == std::string::npos) {
+        if (key.compare(0, keyPrefix.size(), keyPrefix) != 0) {
             continue;
         }
         DistributedBundleInfo distributedBundleInfo;
@@ -516,9 +514,10 @@ std::map<std::string, DistributedBundleInfo> DistributedDataStorage::GetAllOldDi
         APP_LOGE("dataManager_ GetEntries error: %{public}d", status);
         return oldDistributedBundleInfos;
     }
+    const std::string keyPrefix = udid + Constants::FILE_UNDERLINE;
     for (const auto &entry : allEntries) {
         std::string key = entry.key.ToString();
-        if (key.find(udid) == std::string::npos) {
+        if (key.compare(0, keyPrefix.size(), keyPrefix) != 0) {
             continue;
         }
         std::string value = entry.value.ToString();
@@ -553,15 +552,16 @@ DistributedDataStorageCallback::~DistributedDataStorageCallback()
 void DistributedDataStorageCallback::SyncCompleted(const std::map<std::string, DistributedKv::Status> &result)
 {
     APP_LOGD("kvstore sync completed.");
-    if (result.find(uuid_) == result.end()) {
+    std::lock_guard<std::mutex> lock(setVauleMutex_);
+    auto resultIter = result.find(uuid_);
+    if (resultIter == result.end()) {
         APP_LOGW("SyncCompleted uuid %{public}s no result",
             OHOS::AppExecFwk::DistributedDataStorage::AnonymizeUdid(uuid_).c_str());
         return;
     }
-    DistributedKv::Status status = result.at(uuid_);
+    DistributedKv::Status status = resultIter->second;
     APP_LOGI("SyncCompleted uuid %{public}s  result %{public}d",
         OHOS::AppExecFwk::DistributedDataStorage::AnonymizeUdid(uuid_).c_str(), status);
-    std::lock_guard<std::mutex> lock(setVauleMutex_);
     if (!isSetValue_) {
         isSetValue_ = true;
         resultStatusSignal_.set_value(status);
@@ -572,6 +572,7 @@ void DistributedDataStorageCallback::SyncCompleted(const std::map<std::string, D
 
 void DistributedDataStorageCallback::setUuid(const std::string uuid)
 {
+    std::lock_guard<std::mutex> lock(setVauleMutex_);
     uuid_ = uuid;
 }
 

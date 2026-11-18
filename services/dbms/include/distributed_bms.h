@@ -164,6 +164,7 @@ private:
 
     void Init();
     void InitDeviceManager();
+    std::shared_ptr<DbmsDeviceManager> GetDeviceManagerShared();
     bool GetMediaBase64(std::unique_ptr<uint8_t[]> &data, int64_t fileLength,
         std::string &imageType, std::string &value);
     std::unique_ptr<unsigned char[]> LoadResourceFile(std::string &path, int &len);

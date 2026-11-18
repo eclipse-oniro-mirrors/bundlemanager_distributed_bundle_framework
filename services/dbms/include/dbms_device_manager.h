@@ -24,6 +24,8 @@
 #include "distributed_bms_acl_info.h"
 #include "system_ability_load_callback_stub.h"
 
+#define DBMS_DEVICE_MANAGER_ERROR (-1)
+
 namespace OHOS {
 namespace AppExecFwk {
 class DbmsDeviceManager {

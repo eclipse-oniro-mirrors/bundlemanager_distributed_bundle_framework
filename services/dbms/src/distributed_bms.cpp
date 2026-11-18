@@ -166,18 +166,21 @@ void DistributedBms::Init()
 
 void DistributedBms::InitDeviceManager()
 {
+    (void)GetDeviceManagerShared();
+}
+
+std::shared_ptr<DbmsDeviceManager> DistributedBms::GetDeviceManagerShared()
+{
+    std::lock_guard<std::mutex> lock(dbmsDeviceManagerMutex_);
     if (dbmsDeviceManager_ == nullptr) {
-        std::lock_guard<std::mutex> lock(dbmsDeviceManagerMutex_);
-        if (dbmsDeviceManager_ == nullptr) {
-            APP_LOGI("Create device manager");
-            dbmsDeviceManager_ = std::make_shared<DbmsDeviceManager>();
-        }
+        APP_LOGI("Create device manager");
+        dbmsDeviceManager_ = std::make_shared<DbmsDeviceManager>();
     }
+    return dbmsDeviceManager_;
 }
 
 OHOS::sptr<OHOS::AppExecFwk::IBundleMgr> DistributedBms::GetBundleMgr()
 {
-    if (bundleMgr_ == nullptr) {
         std::lock_guard<std::mutex> lock(bundleMgrMutex_);
         if (bundleMgr_ == nullptr) {
             auto systemAbilityManager = OHOS::SystemAbilityManagerClient::GetInstance().GetSystemAbilityManager();
@@ -191,36 +194,38 @@ OHOS::sptr<OHOS::AppExecFwk::IBundleMgr> DistributedBms::GetBundleMgr()
                 return nullptr;
             }
             bundleMgr_ = OHOS::iface_cast<IBundleMgr>(bundleMgrSa);
-        }
     }
     return bundleMgr_;
 }
 
 int32_t DistributedBms::GetUdidByNetworkId(const std::string &networkId, std::string &udid)
 {
-    if (dbmsDeviceManager_ == nullptr) {
-        APP_LOGI("deviceManager_ is nullptr");
-        InitDeviceManager();
+    auto deviceManager = GetDeviceManagerShared();
+    if (deviceManager == nullptr) {
+        APP_LOGE("deviceManager_ is nullptr");
+        return DBMS_DEVICE_MANAGER_ERROR;
     }
-    return dbmsDeviceManager_->GetUdidByNetworkId(networkId, udid);
+    return deviceManager->GetUdidByNetworkId(networkId, udid);
 }
 
 int32_t DistributedBms::GetUuidByNetworkId(const std::string &networkId, std::string &uuid)
 {
-    if (dbmsDeviceManager_ == nullptr) {
-        APP_LOGI("deviceManager_ is nullptr");
-        InitDeviceManager();
+    auto deviceManager = GetDeviceManagerShared();
+    if (deviceManager == nullptr) {
+        APP_LOGE("deviceManager_ is nullptr");
+        return DBMS_DEVICE_MANAGER_ERROR;
     }
-    return dbmsDeviceManager_->GetUuidByNetworkId(networkId, uuid);
+    return deviceManager->GetUuidByNetworkId(networkId, uuid);
 }
 
 bool DistributedBms::GetLocalDevice(DistributedHardware::DmDeviceInfo& dmDeviceInfo)
 {
-    if (dbmsDeviceManager_ == nullptr) {
-        APP_LOGI("deviceManager_ is nullptr");
-        InitDeviceManager();
+    auto deviceManager = GetDeviceManagerShared();
+    if (deviceManager == nullptr) {
+        APP_LOGE("deviceManager_ is nullptr");
+        return false;
     }
-    return dbmsDeviceManager_->GetLocalDevice(dmDeviceInfo);
+    return deviceManager->GetLocalDevice(dmDeviceInfo);
 }
 
 static OHOS::sptr<OHOS::AppExecFwk::IDistributedBms> GetDistributedBundleMgr(const std::string &deviceId)
@@ -492,11 +497,12 @@ int32_t DistributedBms::GetAbilityInfos(const std::vector<ElementName> &elementN
 
 bool DistributedBms::CheckAclData(DistributedBmsAclInfo info)
 {
-    if (dbmsDeviceManager_ == nullptr) {
-        APP_LOGI("deviceManager_ is nullptr");
-        InitDeviceManager();
+    auto deviceManager = GetDeviceManagerShared();
+    if (deviceManager == nullptr) {
+        APP_LOGE("deviceManager_ is nullptr");
+        return false;
     }
-    return dbmsDeviceManager_->CheckAclData(info);
+    return deviceManager->CheckAclData(info);
 }
 
 bool DistributedBms::GetMediaBase64(std::unique_ptr<uint8_t[]> &data, int64_t fileLength,
